@@ -1,0 +1,54 @@
+<form method="post" action="{{ url('actions/thesaurus/get-synonyms') }}">
+    {{ csrfInput() }}
+
+    <label for="word">Enter a word:</label>
+    <input type="text" name="word" id="word" required />
+
+    <button type="submit" class="btn submit">Get Synonyms</button>
+</form>
+
+<div id="synonym-result"></div>
+
+<form method="post" action="{{ url('actions/thesaurus/get-definitions') }}">
+    {{ csrfInput() }}
+
+    <label for="word">Enter a word for definition:</label>
+    <input type="text" name="word" id="word" required />
+
+    <button type="submit" class="btn submit">Get Definitions</button>
+</form>
+
+<div id="definition-result"></div>
+
+<script>
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const url = form.action;
+
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById(
+              form.action.includes('get-synonyms') ? 'synonym-result' : 'definition-result'
+            ).innerText = data.error;
+          } else {
+            document.getElementById(
+              form.action.includes('get-synonyms') ? 'synonym-result' : 'definition-result'
+            ).innerText = JSON.stringify(data, null, 2);
+          }
+        })
+        .catch(error => {
+          document.getElementById(
+            form.action.includes('get-synonyms') ? 'synonym-result' : 'definition-result'
+          ).innerText = 'Error: ' + error;
+        });
+    });
+  });
+</script>
