@@ -1,0 +1,88 @@
+/* stylelint-disable indentation */
+.ck.ck-lookup-form, .ck.ck-result-form {
+  width: 600px;
+  max-width: 100%;
+  min-height: 400px;
+  
+
+  & .ck-loader {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  & .ck-tab-selector {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  & .ck-sub-tab-selector {
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  & .ck-tab {
+    flex-grow: 1;
+    justify-content: center;
+    &.ck-selected {
+      color: var(--ck-color-button-on-color);
+      background: var(--ck-color-button-on-background);
+    }
+  }
+  & .ck-sub-tab {
+    &.ck-selected {
+      color: var(--ck-color-button-on-color);
+      background: var(--ck-color-button-on-background);
+    }
+  }
+  & .ck-toolbar__separator {
+    background-color: var(--ck-color-base-border);
+    width: 1px;
+  }
+
+	& .ck-lookup-form__inputs, .ck-lookup-form__actions {
+    margin: 20px;
+		display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+		/* The inputs area styles */
+		&.ck-lookup-form__inputs {
+      /* margin: 20px; */
+      input {
+        width: 100%;
+      }
+		}
+	}
+  & .ck-word {
+      margin: 20px;
+      font-weight: bold;
+      font-size: large;
+  }
+  & .ck-phonetic {
+      margin: 0 20px;
+      font-weight: bold;
+      font-size: small;
+  }
+  & .ck-definitions {
+      margin: 20px;
+      white-space: wrap;
+      list-style-type: none;
+  }
+  & .ck-definition {
+      white-space: wrap;
+  }
+}
+
+.ck.ck-scrollable-results {
+  height: 400px;
+  max-height: 100%;
+  overflow: scroll;
+}
