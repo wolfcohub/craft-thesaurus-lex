@@ -15,6 +15,6 @@ class CkeditorThesaurusAsset extends BaseCkeditorPackageAsset
         'ThesaurusLex'
     ];
     public array $toolbarItems = [
-        'ThesaurusLex'
+        'thesaurusLexButton'
     ];
 }

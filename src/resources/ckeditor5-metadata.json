@@ -1,17 +1,17 @@
 {
-  "plugins": [
-    {
-      "name": "Thesaurus lex",
-      "className": "ThesaurusLex",
-      "description": "Adds text to the editor.",
-      "path": "src/thesauruslex.ts",
-      "uiComponents": [
-        {
-          "name": "thesaurusLexButton",
-          "type": "Button",
-          "iconPath": "theme/icons/ckeditor.svg"
-        }
-      ]
-    }
-  ]
+	"plugins": [
+		{
+			"name": "Thesaurus lex",
+			"className": "ThesaurusLex",
+			"description": "Adds text to the editor.",
+			"path": "src/thesauruslex.ts",
+			"uiComponents": [
+				{
+					"name": "thesaurusLexButton",
+					"type": "Button",
+					"iconPath": "../icon.svg"
+				}
+			]
+		}
+	]
 }

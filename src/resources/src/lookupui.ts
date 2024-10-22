@@ -35,7 +35,7 @@ export default class LookupUI extends Plugin {
 		const lookupCommand = editor.commands.get(LOOKUP);
 		if (lookupCommand) {
 			// Add lookup button to feature components.
-			editor.ui.componentFactory.add('lookupButton', () => {
+			editor.ui.componentFactory.add('thesaurusLexButton', () => {
 				const dialog = editor.plugins.get('Dialog');
 				const plugin = editor.plugins.get(
 					'LookupEditing',
@@ -46,7 +46,7 @@ export default class LookupUI extends Plugin {
 				const buttonView = new ButtonView(editor.locale);
 
 				buttonView.set({
-					label: t('ThesaurusLex'),
+					label: t('Dictionary'),
 					icon: lexIcon,
 					tooltip: true,
 				});
