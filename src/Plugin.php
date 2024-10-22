@@ -2,13 +2,16 @@
 
 namespace wolfco\thesaurus;
 
+use Craft;
 use craft\base\Model;
-use craft\web\twig\variables\CraftVariable;
+use craft\base\Plugin as BasePlugin;
+use craft\ckeditor\Plugin as CkeditorPlugin;
 use craft\events\RegisterUrlRulesEvent;
 use yii\base\Event;
 use craft\web\UrlManager;
+use wolfco\thesaurus\assetbundles\CkeditorThesaurusAsset;
 
-class Plugin extends \craft\base\Plugin
+class Plugin extends BasePlugin
 {
     public static Plugin $plugin;
 
@@ -22,9 +25,12 @@ class Plugin extends \craft\base\Plugin
         parent::init();
         self::$plugin = $this;
 
+        Craft::setAlias('@plugins/thesaurus-lex', __DIR__);
+        CkeditorPlugin::registerCkeditorPackage(CkeditorThesaurusAsset::class);
+
         // Register the controller map to ensure it's accessible
-        \Craft::$app->controllerMap['thesaurus'] = 'wolfco\thesaurus\controllers\ThesaurusController';
-        \Craft::$app->controllerMap['thesaurus-plugin/settings'] = 'wolfco\thesaurus\controllers\SettingsController';
+        Craft::$app->controllerMap['thesaurus'] = 'wolfco\thesaurus\controllers\ThesaurusController';
+        Craft::$app->controllerMap['thesaurus-plugin/settings'] = 'wolfco\thesaurus\controllers\SettingsController';
         // Register custom routes
         Event::on(
             UrlManager::class,
@@ -41,7 +47,7 @@ class Plugin extends \craft\base\Plugin
 
     protected function settingsHtml(): ?string
     {
-        return \Craft::$app->view->renderTemplate(
+        return Craft::$app->view->renderTemplate(
             'thesaurus-plugin/settings',
             [
                 'settings' => $this->getSettings(),  // This ensures the saved settings are loaded
