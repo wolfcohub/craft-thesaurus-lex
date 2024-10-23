@@ -1,6 +1,6 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
 import LookupState from './lookupstate.js';
-import { MerriamWebsterResult, Pronunciation } from './utils.js';
+import { DictionaryTypes } from '../../DictionaryTypes.js';
 
 const API_KEY = '***REMOVED***';
 
@@ -40,12 +40,12 @@ export default class LookupCommand extends Command {
 			this._state.set('errorMessage', 'Unexpected response from API');
 			return;
 		}
-		const validResults: MerriamWebsterResult[] = [];
+		const validResults: DictionaryTypes.DictionaryResult[] = [];
 
 		results.forEach((result) => {
 			try {
-				const validResult = formatMerriamWebsterResult(result);
-				validResults.push(validResult);
+				// const validResult = formatMerriamWebsterResult(result);
+				validResults.push(result as DictionaryTypes.DictionaryResult);
 			} catch (e) {
 				console.log(`Error!`, e);
 			} // swallow error, exclude from results
@@ -55,6 +55,7 @@ export default class LookupCommand extends Command {
 			this._state.set('errorMessage', 'Unexpected response from API');
 			return;
 		}
+		console.log(`results: `, validResults);
 
 		// request succeeded
 		this._state.set('isFetching', false);
@@ -62,43 +63,4 @@ export default class LookupCommand extends Command {
 		this._state.set('errorMessage', null);
 		this._state.set('results', validResults);
 	}
-}
-
-export function formatMerriamWebsterResult(
-	result: unknown,
-): MerriamWebsterResult {
-	if (typeof result !== 'object' || result === null) {
-		throw new Error('Invalid input: result must be an object');
-	}
-
-	const obj = result as Record<string, any>; // Type assertion for easier property access
-
-	// Ensure required properties
-	if (!obj.shortdef || !Array.isArray(obj.shortdef)) {
-		throw new Error('Missing or invalid property: shortdef');
-	}
-	if (!obj.fl || typeof obj.fl !== 'string') {
-		throw new Error('Missing or invalid property: fl');
-	}
-	if (!obj.hwi || !obj.hwi.hw) {
-		throw new Error('Missing or invalid property: hwi');
-	}
-
-	const pronunciations: Pronunciation[] = [];
-	if (obj.hwi.prs && Array.isArray(obj.hwi.prs)) {
-		obj.hwi.prs.forEach((p: any) => {
-			pronunciations.push({
-				preText: p.l ? String(p.l) : '',
-				text: String(p.mw),
-				postText: p.l2 ? String(p.l2) : '',
-			});
-		});
-	}
-
-	return {
-		word: String(obj.hwi.hw),
-		pronunciations,
-		label: String(obj.fl),
-		definitions: obj.shortdef.map((def: any) => String(def)),
-	};
 }
