@@ -122,19 +122,19 @@ export namespace DictionaryTypes {
     cxtis?: CrossReferenceTarget[];
   };
 
-  type DefiningText = ["text", string];
-  type EtymologyContent = ["text", string];
-  type EtymologySupplementalNote = ["et_snote", Array<["t", string]>];
+  export type DefiningText = ["text", string];
+  export type EtymologyContent = ["text", string];
+  export type EtymologySupplementalNote = ["et_snote", Array<["t", string]>];
 
-  type Sense = [
+  export type Sense = [
     "sense",
     {
-      sn: string;
+      sn?: string;
       dt: Array<DefiningText | VerbalIllustration>;
       et: Array<EtymologyContent | EtymologySupplementalNote>;
     }
   ];
-  type SenseSequence = Array<Sense>;
+  export type SenseSequence = Array<Sense>;
   // 2.10 Sense Organization
   // 2.10.1 Definition Section: def
   export type DefinitionSection = {
@@ -152,16 +152,18 @@ export namespace DictionaryTypes {
   // export type DefiningText = string; // Example: "to move through the air by means of wings"
   // Define the basic structure for 'dt'
 
-  interface Subsource {
+  export type Subsource = {
     source?: string;
     aqdate?: string;
-  }
-  interface AttributionQuote {
+  };
+
+  export type AttributionQuote = {
     auth?: string;
     source?: string;
     aqdate?: string;
     subsource?: Subsource;
-  }
+  };
+
   type VerbalIllustration = [
     "vis",
     {

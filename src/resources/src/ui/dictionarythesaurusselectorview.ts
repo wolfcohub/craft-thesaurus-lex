@@ -1,6 +1,6 @@
 import { ButtonView, ToolbarSeparatorView, View } from 'ckeditor5/src/ui.js';
 import { type Locale } from 'ckeditor5/src/utils.js';
-import { DictionaryTypes } from '../../../DictionaryTypes.js';
+import { DictionaryTypes } from '../DictionaryTypes.js';
 import ResultTabView from './resulttabview.js';
 import SingleMeaningView from './singlemeaningview.js';
 

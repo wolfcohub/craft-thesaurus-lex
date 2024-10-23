@@ -5,7 +5,7 @@ import {
 	Meaning,
 	MerriamWebsterResult,
 } from '../utils.js';
-import { DictionaryTypes } from '../../../DictionaryTypes.js';
+import { DictionaryTypes } from '../DictionaryTypes.js';
 
 export default class SingleMeaningView extends View {
 	constructor(locale: Locale, result: DictionaryTypes.DictionaryResult) {
