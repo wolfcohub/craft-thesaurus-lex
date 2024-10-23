@@ -84,6 +84,16 @@
 	.ck-posttext {
 		font-style: italic;
 	}
+	& .ck-dt-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: start;
+		gap: 10px;
+	}
+	& .ck-sense-number {
+		font-weight: bold;
+	}
 }
 
 .ck.ck-scrollable-results {
