@@ -1,36 +1,34 @@
 import { ObservableMixin, Collection } from 'ckeditor5/src/utils.js';
 import type { Model } from 'ckeditor5/src/engine.js';
 import { LookupResult, MerriamWebsterResult } from './utils.js';
-
-
+import { DictionaryTypes } from '../../DictionaryTypes.js';
 
 export default class LookupState extends ObservableMixin() {
+	public declare wordToLookup: string;
 
-  declare public wordToLookup: string;
+	// selectedTab!: "dictionary" | "thesaurus";
 
-  // selectedTab!: "dictionary" | "thesaurus";
+	public declare isFetching: boolean;
 
-  declare public isFetching: boolean;
+	public declare isSuccess: boolean;
 
-  declare public isSuccess: boolean;
+	// declare public isError: boolean;
 
-  // declare public isError: boolean;
+	public declare results: DictionaryTypes.DictionaryResult[];
 
-  declare public results: MerriamWebsterResult[];
+	public declare errorMessage: string | null;
 
-  declare public errorMessage: string | null;
+	constructor() {
+		super();
+		this.reset();
+	}
 
-  constructor() {
-    super();
-    this.reset();
-  }
-
-  reset(): void {
-    this.set('wordToLookup', '');
-    this.set('isFetching', false);
-    this.set('isSuccess', false);
-    // this.set('isError', false);
-    this.set('results', []);
-    this.set('errorMessage', null);
-  }
+	reset(): void {
+		this.set('wordToLookup', '');
+		this.set('isFetching', false);
+		this.set('isSuccess', false);
+		// this.set('isError', false);
+		this.set('results', []);
+		this.set('errorMessage', null);
+	}
 }
