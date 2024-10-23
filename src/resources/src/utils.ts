@@ -1,5 +1,5 @@
 import type { Range } from 'ckeditor5/src/engine.js';
-import { DictionaryTypes } from '../../DictionaryTypes.js';
+import { DictionaryTypes } from './DictionaryTypes.js';
 
 export type Definition = {
 	definition: string;

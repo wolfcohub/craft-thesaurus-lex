@@ -12,7 +12,7 @@ import {
 } from 'ckeditor5/src/ui.js';
 import { type Locale } from 'ckeditor5/src/utils.js';
 import { LOOKUP, LookupResult, MerriamWebsterResult } from '../utils.js';
-import { DictionaryTypes } from '../../../DictionaryTypes.js';
+import { DictionaryTypes } from '../DictionaryTypes.js';
 import LookupState from '../lookupstate.js';
 import DictionaryThesaurusSelectorView from './dictionarythesaurusselectorview.js';
 

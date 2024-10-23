@@ -1,6 +1,6 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
 import LookupState from './lookupstate.js';
-import { DictionaryTypes } from '../../DictionaryTypes.js';
+import { DictionaryTypes } from './DictionaryTypes.js';
 
 const API_KEY = '***REMOVED***';
 

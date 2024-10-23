@@ -6,7 +6,7 @@ import {
 	ViewCollection,
 } from 'ckeditor5/src/ui.js';
 import { LookupResult, MerriamWebsterResult } from '../utils.js';
-import { DictionaryTypes } from '../../../DictionaryTypes.js';
+import { DictionaryTypes } from '../DictionaryTypes.js';
 import SingleMeaningView from './singlemeaningview.js';
 
 export default class ResultTabView extends View {
