@@ -11,20 +11,22 @@ export default class SingleMeaningView extends View {
 	constructor(locale: Locale, result: DictionaryTypes.DictionaryResult) {
 		super(locale);
 
-		const { def, hwi, shortdef: shortDefinitions } = result;
+		const { def, hwi, shortdef: shortDefinitions, quotes, meta } = result;
 		const { sseq: senseSequences } = def[0];
 		const { prs: pronunciations } = hwi;
+		const { id: headword } = meta;
+		console.log(`quotes: `, quotes);
 
-		const pronunciationsContainer = this.createPronunciationsBlock(
-			pronunciations,
-			locale,
+		const topLevelBlocks = this.createCollection();
+
+		topLevelBlocks.add(
+			this.createPronunciationsBlock(pronunciations, locale),
 		);
 
 		const senseSequenceBlockCollection = this.createCollection();
 
 		if (senseSequences.length) {
 			senseSequences.forEach((senseSequence, index) => {
-				console.log(`sense sequence: ${index}`);
 				const senseSequenceBlock = this.createSenseSequenceBlock(
 					senseSequence,
 					locale,
@@ -37,26 +39,27 @@ export default class SingleMeaningView extends View {
 		sequencesContainer.setTemplate({
 			tag: 'div',
 			attributes: {
-				class: ['ck'],
+				class: ['ck', 'ck-sense-sequence-container'],
 			},
 			children: senseSequenceBlockCollection,
 		});
+		topLevelBlocks.add(sequencesContainer);
 
-		const definitionsContainer = this.createShortDefinitionsBlock(
-			shortDefinitions,
-			locale,
-		);
+		if (quotes) {
+			const quotesBlock = this.createQuotesBlock(
+				headword,
+				quotes,
+				locale,
+			);
+			topLevelBlocks.add(quotesBlock);
+		}
 
 		this.setTemplate({
 			tag: 'ul',
 			attributes: {
 				class: ['ck', 'ck-definitions'],
 			},
-			children: [
-				pronunciationsContainer,
-				// definitionsContainer,
-				sequencesContainer,
-			],
+			children: topLevelBlocks,
 		});
 	}
 
@@ -167,60 +170,214 @@ export default class SingleMeaningView extends View {
 		return shortDefinitionsContainer;
 	}
 
-	createDefiningTextBlock(
-		definingText: DictionaryTypes.DefiningText,
-		locale: Locale,
-	): View {
-		console.log(`createDefiningTextBlock input: `, definingText);
-		const definition = definingText[1];
+	createDefiningTextBlock(definingText: string, locale: Locale): View {
 		const definitionBlock = new View(locale);
 		definitionBlock.setTemplate({
 			tag: 'p',
 			attributes: {
 				class: ['ck', 'ck-definition'],
 			},
-			children: [definition],
+			children: [definingText],
 		});
 		return definitionBlock;
 	}
 
+	createVerbalIllustrationBlock(
+		verbalIllustrationItems: DictionaryTypes.VerbalIllustrationContent[],
+		locale: Locale,
+	): View {
+		const visCollection = this.createCollection();
+		verbalIllustrationItems.forEach((viContent) => {
+			const { t, aq } = viContent;
+			const visBlock = new View(locale);
+			visBlock.setTemplate({
+				tag: 'div',
+				attributes: {
+					class: ['ck', 'ck-verbal-illustration'],
+				},
+				children: [t],
+			});
+			visCollection.add(visBlock);
+		});
+
+		const visContainer = new View(locale);
+		visContainer.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-vis-container'],
+			},
+			children: visCollection,
+		});
+		return visContainer;
+	}
+
+	createDividedSenseBlock(
+		dividedSense: DictionaryTypes.DividedSense,
+		locale: Locale,
+	): View {
+		const { sd: senseDivider, dt } = dividedSense;
+
+		const senseDividerBlock = new View(locale);
+		senseDividerBlock.setTemplate({
+			tag: 'span',
+			attributes: {
+				class: ['ck', 'ck-sense-divider'],
+			},
+			children: [senseDivider],
+		});
+
+		const dtCollection = this.createCollection();
+		dt.forEach((definingText) => {
+			if (definingText[0] === 'text') {
+				const definingTextContainer = new View(locale);
+				definingTextContainer.setTemplate({
+					tag: 'div',
+					attributes: {
+						class: ['ck', 'ck-definition'],
+					},
+				});
+				const definingTextBlock = new View(locale);
+				definingTextBlock.setTemplate({
+					tag: 'p',
+					attributes: {
+						class: ['ck', 'ck-definition'],
+					},
+					children: [],
+				});
+				dtCollection.add(
+					this.createDefiningTextBlock(definingText[1], locale),
+				);
+			} else if (definingText[0] === 'vis') {
+				dtCollection.add(
+					this.createVerbalIllustrationBlock(definingText[1], locale),
+				);
+			}
+		});
+		const dtContainer = new View(locale);
+		dtContainer.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-dt-container'],
+			},
+			children: dtCollection,
+		});
+
+		const senseDividerContainer = new View(locale);
+		senseDividerContainer.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-sdsense-container'],
+			},
+			children: [senseDividerBlock, dtContainer],
+		});
+
+		return senseDividerContainer;
+	}
+
 	createSenseBlock(sense: DictionaryTypes.Sense, locale: Locale): View {
-		// console.log(`createSenseBlock input: `, sense);
-		const { sn: senseNumber, dt, et } = sense[1];
+		const { sn: senseNumber, dt, et, sdsense: dividedSense } = sense[1];
 		console.log(`senseNumber: ${senseNumber}`);
 
 		const senseCollection = this.createCollection();
 
 		if (senseNumber) {
-			const snBlock = new View(locale);
-			snBlock.setTemplate({
-				tag: 'span',
+			// sense number block
+			const senseNumberBlock = new View(locale);
+			senseNumberBlock.setTemplate({
+				tag: 'div',
 				attributes: {
 					class: ['ck', 'ck-sense-number'],
 				},
 				children: [senseNumber],
 			});
-			senseCollection.add(snBlock);
+
+			// indented block
+			const indentBlock = new View(locale);
+			indentBlock.setTemplate({
+				tag: 'div',
+				attributes: {
+					class: ['ck', 'ck-sense-indent'],
+				},
+				children: [],
+			});
+			const sensePrefixBlock = new View(locale);
+			sensePrefixBlock.setTemplate({
+				tag: 'div',
+				attributes: {
+					class: ['ck', 'ck-sense-prefix'],
+				},
+				children: [senseNumberBlock, indentBlock],
+			});
+			senseCollection.add(sensePrefixBlock);
 		}
 
-		if (dt.length && dt[0].length && dt[0][0] === 'text') {
-			const definingTextBlock = this.createDefiningTextBlock(
-				dt[0],
-				locale,
-			);
-			senseCollection.add(definingTextBlock);
+		const senseContentRows = this.createCollection();
+
+		dt.forEach((definingText) => {
+			if (definingText[0] === 'text') {
+				// add Defining Text (dt) row
+				const definingTextRow = new View(locale);
+				definingTextRow.setTemplate({
+					tag: 'div',
+					attributes: {
+						class: ['ck', 'ck-sense-content-row'],
+					},
+					children: [
+						this.createDefiningTextBlock(definingText[1], locale),
+					],
+				});
+				senseContentRows.add(definingTextRow);
+			} else if (definingText[0] === 'vis') {
+				// add Verbal Illustration (vis) row
+				const verbalIllustrationRow = new View(locale);
+				verbalIllustrationRow.setTemplate({
+					tag: 'div',
+					attributes: {
+						class: ['ck', 'ck-sense-content-row'],
+					},
+					children: [
+						this.createVerbalIllustrationBlock(
+							definingText[1],
+							locale,
+						),
+					],
+				});
+				senseContentRows.add(verbalIllustrationRow);
+			}
+		});
+
+		if (dividedSense) {
+			const dividedSenseRow = new View(locale);
+			dividedSenseRow.setTemplate({
+				tag: 'div',
+				attributes: {
+					class: ['ck', 'ck-sense-content-row'],
+				},
+				children: [this.createDividedSenseBlock(dividedSense, locale)],
+			});
+			senseContentRows.add(dividedSenseRow);
 		}
 
-		const dtRowBlock = new View(locale);
-		dtRowBlock.setTemplate({
-			tag: 'p',
+		const senseContentContainer = new View(locale);
+		senseContentContainer.setTemplate({
+			tag: 'div',
 			attributes: {
-				class: ['ck', 'ck-dt-row'],
+				class: ['ck', 'ck-sense-content'],
+			},
+			children: senseContentRows,
+		});
+		senseCollection.add(senseContentContainer);
+
+		const senseContainer = new View(locale);
+		senseContainer.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-sense'],
 			},
 			children: senseCollection,
 		});
 
-		return dtRowBlock;
+		return senseContainer;
 	}
 
 	createSenseSequenceBlock(
@@ -245,5 +402,138 @@ export default class SingleMeaningView extends View {
 			children: sceneSequenceCollection,
 		});
 		return senseSequenceBlock;
+	}
+
+	createAttributionBlock(
+		aq: DictionaryTypes.AttributionQuote,
+		locale: Locale,
+	): View {
+		const { auth, source, aqdate, subsource } = aq;
+
+		const attributionStrings: Array<string|View> = [];
+
+		// format quote attribution by what values are defined
+		if (auth) {
+			attributionStrings.push(auth);
+		}
+		if (source) {
+			attributionStrings.push(
+				`${attributionStrings.length ? ', ' : ''}${source}`,
+			);
+		}
+		if (aqdate) {
+			attributionStrings.push(
+				`${attributionStrings.length ? ', ' : ''}${aqdate}`,
+			);
+		}
+		if (subsource) {
+			const { source: innerSource, aqdate: innerAqdate } = subsource;
+
+			if (innerSource) {
+				attributionStrings.push(
+					`${attributionStrings.length ? ', ' : ''}${innerSource}`,
+				);
+			}
+			if (innerAqdate) {
+				attributionStrings.push(
+					`${attributionStrings.length ? ', ' : ''}${innerAqdate}`,
+				);
+			}
+		}
+		if (attributionStrings.length) {
+			// prepend attribution string with an emdash
+			attributionStrings.unshift('—');
+		}
+		const quoteAttributionBlock = new View(locale);
+		quoteAttributionBlock.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-quote-attribution'],
+			},
+			children: attributionStrings,
+		});
+		return quoteAttributionBlock;
+	}
+
+	createSingleQuoteBlock(quote: DictionaryTypes.Quote, locale: Locale): View {
+		const { t, aq } = quote;
+
+		const quoteBlocks = this.createCollection();
+
+		const quoteContentBlock = new View(locale);
+		quoteContentBlock.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-quote-content'],
+			},
+			children: [t],
+		});
+		quoteBlocks.add(quoteContentBlock);
+
+		if (aq) {
+			const attributionBlock = this.createAttributionBlock(aq, locale);
+			quoteBlocks.add(attributionBlock);
+		}
+
+		const quoteContainer = new View(locale);
+		quoteContainer.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-quote'],
+			},
+			children: quoteBlocks,
+		});
+		return quoteContainer;
+	}
+
+	createQuotesBlock(
+		headword: string,
+		quotes: DictionaryTypes.Quote[],
+		locale: Locale,
+	): View {
+		const headwordSpan = new View(locale);
+		headwordSpan.setTemplate({
+			tag: 'span',
+			children: [headword],
+		});
+
+		const headerTitle = new View(locale);
+		headerTitle.setTemplate({
+			tag: 'p',
+			children: ['Examples of ', headwordSpan, ' in a sentence:'],
+		});
+
+		const quotesBlockHeader = new View(locale);
+		quotesBlockHeader.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-quotes-header'],
+			},
+			children: [headerTitle],
+		});
+
+		const quotesCollection = this.createCollection();
+		quotes.forEach((quote) => {
+			quotesCollection.add(this.createSingleQuoteBlock(quote, locale));
+		});
+
+		const quotesBody = new View(locale);
+		quotesBody.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-quotes-body'],
+			},
+			children: quotesCollection,
+		});
+
+		const quotesBlock = new View(locale);
+		quotesBlock.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-quotes-block'],
+			},
+			children: [quotesBlockHeader, quotesBody],
+		});
+		return quotesBlock;
 	}
 }
