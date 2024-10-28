@@ -1,5 +1,7 @@
+import { Locale } from 'ckeditor5';
 import type { Range } from 'ckeditor5/src/engine.js';
 import { DictionaryTypes } from './DictionaryTypes.js';
+import { View } from 'ckeditor5/src/ui.js';
 
 export type Definition = {
 	definition: string;
@@ -74,24 +76,149 @@ export function rangeToText(range: Range | null): string {
 	}, '');
 }
 
-export function getAudioUrlForPronunciation(
-	sound: DictionaryTypes.Sound,
-): string | undefined {
-	const audioFile = sound.audio;
-	let subdirectory: string;
+export function stringToCollection(
+	text: string,
+	locale: Locale,
+): Array<string | View> {
+	const result: Array<string | View> = [];
+	const regex = /(.*?)(\{it\})(.*?)(\{\/it\})/g; // regex to match text around {it}...{/it} tokens
+	let lastIndex = 0;
 
-	// Determine the subdirectory based on the audio file name
-	if (audioFile.startsWith('bix')) {
-		subdirectory = 'bix';
-	} else if (audioFile.startsWith('gg')) {
-		subdirectory = 'gg';
-	} else if (/^[0-9_]/.test(audioFile)) {
-		subdirectory = 'number';
-	} else {
-		subdirectory = audioFile.charAt(0);
+	let match;
+	while ((match = regex.exec(text)) !== null) {
+		const [fullMatch, beforeText, , insideItText] = match;
+
+		// Push any text before the match as a plain string.
+		if (match.index > lastIndex) {
+			result.push(text.slice(lastIndex, match.index));
+		}
+
+		// Push the View for the {it}...{/it} text.
+		const italicView = new View(locale);
+		italicView.setTemplate({
+			tag: 'span',
+			children: [insideItText],
+		});
+		result.push(italicView);
+
+		// Update lastIndex to the end of this match.
+		lastIndex = match.index + fullMatch.length;
 	}
 
-	// Construct the full URL
-	const baseUrl = 'https://media.merriam-webster.com/audio/prons/en/us/wav';
-	return `${baseUrl}/${subdirectory}/${audioFile}.wav`;
+	// Push any remaining text after the last match.
+	if (lastIndex < text.length) {
+		result.push(text.slice(lastIndex));
+	}
+
+	return result;
+}
+
+export function stringToViewCollection(
+	text: string,
+	locale: Locale,
+): Array<string | View> {
+	const result: Array<string | View> = [];
+
+	// Updated regex to handle paired tokens, self-contained tokens, and the {a_link|text} token
+	const regex =
+		/(.*?)(\{(it|b|inf|sc|sup)\}(.*?)\{\/\3\}|\{(bc|ldquo|rdquo)\}|\{a_link\|(.*?)\})(.*?)/g;
+	let lastIndex = 0;
+	let match;
+
+	while ((match = regex.exec(text)) !== null) {
+		const [
+			fullMatch,
+			beforeText,
+			pairedToken,
+			pairedTokenType,
+			insideText,
+			selfContainedTokenType,
+			linkText,
+		] = match;
+
+		// Push any text before the token as a plain string.
+		if (match.index > lastIndex) {
+			result.push(text.slice(lastIndex, match.index));
+		}
+
+		// Process any text before the token
+		if (beforeText) result.push(beforeText);
+
+		// Handle paired tokens with opening and closing tags.
+		if (pairedToken) {
+			if (pairedTokenType === 'it') {
+				const italicView = new View(locale);
+				italicView.setTemplate({
+					tag: 'span',
+					attributes: { style: 'font-style: italic;' },
+					children: [insideText],
+				});
+				result.push(italicView);
+			} else if (pairedTokenType === 'b') {
+				const boldView = new View(locale);
+				boldView.setTemplate({
+					tag: 'span',
+					attributes: { style: 'font-weight: bold;' },
+					children: [insideText],
+				});
+				result.push(boldView);
+			} else if (pairedTokenType === 'inf') {
+				const subscriptView = new View(locale);
+				subscriptView.setTemplate({
+					tag: 'sub',
+					children: [insideText],
+				});
+				result.push(subscriptView);
+			} else if (pairedTokenType === 'sup') {
+				const superscriptView = new View(locale);
+				superscriptView.setTemplate({
+					tag: 'sup',
+					children: [insideText],
+				});
+				result.push(superscriptView);
+			} else if (pairedTokenType === 'sc') {
+				const smallCapsView = new View(locale);
+				smallCapsView.setTemplate({
+					tag: 'span',
+					attributes: { style: 'font-variant: small-caps;' },
+					children: [insideText],
+				});
+				result.push(smallCapsView);
+			}
+		}
+
+		// Handle self-contained tokens
+		if (selfContainedTokenType) {
+			if (selfContainedTokenType === 'bc') {
+				const boldColonView = new View(locale);
+				boldColonView.setTemplate({
+					tag: 'span',
+					attributes: { style: 'font-weight: bold;' },
+					children: [': '],
+				});
+				result.push(boldColonView);
+			} else if (selfContainedTokenType === 'ldquo') {
+				result.push('“');
+			} else if (selfContainedTokenType === 'rdquo') {
+				result.push('”');
+			}
+		}
+
+		// Handle the {a_link|text} token, which creates an <a> link.
+		if (linkText) {
+			const linkView = new View(locale);
+			linkView.setTemplate({ tag: 'a', children: [linkText] });
+			result.push(linkView);
+		}
+
+		// Update lastIndex to the end of this match.
+		lastIndex = match.index + fullMatch.length;
+	}
+
+	// Push any remaining text after the last token as a plain string.
+	if (lastIndex < text.length) {
+		result.push(text.slice(lastIndex));
+	}
+
+	return result;
 }
