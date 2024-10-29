@@ -7,9 +7,7 @@ export default class DefiningTextBlock extends View {
 	constructor(locale: Locale, data: string) {
 		super(locale);
 
-		console.log(`Defining Text: `, data);
 		const definingTextCollection = stringToViewCollection(data, locale);
-		console.log('collection: ', definingTextCollection);
 		this.setTemplate({
 			tag: 'p',
 			attributes: {

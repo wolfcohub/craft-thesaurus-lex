@@ -52,6 +52,15 @@ export type MerriamWebsterResult = {
 	label: string; // (noun, verb, adjective, etc)
 	definitions: string[];
 };
+type StylingKey =
+	| 'normal'
+	| 'sub'
+	| 'sup'
+	| 'smallCaps'
+	| 'italic'
+	| 'bold'
+	| 'boldItalic'
+	| 'boldSmallCaps';
 
 export const LOOKUP = 'lookup';
 
@@ -76,149 +85,164 @@ export function rangeToText(range: Range | null): string {
 	}, '');
 }
 
-export function stringToCollection(
-	text: string,
-	locale: Locale,
-): Array<string | View> {
-	const result: Array<string | View> = [];
-	const regex = /(.*?)(\{it\})(.*?)(\{\/it\})/g; // regex to match text around {it}...{/it} tokens
-	let lastIndex = 0;
+function stripNestedTokens(text: string): string {
+	// Define a regular expression to match {dx}, {dx_def}, {dx_ety}, and {ma} opening and closing tags.
+	const nestedTokenRegex =
+		/\{(dx|dx_def|dx_ety|ma)\}|{\/(dx|dx_def|dx_ety|ma)}/g;
 
-	let match;
-	while ((match = regex.exec(text)) !== null) {
-		const [fullMatch, beforeText, , insideItText] = match;
-
-		// Push any text before the match as a plain string.
-		if (match.index > lastIndex) {
-			result.push(text.slice(lastIndex, match.index));
-		}
-
-		// Push the View for the {it}...{/it} text.
-		const italicView = new View(locale);
-		italicView.setTemplate({
-			tag: 'span',
-			children: [insideItText],
-		});
-		result.push(italicView);
-
-		// Update lastIndex to the end of this match.
-		lastIndex = match.index + fullMatch.length;
-	}
-
-	// Push any remaining text after the last match.
-	if (lastIndex < text.length) {
-		result.push(text.slice(lastIndex));
-	}
-
-	return result;
+	// Replace all instances of the matched tokens with an empty string.
+	return text.replace(nestedTokenRegex, '');
 }
+
+type TokenHandler = (matchGroups: string[], locale: Locale) => string | View;
+
+const tokenHandlers: Record<string, TokenHandler> = {
+	it: (groups, locale) => createStyledView('italic', groups[0], locale),
+	b: (groups, locale) => createStyledView('bold', groups[0], locale),
+	inf: (groups, locale) => createStyledView('sub', groups[0], locale),
+	sup: (groups, locale) => createStyledView('sup', groups[0], locale),
+	sc: (groups, locale) => createStyledView('smallCaps', groups[0], locale),
+	gloss: (groups, locale) =>
+		createStyledView('normal', `[${groups[0]}]`, locale),
+	parahw: (groups, locale) =>
+		createStyledView('boldSmallCaps', groups[0], locale),
+	phrase: (groups, locale) =>
+		createStyledView('boldItalic', groups[0], locale),
+	qword: (groups, locale) => createStyledView('italic', groups[0], locale),
+	wi: (groups, locale) => createStyledView('italic', groups[0], locale),
+	bc: () => ': ',
+	ldquo: () => '“',
+	rdquo: () => '”',
+	a_link: (groups, locale) => createLinkView(groups[3], groups[3], locale),
+	d_link: (groups, locale) => {
+		const linkText = groups[4] || groups[3];
+		const view = createLinkView(linkText, linkText, locale);
+		return view;
+	},
+	i_link: (groups, locale) => {
+		const linkText = groups[4] || groups[3];
+		const view = createLinkView(linkText, linkText, locale);
+		return view;
+	},
+	et_link: (groups, locale) => {
+		const linkText = groups[4] || groups[3];
+		const view = createLinkView(linkText, linkText, locale);
+		return view;
+	},
+	sx: (groups, locale) =>
+		createLinkView(groups[3], groups[3], locale, undefined, groups[5]),
+	mat: (groups, locale) => {
+		const linkText = groups[4] || groups[3];
+		const view = createLinkView(linkText, linkText, locale);
+		return view;
+	},
+	dxt: (groups, locale) => {
+		const view = createLinkView(
+			groups[3],
+			groups[3],
+			locale,
+			undefined,
+			groups[5],
+		);
+		return view;
+	},
+};
 
 export function stringToViewCollection(
 	text: string,
 	locale: Locale,
 ): Array<string | View> {
-	const result: Array<string | View> = [];
+	const collection: Array<string | View> = [];
+	const textWithoutNestedTokens = stripNestedTokens(text);
+	parseAndBuildCollection(textWithoutNestedTokens, collection, locale);
+	return collection;
+}
 
-	// Updated regex to handle paired tokens, self-contained tokens, and the {a_link|text} token
-	const regex =
-		/(.*?)(\{(it|b|inf|sc|sup)\}(.*?)\{\/\3\}|\{(bc|ldquo|rdquo)\}|\{a_link\|(.*?)\})(.*?)/g;
+function parseAndBuildCollection(
+	text: string,
+	collection: Array<string | View>,
+	locale: Locale,
+) {
+	const tokenRegex =
+		/\{(it|b|inf|sc|sup|gloss|parahw|phrase|qword|wi)\}(.*?)\{\/\1\}|\{(bc|ldquo|rdquo)\}|\{(a_link|d_link|i_link|et_link|sx|mat|dxt)\|?([^|]*)\|?([^|]*)\|?([^|]*)\}/g;
 	let lastIndex = 0;
 	let match;
 
-	while ((match = regex.exec(text)) !== null) {
-		const [
-			fullMatch,
-			beforeText,
-			pairedToken,
-			pairedTokenType,
-			insideText,
-			selfContainedTokenType,
-			linkText,
-		] = match;
-
-		// Push any text before the token as a plain string.
+	while ((match = tokenRegex.exec(text)) !== null) {
+		// Add any preceding plain text to the collection
 		if (match.index > lastIndex) {
-			result.push(text.slice(lastIndex, match.index));
+			collection.push(text.slice(lastIndex, match.index));
 		}
 
-		// Process any text before the token
-		if (beforeText) result.push(beforeText);
+		// Determine the token type and find the appropriate handler
+		const tokenType = match[1] || match[4] || match[3] || match[5];
 
-		// Handle paired tokens with opening and closing tags.
-		if (pairedToken) {
-			if (pairedTokenType === 'it') {
-				const italicView = new View(locale);
-				italicView.setTemplate({
-					tag: 'span',
-					attributes: { style: 'font-style: italic;' },
-					children: [insideText],
-				});
-				result.push(italicView);
-			} else if (pairedTokenType === 'b') {
-				const boldView = new View(locale);
-				boldView.setTemplate({
-					tag: 'span',
-					attributes: { style: 'font-weight: bold;' },
-					children: [insideText],
-				});
-				result.push(boldView);
-			} else if (pairedTokenType === 'inf') {
-				const subscriptView = new View(locale);
-				subscriptView.setTemplate({
-					tag: 'sub',
-					children: [insideText],
-				});
-				result.push(subscriptView);
-			} else if (pairedTokenType === 'sup') {
-				const superscriptView = new View(locale);
-				superscriptView.setTemplate({
-					tag: 'sup',
-					children: [insideText],
-				});
-				result.push(superscriptView);
-			} else if (pairedTokenType === 'sc') {
-				const smallCapsView = new View(locale);
-				smallCapsView.setTemplate({
-					tag: 'span',
-					attributes: { style: 'font-variant: small-caps;' },
-					children: [insideText],
-				});
-				result.push(smallCapsView);
+		if (tokenType) {
+			const handler = tokenHandlers[tokenType];
+
+			if (handler) {
+				// Slice to extract the relevant match groups and pass to the handler
+				const groups = match.slice(2);
+				const element = handler(groups, locale);
+				collection.push(element);
 			}
 		}
-
-		// Handle self-contained tokens
-		if (selfContainedTokenType) {
-			if (selfContainedTokenType === 'bc') {
-				const boldColonView = new View(locale);
-				boldColonView.setTemplate({
-					tag: 'span',
-					attributes: { style: 'font-weight: bold;' },
-					children: [': '],
-				});
-				result.push(boldColonView);
-			} else if (selfContainedTokenType === 'ldquo') {
-				result.push('“');
-			} else if (selfContainedTokenType === 'rdquo') {
-				result.push('”');
-			}
-		}
-
-		// Handle the {a_link|text} token, which creates an <a> link.
-		if (linkText) {
-			const linkView = new View(locale);
-			linkView.setTemplate({ tag: 'a', children: [linkText] });
-			result.push(linkView);
-		}
-
-		// Update lastIndex to the end of this match.
-		lastIndex = match.index + fullMatch.length;
+		// Update lastIndex to the end of the current match
+		lastIndex = match.index + match[0].length;
 	}
 
-	// Push any remaining text after the last token as a plain string.
+	// Add any remaining plain text after the last match
 	if (lastIndex < text.length) {
-		result.push(text.slice(lastIndex));
+		collection.push(text.slice(lastIndex));
 	}
+}
 
-	return result;
+function createStyledView(
+	style: StylingKey,
+	content: string,
+	locale: Locale,
+): View {
+	const view = new View(locale);
+	const styles = {
+		normal: '',
+		italic: 'font-style: italic;',
+		boldItalic: 'font-style: italic; font-weight: bold;',
+		boldSmallCaps: 'font-variant: small-caps; font-weight: bold;',
+		bold: 'font-weight: bold;',
+		sub: 'sub',
+		sup: 'sup',
+		smallCaps: 'font-variant: small-caps;',
+	};
+	view.setTemplate({
+		tag: style === 'sub' || style === 'sup' ? style : 'span',
+		attributes:
+			style !== 'sub' && style !== 'sup'
+				? { style: styles[style] }
+				: undefined,
+		children: [content],
+	});
+	return view;
+}
+
+function createLinkView(
+	linkText: string,
+	href: string | undefined,
+	locale: Locale,
+	textStyle?: string,
+	extraText?: string,
+): View {
+	const linkView = new View(locale);
+	const text = extraText ? `${linkText} ${extraText}` : linkText;
+
+	linkView.setTemplate({
+		tag: 'a',
+		attributes: {
+			href: href || linkText,
+			...(textStyle && {
+				style: textStyle === 'italic' ? 'font-style: italic;' : '',
+			}),
+		},
+		children: [text],
+	});
+	return linkView;
 }
