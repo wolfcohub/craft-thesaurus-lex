@@ -23,6 +23,11 @@ export default class ResultTabView extends View {
 		const resultBlocks = this.createCollection();
 
 		lookupResults.forEach((result, index) => {
+			if (!result.def) {
+				// @todo: fix SingleMeaningView to handle undefined `def`
+				// then remove this return
+				return;
+			}
 			if (index > 0) {
 				// insert separators between tabs
 				tabBlocks.add(new ToolbarSeparatorView());

@@ -10,7 +10,14 @@ export default class SingleMeaningView extends View {
 	constructor(locale: Locale, result: DictionaryTypes.DictionaryResult) {
 		super(locale);
 
-		const { def, hwi, shortdef: shortDefinitions, quotes, meta } = result;
+		const {
+			def,
+			hwi,
+			shortdef: shortDefinitions,
+			quotes,
+			meta,
+			cxs,
+		} = result;
 		const { sseq: senseSequences } = def[0];
 		const { prs: pronunciations } = hwi;
 		const { id: headword } = meta;

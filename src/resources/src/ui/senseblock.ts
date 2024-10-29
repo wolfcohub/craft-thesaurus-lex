@@ -44,33 +44,40 @@ export default class SenseBlock extends View {
 
 		const senseContentRows = this.createCollection();
 
-		dt.forEach((definingText) => {
-			if (definingText[0] === 'text') {
-				// add Defining Text (dt) row
-				const definingTextRow = new View(locale);
-				definingTextRow.setTemplate({
-					tag: 'div',
-					attributes: {
-						class: ['ck', 'ck-sense-content-row'],
-					},
-					children: [new DefiningTextBlock(locale, definingText[1])],
-				});
-				senseContentRows.add(definingTextRow);
-			} else if (definingText[0] === 'vis') {
-				// add Verbal Illustration (vis) row
-				const verbalIllustrationRow = new View(locale);
-				verbalIllustrationRow.setTemplate({
-					tag: 'div',
-					attributes: {
-						class: ['ck', 'ck-sense-content-row'],
-					},
-					children: [
-						new VerbalIllustrationBlock(locale, definingText[1]),
-					],
-				});
-				senseContentRows.add(verbalIllustrationRow);
-			}
-		});
+		if (dt) {
+			dt.forEach((definingText) => {
+				if (definingText[0] === 'text') {
+					// add Defining Text (dt) row
+					const definingTextRow = new View(locale);
+					definingTextRow.setTemplate({
+						tag: 'div',
+						attributes: {
+							class: ['ck', 'ck-sense-content-row'],
+						},
+						children: [
+							new DefiningTextBlock(locale, definingText[1]),
+						],
+					});
+					senseContentRows.add(definingTextRow);
+				} else if (definingText[0] === 'vis') {
+					// add Verbal Illustration (vis) row
+					const verbalIllustrationRow = new View(locale);
+					verbalIllustrationRow.setTemplate({
+						tag: 'div',
+						attributes: {
+							class: ['ck', 'ck-sense-content-row'],
+						},
+						children: [
+							new VerbalIllustrationBlock(
+								locale,
+								definingText[1],
+							),
+						],
+					});
+					senseContentRows.add(verbalIllustrationRow);
+				}
+			});
+		}
 
 		if (dividedSense) {
 			const dividedSenseRow = new View(locale);
