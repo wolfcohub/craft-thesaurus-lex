@@ -57,7 +57,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.6",
     "prettier": "^3.3.3",
-    "stylelint": "^13.13.1",
+    "stylelint": "^16.10.0",
     "stylelint-config-ckeditor5": ">=8.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
@@ -69,19 +69,18 @@
     "build:dist": "node ./scripts/build-dist.mjs",
     "ts:build": "tsc -p ./tsconfig.release.json",
     "ts:clear": "npx rimraf \"src/**/*.@(js|d.ts)\"",
-    "dll:build": "ckeditor5-package-tools dll:build",
-    "dll:watch": "ckeditor5-package-tools dll:build --watch",
+    "dll:build": "npx ckeditor5-package-tools dll:build",
+    "dll:watch": "npx ckeditor5-package-tools dll:build --watch",
     "dll:serve": "http-server ./ -o sample/dll.html",
     "lint": "eslint \"**/*.{js,ts}\" --quiet",
-    "start": "ckeditor5-package-tools start",
+    "start": "npx ckeditor5-package-tools start",
     "stylelint": "stylelint --quiet --allow-empty-input 'theme/**/*.css'",
-    "test": "ckeditor5-package-tools test",
-    "prepare": "npm run dll:build && npm run build:dist",
+    "test": "npx ckeditor5-package-tools test",
     "prepublishOnly": "npm run ts:build && ckeditor5-package-tools export-package-as-javascript",
     "postpublish": "npm run ts:clear && ckeditor5-package-tools export-package-as-typescript",
-    "translations:collect": "ckeditor5-package-tools translations:collect",
-    "translations:download": "ckeditor5-package-tools translations:download",
-    "translations:upload": "ckeditor5-package-tools translations:upload"
+    "translations:collect": "npx ckeditor5-package-tools translations:collect",
+    "translations:download": "npx ckeditor5-package-tools translations:download",
+    "translations:upload": "npx ckeditor5-package-tools translations:upload"
   },
   "lint-staged": {
     "**/*.{js,ts}": [
