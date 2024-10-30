@@ -1,0 +1,13 @@
+{
+  "name": "craft-thesaurus-lex-plugin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dll:build": "npm --prefix src/resources run dll:build",
+    "dll:watch": "npm --prefix src/resources run dll:watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

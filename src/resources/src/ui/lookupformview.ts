@@ -5,15 +5,11 @@ import {
 	createLabeledInputText,
 	submitHandler,
 	InputView,
-	SplitButtonView,
-	ToolbarSeparatorView,
 	SpinnerView,
 	ViewCollection,
 } from 'ckeditor5/src/ui.js';
 import { type Locale } from 'ckeditor5/src/utils.js';
-import { LOOKUP, LookupResult, MerriamWebsterResult } from '../utils.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
-import LookupState from '../lookupstate.js';
 import DictionaryThesaurusSelectorView from './dictionarythesaurusselectorview.js';
 
 export default class LookupFormView extends View {
@@ -152,54 +148,5 @@ export default class LookupFormView extends View {
 			children: [this.loadingView, this.input, actionDiv],
 		});
 		return containerView;
-	}
-
-	createResultView(locale: Locale, result: LookupResult): View {
-		const blocks = this.createCollection();
-
-		const wordHeading = new View(locale);
-		wordHeading.setTemplate({
-			tag: 'div',
-			attributes: {
-				class: ['ck', 'ck-word'],
-			},
-			children: result !== null ? [result.word] : [],
-		});
-		const { meanings } = result;
-		const { definitions } = meanings[0];
-		const definitionView = new View(locale);
-		const defBlocks = this.createCollection();
-		definitions.forEach((def, index) => {
-			const defBlock = new View(locale);
-			defBlock.setTemplate({
-				tag: 'li',
-				attributes: {
-					class: ['ck', 'ck-definition'],
-				},
-				children: [`${index + 1}. ${def.definition}`],
-			});
-			defBlocks.add(defBlock);
-		});
-
-		definitionView.setTemplate({
-			tag: 'ul',
-			attributes: {
-				class: ['ck', 'ck-definitions'],
-			},
-			children: defBlocks,
-		});
-
-		blocks.addMany([wordHeading, definitionView]);
-
-		const resultView = new View();
-		resultView.setTemplate({
-			tag: 'div',
-			attributes: {
-				class: ['ck', 'ck-result-form'],
-				tabindex: -1,
-			},
-			children: blocks,
-		});
-		return resultView;
 	}
 }
