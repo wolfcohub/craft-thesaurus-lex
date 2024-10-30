@@ -1,6 +1,4 @@
-import { ObservableMixin, Collection } from 'ckeditor5/src/utils.js';
-import type { Model } from 'ckeditor5/src/engine.js';
-import { LookupResult, MerriamWebsterResult } from './utils.js';
+import { ObservableMixin } from 'ckeditor5/src/utils.js';
 import { DictionaryTypes } from './DictionaryTypes.js';
 
 export default class LookupState extends ObservableMixin() {

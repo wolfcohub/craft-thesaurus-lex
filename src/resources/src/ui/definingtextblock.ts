@@ -1,6 +1,5 @@
 import { Locale } from 'ckeditor5';
 import { View } from 'ckeditor5/src/ui.js';
-import { DictionaryTypes } from '../DictionaryTypes.js';
 import { stringToViewCollection } from '../utils.js';
 
 export default class DefiningTextBlock extends View {

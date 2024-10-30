@@ -1,57 +1,7 @@
 import { Locale } from 'ckeditor5';
 import type { Range } from 'ckeditor5/src/engine.js';
-import { DictionaryTypes } from './DictionaryTypes.js';
 import { View } from 'ckeditor5/src/ui.js';
 
-export type Definition = {
-	definition: string;
-	synonyms: string[];
-	antonyms: string[];
-};
-export type Meaning = {
-	partOfSpeech: string;
-	definitions: Definition[];
-	synonyms: string[];
-	antonyms: string[];
-};
-export type Phonetic = {
-	text?: string;
-	audio?: string;
-	sourceUrl?: string;
-};
-export type LookupResult = {
-	word: string;
-	phonetics: Phonetic[];
-	meanings: Meaning[];
-};
-// vis
-export type VerbalIllustration = {
-	text: string;
-	author: string;
-};
-// dt
-export type DefiningText = {
-	text: string;
-};
-// bnw
-export type BiographicalNameWrap = {
-	pname?: string; // display in normal font
-	sname?: string; // display in normal font
-	altname?: string; // display in italics
-};
-// sseq
-export type SenseSequence = {};
-export type Pronunciation = {
-	preText: string;
-	text: string;
-	postText: string;
-};
-export type MerriamWebsterResult = {
-	word: string;
-	pronunciations: Pronunciation[];
-	label: string; // (noun, verb, adjective, etc)
-	definitions: string[];
-};
 type StylingKey =
 	| 'normal'
 	| 'sub'
@@ -64,6 +14,7 @@ type StylingKey =
 
 export const LOOKUP = 'lookup';
 
+// return boolean `true` if input string consists of a single unbroken word, `false` otherwise
 export function isSingleWord(input: string): boolean {
 	// Trim leading and trailing whitespace
 	const trimmedInput = input.trim();
@@ -72,6 +23,7 @@ export function isSingleWord(input: string): boolean {
 	return /^[^\s]+$/.test(trimmedInput);
 }
 
+// return string representation of a selected Range from CKEditor field
 export function rangeToText(range: Range | null): string {
 	if (!range) {
 		return '';
@@ -85,8 +37,9 @@ export function rangeToText(range: Range | null): string {
 	}, '');
 }
 
+// strip out tokens from Dictionary API response we don't use
+// (dx, dx_def, dx_ety, ma)
 function stripNestedTokens(text: string): string {
-	// Define a regular expression to match {dx}, {dx_def}, {dx_ety}, and {ma} opening and closing tags.
 	const nestedTokenRegex =
 		/\{(dx|dx_def|dx_ety|ma)\}|{\/(dx|dx_def|dx_ety|ma)}/g;
 
@@ -96,6 +49,8 @@ function stripNestedTokens(text: string): string {
 
 type TokenHandler = (matchGroups: string[], locale: Locale) => string | View;
 
+// function map for converting the various tokens to displayable elements in CKEditor
+// per Merriam-Webster guidlines (https://dictionaryapi.com/products/json)
 const tokenHandlers: Record<string, TokenHandler> = {
 	it: (groups, locale) => createStyledView('italic', groups[0], locale),
 	b: (groups, locale) => createStyledView('bold', groups[0], locale),
@@ -148,6 +103,8 @@ const tokenHandlers: Record<string, TokenHandler> = {
 	},
 };
 
+// convert text block from Dictionary API to a combined Array<string | View>
+// which can be passed into the `children` prop of `View.setTemplate`
 export function stringToViewCollection(
 	text: string,
 	locale: Locale,
@@ -197,6 +154,7 @@ function parseAndBuildCollection(
 	}
 }
 
+// return styled CKEditor View per embedded API tokens
 function createStyledView(
 	style: StylingKey,
 	content: string,
@@ -224,6 +182,9 @@ function createStyledView(
 	return view;
 }
 
+// create CKEditor View for link to another word
+// @todo make this a Button whose job is to search for the word in `href`
+// (these links do nothing as of now)
 function createLinkView(
 	linkText: string,
 	href: string | undefined,
