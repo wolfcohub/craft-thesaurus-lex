@@ -63,18 +63,18 @@ export namespace DictionaryTypes {
 	// 2.7 Labels
 	// Full export type for the labels section
 	export type Labels = {
-		fl: FunctionalLabel; // Functional label (required)
+		fl: string; // Functional label (required)
 		lbs?: string[]; // General labels (optional)
-		sls?: SubjectStatusLabels; // Subject/status labels (optional)
+		sls?: string[]; // Subject/status labels (optional)
 		psl?: ParenthesizedSubjectStatusLabel; // Parenthesized subject/status label (optional)
 		spl?: SenseSpecificInflectionPluralLabel; // Sense-specific inflection plural label (optional)
 		sgram?: SenseSpecificGrammaticalLabel; // Sense-specific grammatical label (optional)
 	};
 	// 2.7.1 Functional Label: fl
 	// Type for the functional label (fl)
-	export type FunctionalLabel = {
-		fl: string; // Part of speech or functional label (required)
-	};
+	// export type FunctionalLabel = {
+	// 	fl: string; // Part of speech or functional label (required)
+	// };
 	// 2.7.3 Subject/Status Labels: sls
 	// Type for subject/status labels (sls)
 	export type SubjectStatusLabels = {
@@ -125,14 +125,25 @@ export namespace DictionaryTypes {
 	export type DefiningText = ['text', string];
 	export type EtymologyContent = ['text', string];
 	export type EtymologySupplementalNote = ['et_snote', Array<['t', string]>];
+	export type Pseq = [
+		'pseq',
+		Array<{
+			sense: {
+				sn: string;
+				dt: Array<DefiningText | VerbalIllustration>;
+			};
+		}>,
+	];
 
 	export type Sense = [
-		'sense',
+		'sense' | 'pseq',
 		{
 			sn?: string;
-			dt: Array<DefiningText | VerbalIllustration>;
-			et: Array<EtymologyContent | EtymologySupplementalNote>;
+			dt?: Array<DefiningText | VerbalIllustration>;
+			et?: Array<EtymologyContent | EtymologySupplementalNote>;
 			sdsense?: DividedSense;
+			sls?: string[];
+			pseq?: Pseq;
 		},
 	];
 
@@ -162,6 +173,7 @@ export namespace DictionaryTypes {
 	};
 	export type Definition = {
 		sseq: SenseSequence[];
+		vd?: string;
 	};
 	// 2.10.2 Verb Divider: vd
 	export type VerbDivider = 'transitive' | 'intransitive';
@@ -286,15 +298,15 @@ export namespace DictionaryTypes {
 	};
 
 	export type DictionaryResult = {
-		def: Array<{ sseq: Array<SenseSequence> }>;
+		def: Array<Definition>;
 		meta: Meta;
 		shortdef: string[];
 		quotes?: Quote[];
 		hom?: Homograph;
 		hwi: HeadwordInformation;
-		awhs?: AlternateHeadword[];
+		ahws?: AlternateHeadword[];
 		vrs?: Variant[];
-		fl: FunctionalLabel;
+		fl: string;
 		lbs?: string[];
 		sls?: string[];
 		ins?: Inflection[];

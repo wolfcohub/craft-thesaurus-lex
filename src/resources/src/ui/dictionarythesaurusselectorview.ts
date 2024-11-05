@@ -9,7 +9,7 @@ export default class DictionaryThesaurusSelectorView extends View {
 
 	constructor(
 		locale: Locale,
-		lookupResults: DictionaryTypes.DictionaryResult[],
+		lookupResults: DictionaryTypes.DictionaryResult[]
 	) {
 		super(locale);
 		const t = locale.t;
@@ -18,6 +18,7 @@ export default class DictionaryThesaurusSelectorView extends View {
 			throw new Error('No results to display');
 		}
 		const word = lookupResults[0].hwi.hw;
+		const functionalLabel = lookupResults[0].fl;
 
 		this.set('selectedTab', 'dictionary');
 
@@ -32,7 +33,7 @@ export default class DictionaryThesaurusSelectorView extends View {
 			.to(this, 'selectedTab', (value) =>
 				value === 'dictionary'
 					? 'ck ck-tab ck-dictionary-select ck-selected'
-					: 'ck ck-tab ck-dictionary-select',
+					: 'ck ck-tab ck-dictionary-select'
 			);
 		this.listenTo(dictionarySelectButton, 'execute', () => {
 			this.set('selectedTab', 'dictionary');
@@ -49,7 +50,7 @@ export default class DictionaryThesaurusSelectorView extends View {
 			.to(this, 'selectedTab', (value) =>
 				value === 'thesaurus'
 					? 'ck ck-tab ck-thesaurus-select ck-selected'
-					: 'ck ck-tab ck-thesaurus-select',
+					: 'ck ck-tab ck-thesaurus-select'
 			);
 		this.listenTo(thesaurusSelectButton, 'execute', () => {
 			this.set('selectedTab', 'thesaurus');
@@ -67,14 +68,34 @@ export default class DictionaryThesaurusSelectorView extends View {
 				thesaurusSelectButton,
 			],
 		});
-
+		// Create word heading view
 		const wordHeading = new View(locale);
 		wordHeading.setTemplate({
-			tag: 'div',
+			tag: 'span',
 			attributes: {
 				class: ['ck', 'ck-word'],
 			},
 			children: [word],
+		});
+
+		// Create functional label view
+		const functionalLabelView = new View(locale);
+		functionalLabelView.setTemplate({
+			tag: 'span',
+			attributes: {
+				class: ['ck', 'ck-functional-label'],
+			},
+			children: [functionalLabel],
+		});
+
+		// Container for wordHeading and functionalLabelView
+		const wordContainer = new View(locale);
+		wordContainer.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-word-container'],
+			},
+			children: [wordHeading, functionalLabelView],
 		});
 
 		const dictionaryContainer = new View(locale);
@@ -91,11 +112,11 @@ export default class DictionaryThesaurusSelectorView extends View {
 					bind.if(
 						'selectedTab',
 						'ck-hidden',
-						(value) => value !== 'dictionary',
+						(value) => value !== 'dictionary'
 					),
 				],
 			},
-			children: [wordHeading, dictionaryContent],
+			children: [wordContainer, dictionaryContent],
 		});
 
 		const thesaurusContainer = new View(locale);
@@ -104,11 +125,7 @@ export default class DictionaryThesaurusSelectorView extends View {
 			attributes: {
 				class: [
 					'ck',
-					bind.if(
-						'selectedTab',
-						'ck-hidden',
-						(value) => value !== 'thesaurus',
-					),
+					bind.if('selectedTab', 'ck-hidden', (value) => value !== 'thesaurus'),
 				],
 			},
 			children: ['no content yet'],

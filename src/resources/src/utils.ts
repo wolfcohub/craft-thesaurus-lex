@@ -61,8 +61,7 @@ const tokenHandlers: Record<string, TokenHandler> = {
 		createStyledView('normal', `[${groups[0]}]`, locale),
 	parahw: (groups, locale) =>
 		createStyledView('boldSmallCaps', groups[0], locale),
-	phrase: (groups, locale) =>
-		createStyledView('boldItalic', groups[0], locale),
+	phrase: (groups, locale) => createStyledView('boldItalic', groups[0], locale),
 	qword: (groups, locale) => createStyledView('italic', groups[0], locale),
 	wi: (groups, locale) => createStyledView('italic', groups[0], locale),
 	bc: () => ': ',
@@ -97,7 +96,7 @@ const tokenHandlers: Record<string, TokenHandler> = {
 			groups[3],
 			locale,
 			undefined,
-			groups[5],
+			groups[5]
 		);
 		return view;
 	},
@@ -107,7 +106,7 @@ const tokenHandlers: Record<string, TokenHandler> = {
 // which can be passed into the `children` prop of `View.setTemplate`
 export function stringToViewCollection(
 	text: string,
-	locale: Locale,
+	locale: Locale
 ): Array<string | View> {
 	const collection: Array<string | View> = [];
 	const textWithoutNestedTokens = stripNestedTokens(text);
@@ -118,7 +117,7 @@ export function stringToViewCollection(
 function parseAndBuildCollection(
 	text: string,
 	collection: Array<string | View>,
-	locale: Locale,
+	locale: Locale
 ) {
 	const tokenRegex =
 		/\{(it|b|inf|sc|sup|gloss|parahw|phrase|qword|wi)\}(.*?)\{\/\1\}|\{(bc|ldquo|rdquo)\}|\{(a_link|d_link|i_link|et_link|sx|mat|dxt)\|?([^|]*)\|?([^|]*)\|?([^|]*)\}/g;
@@ -158,7 +157,7 @@ function parseAndBuildCollection(
 function createStyledView(
 	style: StylingKey,
 	content: string,
-	locale: Locale,
+	locale: Locale
 ): View {
 	const view = new View(locale);
 	const styles = {
@@ -174,9 +173,7 @@ function createStyledView(
 	view.setTemplate({
 		tag: style === 'sub' || style === 'sup' ? style : 'span',
 		attributes:
-			style !== 'sub' && style !== 'sup'
-				? { style: styles[style] }
-				: undefined,
+			style !== 'sub' && style !== 'sup' ? { style: styles[style] } : undefined,
 		children: [content],
 	});
 	return view;
@@ -190,7 +187,7 @@ function createLinkView(
 	href: string | undefined,
 	locale: Locale,
 	textStyle?: string,
-	extraText?: string,
+	extraText?: string
 ): View {
 	const linkView = new View(locale);
 	const text = extraText ? `${linkText} ${extraText}` : linkText;
