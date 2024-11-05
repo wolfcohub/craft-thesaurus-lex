@@ -6,7 +6,7 @@ import { stringToViewCollection } from '../utils.js';
 export default class VerbalIllustrationBlock extends View {
 	constructor(
 		locale: Locale,
-		data: DictionaryTypes.VerbalIllustrationContent[],
+		data: DictionaryTypes.VerbalIllustrationContent[]
 	) {
 		super(locale);
 
@@ -22,6 +22,17 @@ export default class VerbalIllustrationBlock extends View {
 				children: stringToViewCollection(t, locale),
 			});
 			visCollection.add(visBlock);
+			if (aq && aq.auth) {
+				const attributionBlock = new View(locale);
+				attributionBlock.setTemplate({
+					tag: 'div',
+					attributes: {
+						class: ['ck', 'ck-quote-attribution'],
+					},
+					children: [`- ${aq.auth}`], // Add the author in an attribution format
+				});
+				visCollection.add(attributionBlock);
+			}
 		});
 
 		this.setTemplate({

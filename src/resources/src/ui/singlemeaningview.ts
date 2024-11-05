@@ -10,15 +10,8 @@ export default class SingleMeaningView extends View {
 	constructor(locale: Locale, result: DictionaryTypes.DictionaryResult) {
 		super(locale);
 
-		const {
-			def,
-			hwi,
-			shortdef: shortDefinitions,
-			quotes,
-			meta,
-			cxs,
-		} = result;
-		const { sseq: senseSequences } = def[0];
+		const { def, hwi, shortdef: shortDefinitions, quotes, meta, cxs } = result;
+		const { sseq: senseSequences, vd: verbDivider } = def[0];
 		const { prs: pronunciations } = hwi;
 		const { id: headword } = meta;
 
@@ -27,14 +20,16 @@ export default class SingleMeaningView extends View {
 		if (pronunciations) {
 			topLevelBlocks.add(new PronunciationsBlock(locale, pronunciations));
 		}
-
+		if (verbDivider) {
+			topLevelBlocks.add(this.createVerbDividerBlock(locale, verbDivider));
+		}
 		const senseSequenceBlockCollection = this.createCollection();
 
 		if (senseSequences.length) {
 			senseSequences.forEach((senseSequence, index) => {
 				const senseSequenceBlock = this.createSenseSequenceBlock(
 					senseSequence,
-					locale,
+					locale
 				);
 				senseSequenceBlockCollection.add(senseSequenceBlock);
 			});
@@ -51,11 +46,7 @@ export default class SingleMeaningView extends View {
 		topLevelBlocks.add(sequencesContainer);
 
 		if (quotes) {
-			const quotesBlock = this.createQuotesBlock(
-				headword,
-				quotes,
-				locale,
-			);
+			const quotesBlock = this.createQuotesBlock(headword, quotes, locale);
 			topLevelBlocks.add(quotesBlock);
 		}
 
@@ -66,6 +57,17 @@ export default class SingleMeaningView extends View {
 			},
 			children: topLevelBlocks,
 		});
+	}
+	createVerbDividerBlock(locale: Locale, verbDivider: string): View {
+		const verbDividerBlock = new View(locale);
+		verbDividerBlock.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: ['ck', 'ck-verb-divider'],
+			},
+			children: [verbDivider], // Render `vd` text
+		});
+		return verbDividerBlock;
 	}
 
 	createDefiningTextBlock(definingText: string, locale: Locale): View {
@@ -82,7 +84,7 @@ export default class SingleMeaningView extends View {
 
 	createVerbalIllustrationBlock(
 		verbalIllustrationItems: DictionaryTypes.VerbalIllustrationContent[],
-		locale: Locale,
+		locale: Locale
 	): View {
 		const visCollection = this.createCollection();
 		verbalIllustrationItems.forEach((viContent) => {
@@ -111,7 +113,7 @@ export default class SingleMeaningView extends View {
 
 	createDividedSenseBlock(
 		dividedSense: DictionaryTypes.DividedSense,
-		locale: Locale,
+		locale: Locale
 	): View {
 		const { sd: senseDivider, dt } = dividedSense;
 
@@ -142,12 +144,10 @@ export default class SingleMeaningView extends View {
 					},
 					children: [],
 				});
-				dtCollection.add(
-					this.createDefiningTextBlock(definingText[1], locale),
-				);
+				dtCollection.add(this.createDefiningTextBlock(definingText[1], locale));
 			} else if (definingText[0] === 'vis') {
 				dtCollection.add(
-					this.createVerbalIllustrationBlock(definingText[1], locale),
+					this.createVerbalIllustrationBlock(definingText[1], locale)
 				);
 			}
 		});
@@ -174,7 +174,7 @@ export default class SingleMeaningView extends View {
 
 	createSenseSequenceBlock(
 		senseSequence: DictionaryTypes.SenseSequence,
-		locale: Locale,
+		locale: Locale
 	): View {
 		// console.log(`createSenseSequenceBlock input: `, senseSequence);
 		const sceneSequenceCollection = this.createCollection();
@@ -230,7 +230,7 @@ export default class SingleMeaningView extends View {
 	createQuotesBlock(
 		headword: string,
 		quotes: DictionaryTypes.Quote[],
-		locale: Locale,
+		locale: Locale
 	): View {
 		const headwordSpan = new View(locale);
 		headwordSpan.setTemplate({
