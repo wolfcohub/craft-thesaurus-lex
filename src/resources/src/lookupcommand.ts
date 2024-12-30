@@ -1,8 +1,10 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
 import LookupState from './lookupstate.js';
 import { DictionaryTypes } from './DictionaryTypes.js';
+import { ThesaurusTypes } from './ThesaurusTypes.js';
 
-const API_KEY = '054c2e55-ab0b-437e-adc6-ddec840a3616';
+const DICTIONARY_API_KEY = '054c2e55-ab0b-437e-adc6-ddec840a3616';
+const THESAURUS_API_KEY = '8cd9de89-50b3-4100-a9e4-299891e94436';
 
 export default class LookupCommand extends Command {
 	/**
@@ -22,45 +24,85 @@ export default class LookupCommand extends Command {
 	override async execute(inputWord: string) {
 		this._state.set('isFetching', true);
 
-		const url = `https://dictionaryapi.com/api/v3/references/collegiate/json/${inputWord}?key=${API_KEY}`;
+		const url = `https://dictionaryapi.com/api/v3/references/collegiate/json/${inputWord}?key=${DICTIONARY_API_KEY}`;
 		const response = await fetch(url);
 		if (!response.ok) {
 			this._state.set('isFetching', false);
 			this._state.set(
 				'errorMessage',
-				`Error fetching definition for ${inputWord}: ${response.status}`,
+				`Error fetching definition for ${inputWord}: ${response.status}`
 			);
 			return;
 		}
 
-		const results = await response.json();
-		console.log('response data: ', results);
-		if (!Array.isArray(results)) {
+		const dictionaryResults = await response.json();
+		// console.log('dictionary response data: ', results);
+		if (!Array.isArray(dictionaryResults)) {
 			this._state.set('isFetching', false);
 			this._state.set('errorMessage', 'Unexpected response from API');
 			return;
 		}
-		const validResults: DictionaryTypes.DictionaryResult[] = [];
+		const validDictionaryResults: DictionaryTypes.DictionaryResult[] = [];
 
-		results.forEach((result) => {
+		dictionaryResults.forEach((result) => {
 			try {
 				// const validResult = formatMerriamWebsterResult(result);
-				validResults.push(result as DictionaryTypes.DictionaryResult);
+				validDictionaryResults.push(result as DictionaryTypes.DictionaryResult);
 			} catch (e) {
 				console.log(`Error!`, e);
 			} // swallow error, exclude from results
 		});
-		if (!validResults.length) {
+		if (!validDictionaryResults.length) {
 			this._state.set('isFetching', false);
 			this._state.set('errorMessage', 'Unexpected response from API');
 			return;
 		}
-		console.log(`results: `, validResults);
+		// console.log(`results: `, validDictionaryResults);
 
 		// request succeeded
+
+		this._state.set('dictionaryResults', validDictionaryResults);
+
+		const thesaurusUrl = `https://dictionaryapi.com/api/v3/references/thesaurus/json/${inputWord}?key=${THESAURUS_API_KEY}`;
+		const thesaurusResponse = await fetch(thesaurusUrl);
+		if (!thesaurusResponse.ok) {
+			console.error(
+				`Failed to fetch thesaurus results: ${thesaurusResponse.status}`
+			);
+			return;
+		}
+		const thesaurusResults = await thesaurusResponse.json();
+		if (!Array.isArray(thesaurusResults)) {
+			this._state.set('isFetching', false);
+			this._state.set('errorMessage', 'Unexpected response from API');
+			return;
+		}
+		const validThesaurusResults: ThesaurusTypes.ThesaurusResult[] = [];
+
+		thesaurusResults.forEach((thesaurusResult) => {
+			try {
+				// const validResult = formatMerriamWebsterResult(thesaurusResult);
+				validThesaurusResults.push(
+					thesaurusResult as ThesaurusTypes.ThesaurusResult
+				);
+			} catch (e) {
+				console.log(`Error!`, e);
+			} // swallow error, exclude from results
+		});
+		if (!validThesaurusResults.length) {
+			this._state.set('isFetching', false);
+			this._state.set('errorMessage', 'Unexpected response from API');
+			return;
+		}
+
+		this._state.set('thesaurusResults', validThesaurusResults);
 		this._state.set('isFetching', false);
 		this._state.set('isSuccess', true);
 		this._state.set('errorMessage', null);
-		this._state.set('results', validResults);
+		// console.error('Error fetching thesaurus data:', error);
+		// console.log(
+		// 	'🚀 ~ LookupCommand ~ overrideexecute ~ validThesaurusResults:',
+		// 	validThesaurusResults
+		// );
 	}
 }

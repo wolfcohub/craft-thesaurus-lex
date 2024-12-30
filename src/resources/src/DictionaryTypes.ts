@@ -146,7 +146,15 @@ export namespace DictionaryTypes {
 			pseq?: Pseq;
 		},
 	];
-
+	export type TestSense = {
+		sn?: string;
+		dt?: Array<DefiningText | VerbalIllustration>;
+		et?: Array<EtymologyContent | EtymologySupplementalNote>;
+		sdsense?: DividedSense;
+		sls?: string[];
+		pseq?: Pseq;
+		sense?: TestSense;
+	};
 	export type VerbalIllustrationContent = {
 		t: string;
 		aq?: AttributionQuote;

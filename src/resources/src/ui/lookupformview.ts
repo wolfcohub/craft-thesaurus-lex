@@ -11,6 +11,7 @@ import {
 import { type Locale } from 'ckeditor5/src/utils.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
 import DictionaryThesaurusSelectorView from './dictionarythesaurusselectorview.js';
+import { ThesaurusTypes } from '../ThesaurusTypes.js';
 
 export default class LookupFormView extends View {
 	contentBlocks!: ViewCollection;
@@ -29,11 +30,12 @@ export default class LookupFormView extends View {
 
 	isError!: boolean;
 
-	results!: DictionaryTypes.DictionaryResult[];
+	dictionaryResults!: DictionaryTypes.DictionaryResult[];
+	thesaurusResults!: ThesaurusTypes.ThesaurusResult[];
 
 	errorMessage!: string | null;
 
-	constructor(locale: Locale) {
+	constructor(locale: Locale, editor: any) {
 		super(locale);
 
 		this.contentBlocks = this.createCollection();
@@ -41,17 +43,41 @@ export default class LookupFormView extends View {
 		const inputForm = this.createInputForm(locale);
 		this.contentBlocks.add(inputForm);
 
-		this.listenTo(this, 'change:results', (evt, name, results) => {
-			if (results.length > 0) {
-				const resultView = new DictionaryThesaurusSelectorView(
-					locale,
-					results,
-				);
-				resultView.set({ viewUid: 'result' });
-				this.contentBlocks.clear();
-				this.contentBlocks.add(resultView);
+		this.listenTo(
+			this,
+			'change:dictionaryResults',
+			(evt, name, dictionaryResults) => {
+				if (dictionaryResults.length > 0) {
+					const resultView = new DictionaryThesaurusSelectorView(
+						locale,
+						editor,
+						dictionaryResults,
+						this.thesaurusResults || [] // Ensure thesaurusResults is also passed
+					);
+					resultView.set({ viewUid: 'result' });
+					this.contentBlocks.clear();
+					this.contentBlocks.add(resultView);
+				}
 			}
-		});
+		);
+
+		this.listenTo(
+			this,
+			'change:thesaurusResults',
+			(evt, name, thesaurusResults) => {
+				if (thesaurusResults.length > 0) {
+					const resultView = new DictionaryThesaurusSelectorView(
+						locale,
+						editor,
+						this.dictionaryResults || [], // Ensure dictionaryResults is also passed
+						thesaurusResults
+					);
+					resultView.set({ viewUid: 'result' });
+					this.contentBlocks.clear();
+					this.contentBlocks.add(resultView);
+				}
+			}
+		);
 
 		// this.listenTo(this, 'change:isFetching', (evt, name, isFetching) => {
 		//   if (isFetching && !this.contentBlocks.has('loader')) {

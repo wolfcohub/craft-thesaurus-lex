@@ -88,7 +88,7 @@
 		font-size: small;
 	}
 	.ck-definitions {
-		margin: 20px;
+		margin: 4px 12px;
 		white-space: wrap;
 		list-style-type: none;
 	}
@@ -97,14 +97,14 @@
 		/* display: flex;
 		flex-direction: row;
 		gap: 5px; */
-		display: flex !important;
-		flex-wrap: wrap !important; /* Allow items to wrap onto the next line */
-		align-items: flex-start !important;
+		display: flex;
+		flex-wrap: wrap; /* Allow items to wrap onto the next line */
+		align-items: flex-start;
 	}
 	.ck-sense-label {
-		flex-shrink: 0 !important; /* Prevent the first item from shrinking */
-		width: auto !important; /* Ensure it takes up only the space it needs */
-		margin-right: 10px !important;
+		flex-shrink: 0; /* Prevent the first item from shrinking */
+		width: auto; /* Ensure it takes up only the space it needs */
+		margin-right: 10px;
 		/* display: flex; */
 		/* flex-direction: column; */
 		background-color: #f4f4f4;
@@ -114,10 +114,29 @@
 		color: #525a5b;
 		/* height: fit-content; */
 	}
+	.ck-sls-container {
+		flex-shrink: 0; /* Prevent the first item from shrinking */
+		width: auto; /* Ensure it takes up only the space it needs */
+		margin-right: 10px;
+		/* display: flex; */
+		/* flex-direction: column; */
+		background-color: #f4f4f4;
+		/* font-size: 14px; */
+		padding: 0.125em 0.3125em;
+		font-weight: 600;
+		color: #525a5b;
+		/* height: fit-content; */
+	}
+	.ck-definition-row {
+		display: flex;
+		flex-direction: column; /* Place each additional definition in a new row */
+		/* margin-top: 10px; Add spacing between rows */
+		margin-left: 43px;
+	}
 	.ck-definition {
-		flex-grow: 1 !important; /* Allow the second item to grow */
-		min-width: 0 !important; /* Make sure the text wraps properly */
-		word-wrap: break-word !important;
+		flex-grow: 1; /* Allow the second item to grow */
+		min-width: 0; /* Make sure the text wraps properly */
+		word-wrap: break-word;
 		/* white-space: wrap; */
 		& a {
 			font-weight: bold;
@@ -143,12 +162,21 @@
 	.ck-sense-sequence {
 		display: flex;
 		flex-direction: column;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		border-bottom: 1px solid #ced4da;
 	}
 
 	.ck-sense {
 		display: flex;
 		flex-direction: column;
-		margin-bottom: 6px;
+		/* margin-bottom: 6px; */
+	}
+	.ck-sense + .ck-sense .ck-number-definition-container {
+		margin-left: 11px; /* Adjust the value as needed */
+	}
+	.ck-number-definition-container:not(:has(.ck-sense-number)) {
+		margin-left: 20px; /* Adjust the value as needed */
 	}
 	.ck-sense-prefix {
 		display: flex;
@@ -183,10 +211,13 @@
 	}
 	.ck-sense-divider {
 		font-style: italic;
+		margin-left: 16px;
+		margin-right: 3px;
 	}
 	.ck-vis-container {
-		border-left: 2px solid #827e7e;
+		border-left: 1px solid #827e7e;
 		padding-left: 10px;
+		margin-left: 21px;
 	}
 	.ck-verbal-illustration {
 		white-space: normal;
@@ -230,18 +261,112 @@
 		color: #6b6b6b; /* Grey color */
 		font-style: italic;
 	}
-}
-.ck.ck-scrollable-results {
-	height: 400px;
-	max-height: 100%;
-	overflow: scroll;
-}
+	.ck-synonym-block {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
+		align-items: center;
+		justify-content: start;
+		/* gap: 10px; */
+		margin: 10px;
+	}
+	.ck-synonym {
+		font-size: 14px;
+		font-weight: bold;
+		background-color: #f4f4f4;
+	}
+	.ck-synonym-list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+	/* .ck-synonym-button {
+		background-color: #f0f0f0;
+		border: 1px solid #ccc;
+		padding: 2px 4px;
+		cursor: pointer;
+		font-size: 14px;
+		border-radius: 4px;
+		margin: 4px;
+	} */
+	.ck-synonym-block button {
+		background-color: #f8f9fa;
+		border: 1px solid #ced4da;
+		padding: 0px 5px;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 12px;
+		font-weight: 700;
+		margin: 6px 4px;
+	}
+	.ck-synonym-header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		width: 100%;
+	}
+	.ck-short-def {
+		margin-left: 20px;
+	}
+	.ck-number-definition-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 10px;
+	}
+	.ck-thesaurus-container {
+		display: flex;
+		flex-direction: row;
+		border-bottom: 1px solid #ccc;
+		align-items: center;
+		gap: 5px;
+	}
+	.ck-synonym-block button:hover {
+		background-color: #e2e6ea;
+	}
 
-.ck-prs-container {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: start;
-	gap: 10px;
-	margin: 10px;
+	.ck-synonym-button:hover {
+		background-color: #e0e0e0;
+	}
+
+	.ck-synonym-button:active {
+		background-color: #d0d0d0;
+	}
+	.ck.ck-scrollable-results {
+		height: 400px;
+		max-height: 100%;
+		overflow: scroll;
+	}
+
+	.ck-prs-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: start;
+		gap: 10px;
+		margin: 10px;
+	}
+	.ck-word-detail {
+		/* margin: 20px; */
+		line-height: 50px;
+		font-weight: 700;
+		font-size: 32px;
+	}
+	.ck-word-detail-container {
+		display: flex;
+		align-items: center;
+	}
+	.ck-sdsense-container {
+		display: flex;
+		align-items: center;
+	}
+	.ck-functionalLabel-detail {
+		font-weight: 700;
+		line-height: 33px;
+		text-decoration: none;
+		margin-left: 15px;
+		font-size: 22px;
+		color: #4a7d95;
+	}
 }
