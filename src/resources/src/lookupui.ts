@@ -6,13 +6,10 @@ import LookupEditing from './lookupediting.js';
 import LookupState from './lookupstate.js';
 import lexIcon from './../../icon.svg';
 
-/**
- * The Lookup UI feature. It introduces the Lookup button.
- */
 export default class LookupUI extends Plugin {
 	state!: LookupState;
 	private modal!: Dialog;
-
+	private handleOutsideClick: (event: MouseEvent) => void = () => {};
 	public static get pluginName() {
 		return 'LookupUI' as const;
 	}
@@ -21,25 +18,29 @@ export default class LookupUI extends Plugin {
 		return [Dialog, Notification];
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public init(): void {
 		const editor = this.editor;
+
 		const t = editor.locale.t;
 		const plugin = editor.plugins.get('LookupEditing') as LookupEditing;
 		this.state = plugin.state;
 
 		this.modal = new Dialog(editor);
 
+		// Define the outside click handler
+		this.handleOutsideClick = (event: MouseEvent) => {
+			const modalContainer = document.querySelector('.ck-dialog'); // Replace with the correct selector for your modal
+			if (modalContainer && !modalContainer.contains(event.target as Node)) {
+				this.modal.hide();
+				this.state.reset();
+			}
+		};
+
 		const lookupCommand = editor.commands.get(LOOKUP);
 		if (lookupCommand) {
-			// Add lookup button to feature components.
 			editor.ui.componentFactory.add('thesaurusLexButton', () => {
 				const dialog = editor.plugins.get('Dialog');
-				const plugin = editor.plugins.get(
-					'LookupEditing',
-				) as LookupEditing;
+				const plugin = editor.plugins.get('LookupEditing') as LookupEditing;
 				const state = plugin.state;
 				const doc = editor.model.document;
 
@@ -55,27 +56,25 @@ export default class LookupUI extends Plugin {
 					.bind('isOn')
 					.to(dialog, 'id', (id) => id === 'dictionaryLookup');
 
-				// Execute the command.
 				this.listenTo(buttonView, 'execute', () => {
-					console.log('LookupUI:execute');
-					const selection = doc.selection;
+					const selection = editor.model.document.selection;
 					if (selection.rangeCount === 1) {
-						// if a single word is selected, prepopulate search input with it
 						const range = selection.getFirstRange();
-
 						const word = rangeToText(range);
+
 						if (isSingleWord(word)) {
 							state.wordToLookup = word;
 						}
 					}
 
-					const formView = this.createLookupFormView();
+					const formView = new LookupFormView(editor.locale, editor); // Pass editor instance
 					formView.input.fieldView.set({
 						value: state?.wordToLookup,
 					});
 					formView.bind('isFetching').to(state, 'isFetching');
 					formView.bind('isSuccess').to(state, 'isSuccess');
-					formView.bind('results').to(state, 'results');
+					formView.bind('dictionaryResults').to(state, 'dictionaryResults');
+					formView.bind('thesaurusResults').to(state, 'thesaurusResults');
 
 					this.listenTo(
 						state,
@@ -83,16 +82,16 @@ export default class LookupUI extends Plugin {
 						(evt, name, errorMessage) => {
 							if (errorMessage) {
 								this.modal.hide();
-								const notification =
-									editor.plugins.get(Notification);
+								const notification = editor.plugins.get(Notification);
 								notification.showWarning(errorMessage);
 							}
-						},
+						}
 					);
 
 					formView.on('cancel', () => {
 						this.modal.hide();
 					});
+
 					this.listenTo(formView, 'submit', () => {
 						editor.execute(LOOKUP, formView.inputText);
 					});
@@ -106,8 +105,18 @@ export default class LookupUI extends Plugin {
 							id: 'dictionaryLookup',
 							title: t('Dictionary Lookup'),
 							content: formView,
+							onShow: () => {
+								if (state.wordToLookup) {
+									editor.execute(LOOKUP, state.wordToLookup);
+								}
+								document.addEventListener('mousedown', this.handleOutsideClick);
+							},
 							onHide: () => {
 								state.reset();
+								document.removeEventListener(
+									'mousedown',
+									this.handleOutsideClick
+								);
 							},
 						});
 					}
@@ -119,7 +128,7 @@ export default class LookupUI extends Plugin {
 	}
 
 	createLookupFormView(): LookupFormView {
-		const formView = new LookupFormView(this.editor.locale);
+		const formView = new LookupFormView(this.editor.locale, this.editor);
 		return formView;
 	}
 }

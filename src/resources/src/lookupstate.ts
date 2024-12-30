@@ -1,5 +1,6 @@
 import { ObservableMixin } from 'ckeditor5/src/utils.js';
 import { DictionaryTypes } from './DictionaryTypes.js';
+import { ThesaurusTypes } from './ThesaurusTypes.js';
 
 export default class LookupState extends ObservableMixin() {
 	public declare wordToLookup: string;
@@ -12,7 +13,8 @@ export default class LookupState extends ObservableMixin() {
 
 	// declare public isError: boolean;
 
-	public declare results: DictionaryTypes.DictionaryResult[];
+	public declare dictionaryResults: DictionaryTypes.DictionaryResult[];
+	public declare thesaurusResults: ThesaurusTypes.ThesaurusResult[];
 
 	public declare errorMessage: string | null;
 
@@ -26,7 +28,8 @@ export default class LookupState extends ObservableMixin() {
 		this.set('isFetching', false);
 		this.set('isSuccess', false);
 		// this.set('isError', false);
-		this.set('results', []);
+		this.set('dictionaryResults', []);
+		this.set('thesaurusResults', []);
 		this.set('errorMessage', null);
 	}
 }

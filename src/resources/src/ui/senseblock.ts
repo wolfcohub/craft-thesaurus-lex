@@ -3,63 +3,22 @@ import { View } from 'ckeditor5/src/ui.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
 import DefiningTextBlock from './definingtextblock.js';
 import VerbalIllustrationBlock from './verbalillustrationblock.js';
+import { stringToViewCollection } from '../utils.js';
 
 export default class SenseBlock extends View {
-	constructor(locale: Locale, data: DictionaryTypes.Sense) {
+	constructor(locale: Locale, data: [string, DictionaryTypes.TestSense]) {
 		super(locale);
-		const { sn: senseNumber, dt, sdsense: dividedSense, sls, pseq } = data[1];
-
+		const [type, content] = data; // Destructure the type and content
 		const senseCollection = this.createCollection();
 
-		// Render the sense number (e.g., 1, 2 a, b, etc.)
-		if (senseNumber) {
-			const senseNumberBlock = new View(locale);
-			senseNumberBlock.setTemplate({
-				tag: 'div',
-				attributes: { class: ['ck', 'ck-sense-number'] },
-				children: [senseNumber],
-			});
-			senseCollection.add(senseNumberBlock);
+		// Handle `bs` (binding substitute) entries
+		if (type === 'bs' && content) {
+			this.handleBindingSubstitute(locale, content, senseCollection);
 		}
 
-		// Render the subject labels (e.g., "psychology")
-		if (sls && sls.length > 0) {
-			const slsBlock = new View(locale);
-			slsBlock.setTemplate({
-				tag: 'span',
-				attributes: { class: ['ck', 'ck-sense-label'] },
-				children: [sls.join(', ')],
-			});
-			senseCollection.add(slsBlock);
-		}
-
-		// Render the defining text (dt)
-		if (dt) {
-			dt.forEach((definitionPart) => {
-				if (definitionPart[0] === 'text') {
-					const definingText = definitionPart[1];
-					const definingTextBlock = new DefiningTextBlock(locale, definingText);
-					senseCollection.add(definingTextBlock);
-				} else if (definitionPart[0] === 'vis') {
-					const visContent = definitionPart[1];
-					senseCollection.add(new VerbalIllustrationBlock(locale, visContent));
-				}
-			});
-		}
-
-		// Handle divided sense (sdsense), if present
-		if (dividedSense) {
-			const dividedSenseBlock = this.createDividedSenseBlock(
-				dividedSense,
-				locale
-			);
-			senseCollection.add(dividedSenseBlock);
-		}
-
-		// Handle nested sense sequences in "pseq", if present
-		if (pseq) {
-			const pseqBlock = this.createPseqBlock(pseq, locale);
-			senseCollection.add(pseqBlock);
+		// Handle `sense` entries
+		if (type === 'sense') {
+			this.handleSense(locale, content, senseCollection);
 		}
 
 		this.setTemplate({
@@ -69,7 +28,107 @@ export default class SenseBlock extends View {
 		});
 	}
 
-	createDividedSenseBlock(
+	private handleBindingSubstitute(
+		locale: Locale,
+		bindingSubstitute: DictionaryTypes.TestSense,
+		collection: any
+	): void {
+		const { dt, sense } = bindingSubstitute;
+
+		// Render the defining text (dt) if present
+		if (dt) {
+			dt.forEach((definitionPart: any) => {
+				if (definitionPart[0] === 'text') {
+					const definingText = definitionPart[1];
+					const definingTextBlock = new DefiningTextBlock(locale, definingText);
+					collection.add(definingTextBlock);
+				}
+			});
+		}
+
+		// Handle the nested "sense" object if present
+		if (sense) {
+			const nestedSenseBlock = new SenseBlock(locale, ['sense', sense]);
+			collection.add(nestedSenseBlock);
+		}
+	}
+
+	private handleSense(
+		locale: Locale,
+		content: DictionaryTypes.TestSense,
+		collection: any
+	): void {
+		const { sn: senseNumber, dt, sdsense: dividedSense, sls, pseq } = content;
+
+		// Create a container for the sense number and first definition
+		const numberDefinitionContainer = new View(locale);
+		const numberDefinitionCollection = this.createCollection();
+
+		// Render the sense number
+		if (senseNumber) {
+			const senseNumberBlock = new View(locale);
+			senseNumberBlock.setTemplate({
+				tag: 'span',
+				attributes: { class: ['ck', 'ck-sense-number'] },
+				children: [senseNumber],
+			});
+			numberDefinitionCollection.add(senseNumberBlock);
+		}
+
+		// Handle the first definition separately
+		if (dt && dt.length > 0) {
+			const firstDefinition = dt[0];
+			if (firstDefinition[0] === 'text') {
+				const definingText = firstDefinition[1];
+				const definingTextBlock = new DefiningTextBlock(locale, definingText);
+				numberDefinitionCollection.add(definingTextBlock);
+			}
+		}
+
+		numberDefinitionContainer.setTemplate({
+			tag: 'div',
+			attributes: { class: ['ck', 'ck-number-definition-container'] },
+			children: numberDefinitionCollection,
+		});
+
+		collection.add(numberDefinitionContainer);
+
+		// Render subsequent definitions in their own rows
+		if (dt && dt.length > 1) {
+			dt.slice(1).forEach((definitionPart: any) => {
+				if (definitionPart[0] === 'text') {
+					const definingText = definitionPart[1];
+					const rowDefinitionContainer = new View(locale);
+					const definitionBlock = new DefiningTextBlock(locale, definingText);
+
+					rowDefinitionContainer.setTemplate({
+						tag: 'div',
+						attributes: { class: ['ck', 'ck-definition-row'] },
+						children: [definitionBlock],
+					});
+
+					collection.add(rowDefinitionContainer);
+				}
+			});
+		}
+
+		// Handle divided sense (sdsense)
+		if (dividedSense) {
+			const dividedSenseBlock = this.createDividedSenseBlock(
+				dividedSense,
+				locale
+			);
+			collection.add(dividedSenseBlock);
+		}
+
+		// Handle nested sense sequences in "pseq", if present
+		if (pseq) {
+			const pseqBlock = this.createPseqBlock(pseq, locale);
+			collection.add(pseqBlock);
+		}
+	}
+
+	private createDividedSenseBlock(
 		dividedSense: DictionaryTypes.DividedSense,
 		locale: Locale
 	): View {
@@ -87,9 +146,6 @@ export default class SenseBlock extends View {
 			if (definingText[0] === 'text') {
 				const textContent = definingText[1];
 				dtCollection.add(new DefiningTextBlock(locale, textContent));
-			} else if (definingText[0] === 'vis') {
-				const visContent = definingText[1];
-				dtCollection.add(new VerbalIllustrationBlock(locale, visContent));
 			}
 		});
 
@@ -110,8 +166,7 @@ export default class SenseBlock extends View {
 		return senseDividerContainer;
 	}
 
-	// Updated method to handle "pseq" with the correct type
-	createPseqBlock(pseq: DictionaryTypes.Pseq, locale: Locale): View {
+	private createPseqBlock(pseq: DictionaryTypes.Pseq, locale: Locale): View {
 		const pseqCollection = this.createCollection();
 
 		pseq[1].forEach((seqItem) => {

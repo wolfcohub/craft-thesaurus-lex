@@ -5,18 +5,33 @@ import PronunciationsBlock from './pronunciationsblock.js';
 import SenseBlock from './senseblock.js';
 import AttributionBlock from './attributionblock.js';
 import { stringToViewCollection } from '../utils.js';
+import { removeAsterisks } from './dictionarythesaurusselectorview.js';
+import WordDetailBlock from './worddetailblock.js';
 
 export default class SingleMeaningView extends View {
 	constructor(locale: Locale, result: DictionaryTypes.DictionaryResult) {
+		console.log('🚀 ~ SingleMeaningView ~ constructor ~ result:', result);
 		super(locale);
 
-		const { def, hwi, shortdef: shortDefinitions, quotes, meta, cxs } = result;
+		const {
+			def,
+			hwi,
+			shortdef: shortDefinitions,
+			quotes,
+			meta,
+			cxs,
+			fl,
+		} = result;
 		const { sseq: senseSequences, vd: verbDivider } = def[0];
 		const { prs: pronunciations } = hwi;
 		const { id: headword } = meta;
-
+		const word = removeAsterisks(hwi.hw);
+		const functionalLabel = fl;
 		const topLevelBlocks = this.createCollection();
 
+		if (word && functionalLabel) {
+			topLevelBlocks.add(new WordDetailBlock(locale, word, functionalLabel));
+		}
 		if (pronunciations) {
 			topLevelBlocks.add(new PronunciationsBlock(locale, pronunciations));
 		}

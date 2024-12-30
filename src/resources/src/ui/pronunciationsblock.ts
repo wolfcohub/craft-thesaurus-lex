@@ -4,7 +4,7 @@ import { DictionaryTypes } from '../DictionaryTypes.js';
 
 export default class PronunciationsBlock extends View {
 	constructor(locale: Locale, data: DictionaryTypes.Pronunciation[]) {
-		console.log(`PronunciationsBlock constructor`);
+		// console.log(`PronunciationsBlock constructor`);
 		super(locale);
 
 		const pronunciationBlocks = this.createCollection();
@@ -17,10 +17,7 @@ export default class PronunciationsBlock extends View {
 				}
 			}
 			data.forEach(
-				(
-					pronunciation: DictionaryTypes.Pronunciation,
-					index: number,
-				) => {
+				(pronunciation: DictionaryTypes.Pronunciation, index: number) => {
 					if (index > 0) {
 						// insert delimiter between pronunciations
 						const delimiterView = new View(locale);
@@ -71,7 +68,7 @@ export default class PronunciationsBlock extends View {
 						});
 						pronunciationBlocks.add(postTextBlock);
 					}
-				},
+				}
 			);
 		}
 		this.setTemplate({
