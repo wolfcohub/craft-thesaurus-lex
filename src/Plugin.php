@@ -14,8 +14,6 @@ use wolfco\thesaurus\assetbundles\CkeditorThesaurusAsset;
 class Plugin extends BasePlugin
 {
     public static Plugin $plugin;
-
-    public bool $hasCpSection = true;
     public bool $hasCpSettings = true;
     public string $schemaVersion = '1.0.0';
     protected string $handle = 'thesaurus-plugin';
@@ -51,6 +49,7 @@ class Plugin extends BasePlugin
             'thesaurus-plugin/settings',
             [
                 'settings' => $this->getSettings(),  // This ensures the saved settings are loaded
+                'version' => $this->schemaVersion,
             ]
         );
     }

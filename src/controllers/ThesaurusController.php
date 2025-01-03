@@ -5,6 +5,7 @@ namespace wolfco\thesaurus\controllers;
 use craft\web\Controller;
 use yii\web\Response;
 use Craft;
+use wolfco\thesaurus\Plugin;
 
 class ThesaurusController extends Controller
 {
@@ -12,44 +13,54 @@ class ThesaurusController extends Controller
 
     public function actionGetSynonyms(): Response
     {
-        $this->requirePostRequest();
-        $word = Craft::$app->getRequest()->getBodyParam('word');
+        $this->requireAcceptsJson();
+        $word = Craft::$app->getRequest()->get('word');
 
         if (!$word) {
-            return $this->asJson(['error' => 'No word provided']);
+          return $this->asJson(['error' => 'No word provided']);
+        }
+        $settings = Plugin::$plugin->getSettings();
+        $thesaurusApiKey = $settings['tKey'];
+
+        if (!$thesaurusApiKey) {
+          return $this->asJson(['error' => 'Missing thesaurus API key. You can set this in Settings -> Plugins -> Thesaurus Lex -> Settings']);
         }
 
-        // Thesaurus API key and request
-        $apiKey = '***REMOVED***';
-        $apiUrl = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{$word}?key={$apiKey}";
+        // Thesaurus API request
+        $apiUrl = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{$word}?key={$thesaurusApiKey}";
 
         $response = file_get_contents($apiUrl);
         $data = json_decode($response, true);
 
         if (isset($data['error'])) {
-            return $this->asJson(['error' => 'Could not retrieve thesaurus data.']);
+            return $this->asJson(['error' => $data['error']]);
         }
 
         return $this->asJson($data);
     }
     public function actionGetDefinitions(): Response
     {
-        $this->requirePostRequest();
-        $word = Craft::$app->getRequest()->getBodyParam('word');
+        $this->requireAcceptsJson();
+        $word = Craft::$app->getRequest()->get('word');
 
         if (!$word) {
             return $this->asJson(['error' => 'No word provided']);
         }
+        $settings = Plugin::$plugin->getSettings();
+        $dictionaryApiKey = $settings->dKey;
 
-        // Dictionary API key and request
-        $apiKey = '***REMOVED***';
-        $apiUrl = "https://www.dictionaryapi.com/api/v3/references/collegiate/json/{$word}?key={$apiKey}";
+        if (!$dictionaryApiKey) {
+          return $this->asJson(['error' => 'Missing dictionary API key. You can set this in Settings -> Plugins -> Thesaurus Lex -> Settings']);
+        }
+
+        // Dictionary API request
+        $apiUrl = "https://www.dictionaryapi.com/api/v3/references/collegiate/json/{$word}?key={$dictionaryApiKey}";
 
         $response = file_get_contents($apiUrl);
         $data = json_decode($response, true);
 
         if (isset($data['error'])) {
-            return $this->asJson(['error' => 'Could not retrieve dictionary data.']);
+            return $this->asJson(['error' => $data['error']]);
         }
 
         return $this->asJson($data);
