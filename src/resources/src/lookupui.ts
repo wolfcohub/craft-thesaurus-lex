@@ -30,7 +30,10 @@ export default class LookupUI extends Plugin {
 		// Define the outside click handler
 		this.handleOutsideClick = (event: MouseEvent) => {
 			const modalContainer = document.querySelector('.ck-dialog'); // Replace with the correct selector for your modal
-			if (modalContainer && !modalContainer.contains(event.target as Node)) {
+			if (
+				modalContainer &&
+				!modalContainer.contains(event.target as Node)
+			) {
 				this.modal.hide();
 				this.state.reset();
 			}
@@ -40,7 +43,9 @@ export default class LookupUI extends Plugin {
 		if (lookupCommand) {
 			editor.ui.componentFactory.add('thesaurusLexButton', () => {
 				const dialog = editor.plugins.get('Dialog');
-				const plugin = editor.plugins.get('LookupEditing') as LookupEditing;
+				const plugin = editor.plugins.get(
+					'LookupEditing'
+				) as LookupEditing;
 				const state = plugin.state;
 				const doc = editor.model.document;
 
@@ -54,7 +59,7 @@ export default class LookupUI extends Plugin {
 
 				buttonView
 					.bind('isOn')
-					.to(dialog, 'id', (id) => id === 'dictionaryLookup');
+					.to(dialog, 'id', id => id === 'dictionaryLookup');
 
 				this.listenTo(buttonView, 'execute', () => {
 					const selection = editor.model.document.selection;
@@ -73,8 +78,12 @@ export default class LookupUI extends Plugin {
 					});
 					formView.bind('isFetching').to(state, 'isFetching');
 					formView.bind('isSuccess').to(state, 'isSuccess');
-					formView.bind('dictionaryResults').to(state, 'dictionaryResults');
-					formView.bind('thesaurusResults').to(state, 'thesaurusResults');
+					formView
+						.bind('dictionaryResults')
+						.to(state, 'dictionaryResults');
+					formView
+						.bind('thesaurusResults')
+						.to(state, 'thesaurusResults');
 
 					this.listenTo(
 						state,
@@ -82,7 +91,8 @@ export default class LookupUI extends Plugin {
 						(evt, name, errorMessage) => {
 							if (errorMessage) {
 								this.modal.hide();
-								const notification = editor.plugins.get(Notification);
+								const notification =
+									editor.plugins.get(Notification);
 								notification.showWarning(errorMessage);
 							}
 						}
@@ -109,10 +119,15 @@ export default class LookupUI extends Plugin {
 								if (state.wordToLookup) {
 									editor.execute(LOOKUP, state.wordToLookup);
 								}
-								document.addEventListener('mousedown', this.handleOutsideClick);
+								document.body.classList.add('no-scroll'); // Prevent background scrolling
+								document.addEventListener(
+									'mousedown',
+									this.handleOutsideClick
+								);
 							},
 							onHide: () => {
 								state.reset();
+								document.body.classList.remove('no-scroll'); // Allow background scrolling
 								document.removeEventListener(
 									'mousedown',
 									this.handleOutsideClick

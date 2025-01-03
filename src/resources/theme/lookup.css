@@ -16,7 +16,10 @@
 		align-items: center;
 		z-index: 999;
 	}
-
+	.no-scroll {
+		overflow: hidden;
+		height: 100%;
+	}
 	.ck-tab-selector {
 		display: flex;
 		flex-direction: row;
@@ -137,7 +140,7 @@
 		flex-grow: 1; /* Allow the second item to grow */
 		min-width: 0; /* Make sure the text wraps properly */
 		word-wrap: break-word;
-		/* white-space: wrap; */
+		white-space: wrap;
 		& a {
 			font-weight: bold;
 			font-size: 14px;
