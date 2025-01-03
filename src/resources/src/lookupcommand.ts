@@ -3,9 +3,6 @@ import LookupState from './lookupstate.js';
 import { DictionaryTypes } from './DictionaryTypes.js';
 import { ThesaurusTypes } from './ThesaurusTypes.js';
 
-const DICTIONARY_API_KEY = '054c2e55-ab0b-437e-adc6-ddec840a3616';
-const THESAURUS_API_KEY = '8cd9de89-50b3-4100-a9e4-299891e94436';
-
 export default class LookupCommand extends Command {
 	/**
 	 * The find and replace state object used for command operations.
@@ -24,19 +21,30 @@ export default class LookupCommand extends Command {
 	override async execute(inputWord: string) {
 		this._state.set('isFetching', true);
 
-		const url = `https://dictionaryapi.com/api/v3/references/collegiate/json/${inputWord}?key=${DICTIONARY_API_KEY}`;
-		const response = await fetch(url);
-		if (!response.ok) {
+		const url =
+			`/actions/thesaurus/get-definitions?` +
+			new URLSearchParams({
+				word: inputWord,
+			}).toString();
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				Accept: 'application/json',
+			},
+		});
+
+		const dictionaryResults = await response.json();
+
+		if (dictionaryResults.error) {
 			this._state.set('isFetching', false);
 			this._state.set(
 				'errorMessage',
-				`Error fetching definition for ${inputWord}: ${response.status}`
+				`Error fetching definition for ${inputWord}: ${dictionaryResults.error}`,
 			);
 			return;
 		}
 
-		const dictionaryResults = await response.json();
-		// console.log('dictionary response data: ', results);
 		if (!Array.isArray(dictionaryResults)) {
 			this._state.set('isFetching', false);
 			this._state.set('errorMessage', 'Unexpected response from API');
@@ -46,8 +54,9 @@ export default class LookupCommand extends Command {
 
 		dictionaryResults.forEach((result) => {
 			try {
-				// const validResult = formatMerriamWebsterResult(result);
-				validDictionaryResults.push(result as DictionaryTypes.DictionaryResult);
+				validDictionaryResults.push(
+					result as DictionaryTypes.DictionaryResult,
+				);
 			} catch (e) {
 				console.log(`Error!`, e);
 			} // swallow error, exclude from results
@@ -57,21 +66,31 @@ export default class LookupCommand extends Command {
 			this._state.set('errorMessage', 'Unexpected response from API');
 			return;
 		}
-		// console.log(`results: `, validDictionaryResults);
 
 		// request succeeded
-
 		this._state.set('dictionaryResults', validDictionaryResults);
 
-		const thesaurusUrl = `https://dictionaryapi.com/api/v3/references/thesaurus/json/${inputWord}?key=${THESAURUS_API_KEY}`;
-		const thesaurusResponse = await fetch(thesaurusUrl);
-		if (!thesaurusResponse.ok) {
+		const thesaurusUrl =
+			`/actions/thesaurus/get-synonyms?` +
+			new URLSearchParams({
+				word: inputWord,
+			}).toString();
+
+		const thesaurusResponse = await fetch(thesaurusUrl, {
+			method: 'GET',
+			headers: {
+				Accept: 'application/json',
+			},
+		});
+
+		const thesaurusResults = await thesaurusResponse.json();
+		if (thesaurusResults.error) {
 			console.error(
-				`Failed to fetch thesaurus results: ${thesaurusResponse.status}`
+				`Failed to fetch thesaurus results: ${thesaurusResults.error}`,
 			);
 			return;
 		}
-		const thesaurusResults = await thesaurusResponse.json();
+
 		if (!Array.isArray(thesaurusResults)) {
 			this._state.set('isFetching', false);
 			this._state.set('errorMessage', 'Unexpected response from API');
@@ -81,9 +100,8 @@ export default class LookupCommand extends Command {
 
 		thesaurusResults.forEach((thesaurusResult) => {
 			try {
-				// const validResult = formatMerriamWebsterResult(thesaurusResult);
 				validThesaurusResults.push(
-					thesaurusResult as ThesaurusTypes.ThesaurusResult
+					thesaurusResult as ThesaurusTypes.ThesaurusResult,
 				);
 			} catch (e) {
 				console.log(`Error!`, e);
@@ -99,10 +117,5 @@ export default class LookupCommand extends Command {
 		this._state.set('isFetching', false);
 		this._state.set('isSuccess', true);
 		this._state.set('errorMessage', null);
-		// console.error('Error fetching thesaurus data:', error);
-		// console.log(
-		// 	'🚀 ~ LookupCommand ~ overrideexecute ~ validThesaurusResults:',
-		// 	validThesaurusResults
-		// );
 	}
 }
