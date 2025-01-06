@@ -4,7 +4,6 @@ import { stringToViewCollection } from '../utils.js';
 
 export default class DefiningTextBlock extends View {
 	constructor(locale: Locale, data: string) {
-		console.log('🚀 ~ DefiningTextBlock ~ constructor ~ data:', data);
 		super(locale);
 
 		const definingTextCollection = stringToViewCollection(data, locale);

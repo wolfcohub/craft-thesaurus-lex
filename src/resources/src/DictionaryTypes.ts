@@ -174,23 +174,11 @@ export namespace DictionaryTypes {
 	};
 
 	export type SenseSequence = Array<Sense>;
-	// 2.10 Sense Organization
-	// 2.10.1 Definition Section: def
-	export type DefinitionSection = {
-		def: SenseSequence[]; // Array of sense sequences representing different senses of the word
-	};
+
 	export type Definition = {
 		sseq: SenseSequence[];
 		vd?: string;
 	};
-	// 2.10.2 Verb Divider: vd
-	export type VerbDivider = 'transitive' | 'intransitive';
-
-	// 2.10.5 Sense Number: sn
-	export type SenseNumber = string; // Example: "1", "1a", "2", etc.
-	// 2.10.6 Defining Text: dt
-	// export type DefiningText = string; // Example: "to move through the air by means of wings"
-	// Define the basic structure for 'dt'
 
 	export type Subsource = {
 		source?: string;
@@ -202,107 +190,6 @@ export namespace DictionaryTypes {
 		source?: string;
 		aqdate?: string;
 		subsource?: Subsource;
-	};
-
-	// 2.10.7 Divided Sense: sdsense
-	// export type DividedSense = {
-	//   sn: string; // Sub-sense number (e.g., "1a", "1b")
-	//   dt: DefiningText[]; // Array of defining texts
-	// };
-
-	// 2.10.8 Truncated Sense: sen
-	export type TruncatedSense = {
-		sn: string; // Sense number
-		dt: DefiningText[]; // Array of defining texts
-	};
-	// 2.10.9 Binding Substitute: bs
-	export type BindingSubstitute = {
-		bs: string; // Placeholder text or reference
-	};
-	// 2.10.10 Parenthesized Sense Sequence: pseq
-	export type ParenthesizedSenseSequence = {
-		sn: string; // Sense number
-		dt: DefiningText[]; // Array of defining texts
-	};
-	// 2.13 Run-In: ri
-	export type RunIn = {
-		ri: string; // The content of the run-in
-	};
-	// 2.14 Biographical Name Wrap: bnw
-	export type BiographicalNameWrap = {
-		bnw: string; // The biographical information wrapped together
-	};
-	// 2.15 Called-Also Note: ca
-	export type CalledAlsoNote = {
-		ca: string[]; // Array of alternate names or terms
-	};
-	// 2.16 Supplemental Information Note: snote
-	export type SupplementalInformationNote = {
-		snote: string; // Additional details or clarifications
-	};
-	// 2.17 Usage Notes: uns
-	export type UsageNotes = {
-		uns: string; // Usage recommendations and notes
-	};
-	// 2.18 Undefined Run-Ons: uros
-	export type UndefinedRunOns = {
-		uros: string[]; // List of undefined run-ons
-	};
-	// 2.19 Defined Run-Ons: dros
-	export type DefinedRunOns = {
-		dros: {
-			word: string;
-			definition: string;
-		}[]; // Array of defined run-ons with their definitions
-	};
-	// 2.20 Directional Cross-Reference Section: dxnls
-	export type DirectionalCrossReferenceSection = {
-		dxnls: string[]; // List of cross-references
-	};
-	// 2.21 Usage Section: usages
-	export type UsageSection = {
-		usage_notes: string; // Detailed explanation of how the word should be used
-	};
-	// 2.22 Synonyms Section: syns
-	export type SynonymsSection = {
-		synonyms: {
-			word: string;
-			description: string; // Brief differentiation between synonyms
-		}[];
-	};
-	// 2.23 Quotations Section: quotes
-	export type QuotationsSection = {
-		quotations: {
-			text: string;
-			source: string; // Author or title of the work
-		}[];
-	};
-	// 2.24 Artwork: art
-	export type ArtworkSection = {
-		images: {
-			description: string;
-			url: string; // URL or path to the image
-		}[];
-	};
-	// 2.25 Tables: table
-	export type TablesSection = {
-		tables: {
-			headers: string[]; // List of column headers
-			rows: string[][]; // 2D array representing table rows and columns
-		}[];
-	};
-	// 2.26 Etymology: et
-	export type EtymologySection = {
-		origin: string; // Brief history of the word's origin
-		languages: string[]; // List of languages contributing to the word's evolution
-	};
-	// 2.27 First Known Use: date
-	export type FirstKnownUseSection = {
-		first_use_date: string; // Date of the first known appearance of the word
-	};
-	// 2.28 Short Definition: shortdef
-	export type ShortDefinitionSection = {
-		definitions: string[]; // List of brief definitions
 	};
 
 	export type DictionaryResult = {

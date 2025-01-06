@@ -22,8 +22,6 @@ export default class LookupFormView extends View {
 
 	loadingView!: View;
 
-	errorView!: View;
-
 	isFetching!: boolean;
 
 	isSuccess!: boolean;
@@ -38,6 +36,7 @@ export default class LookupFormView extends View {
 	constructor(locale: Locale, editor: any) {
 		super(locale);
 
+		// instantiate the container for all content blocks in this view
 		this.contentBlocks = this.createCollection();
 
 		const inputForm = this.createInputForm(locale);
@@ -47,46 +46,41 @@ export default class LookupFormView extends View {
 			this,
 			'change:dictionaryResults',
 			(evt, name, dictionaryResults) => {
+				// dictionaryResults changed. add them to the UI
 				if (dictionaryResults.length > 0) {
 					const resultView = new DictionaryThesaurusSelectorView(
 						locale,
 						editor,
 						dictionaryResults,
-						this.thesaurusResults || [] // Ensure thesaurusResults is also passed
+						this.thesaurusResults || [],
 					);
 					resultView.set({ viewUid: 'result' });
 					this.contentBlocks.clear();
 					this.contentBlocks.add(resultView);
 				}
-			}
+			},
 		);
 
 		this.listenTo(
 			this,
 			'change:thesaurusResults',
 			(evt, name, thesaurusResults) => {
+				// thesaurusResults changed. add them to the UI
 				if (thesaurusResults.length > 0) {
 					const resultView = new DictionaryThesaurusSelectorView(
 						locale,
 						editor,
-						this.dictionaryResults || [], // Ensure dictionaryResults is also passed
-						thesaurusResults
+						this.dictionaryResults || [],
+						thesaurusResults,
 					);
 					resultView.set({ viewUid: 'result' });
 					this.contentBlocks.clear();
 					this.contentBlocks.add(resultView);
 				}
-			}
+			},
 		);
 
-		// this.listenTo(this, 'change:isFetching', (evt, name, isFetching) => {
-		//   if (isFetching && !this.contentBlocks.has('loader')) {
-		//     this.contentBlocks.add(this.loadingView);
-		//   }
-		// });
-
-		// listen for change to isError
-
+		// return all content blocks wrapped in a single view
 		this.setTemplate({
 			tag: 'div',
 			attributes: {
@@ -97,6 +91,8 @@ export default class LookupFormView extends View {
 		});
 	}
 
+	// delegate handling of form submit to this view component
+	// (stop event from bubbling up to browser)
 	override render() {
 		super.render();
 		submitHandler({
@@ -104,6 +100,7 @@ export default class LookupFormView extends View {
 		});
 	}
 
+	// helper function to get current value of form input
 	get inputText() {
 		return this.input.fieldView.element?.value ?? '';
 	}
@@ -116,6 +113,7 @@ export default class LookupFormView extends View {
 		this.input.label = t('Lookup word…');
 		this.input.class = 'ck-lookup-form__inputs';
 
+		// button to submit form
 		const lookupButton = new ButtonView(locale);
 		lookupButton.set({
 			label: t('Get Definition'),
@@ -125,6 +123,7 @@ export default class LookupFormView extends View {
 		});
 		lookupButton.type = 'submit';
 
+		// button to trigger 'cancel' event (close form)
 		const cancelButton = new ButtonView(locale);
 		cancelButton.set({
 			label: t('Cancel'),
@@ -133,6 +132,7 @@ export default class LookupFormView extends View {
 		});
 		cancelButton.delegate('execute').to(this, 'cancel');
 
+		// instantiate spinner for loading state
 		const spinner = new SpinnerView();
 		spinner.set({ isVisible: true });
 
@@ -144,6 +144,7 @@ export default class LookupFormView extends View {
 				class: [
 					'ck',
 					'ck-loader',
+					// show loader if isFetching is true
 					bind.if('isFetching', 'ck-hidden', (value) => !value),
 				],
 			},
@@ -159,6 +160,7 @@ export default class LookupFormView extends View {
 			children: [cancelButton, lookupButton],
 		});
 
+		// return input field and buttons wrapped in a single view
 		const containerView = new View(locale);
 		containerView.set({ viewUid: 'input' });
 		containerView.setTemplate({
@@ -167,8 +169,8 @@ export default class LookupFormView extends View {
 				class: [
 					'ck',
 					'ck-lookup-form',
+					// hide loader if isSuccess is true
 					bind.if('isSuccess', 'ck-hidden'),
-					// bind.if('isFetching', 'ck-hidden')
 				],
 			},
 			children: [this.loadingView, this.input, actionDiv],

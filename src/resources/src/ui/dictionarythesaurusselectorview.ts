@@ -1,12 +1,10 @@
 import { ButtonView, ToolbarSeparatorView, View } from 'ckeditor5/src/ui.js';
 import { type Locale } from 'ckeditor5/src/utils.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
-import SingleMeaningView from './singlemeaningview.js';
 import { ThesaurusTypes } from '../ThesaurusTypes.js';
 import ThesaurusBlock from './thesaurusblock.js';
-import ResultTabView from './resulttabview.js';
+import DictionaryContentView from './dictionarycontentview.js';
 
-const THESAURUS_API_KEY = '***REMOVED***';
 export function removeAsterisks(input: string): string {
 	return input.replace(/\*/g, '');
 }
@@ -22,12 +20,8 @@ export default class DictionaryThesaurusSelectorView extends View {
 		locale: Locale,
 		editor: any,
 		dictionaryResults: DictionaryTypes.DictionaryResult[],
-		thesaurusResults: ThesaurusTypes.ThesaurusResult[] = []
+		thesaurusResults: ThesaurusTypes.ThesaurusResult[] = [],
 	) {
-		console.log(
-			'🚀 ~ DictionaryThesaurusSelectorView ~ dictionaryResults:',
-			dictionaryResults
-		);
 		super(locale);
 		this.editor = editor;
 		const t = locale.t;
@@ -54,7 +48,7 @@ export default class DictionaryThesaurusSelectorView extends View {
 			.to(this, 'selectedTab', (value) =>
 				value === 'dictionary'
 					? 'ck ck-tab ck-dictionary-select ck-selected'
-					: 'ck ck-tab ck-dictionary-select'
+					: 'ck ck-tab ck-dictionary-select',
 			);
 		this.listenTo(dictionarySelectButton, 'execute', () => {
 			this.set('selectedTab', 'dictionary');
@@ -72,11 +66,10 @@ export default class DictionaryThesaurusSelectorView extends View {
 			.to(this, 'selectedTab', (value) =>
 				value === 'thesaurus'
 					? 'ck ck-tab ck-thesaurus-select ck-selected'
-					: 'ck ck-tab ck-thesaurus-select'
+					: 'ck ck-tab ck-thesaurus-select',
 			);
 		this.listenTo(thesaurusSelectButton, 'execute', () => {
 			this.set('selectedTab', 'thesaurus');
-			// this.fetchThesaurusResults(); // Trigger thesaurus API call
 		});
 
 		const tabSelectDiv = new View(locale);
@@ -122,22 +115,23 @@ export default class DictionaryThesaurusSelectorView extends View {
 			children: [wordHeading, functionalLabelView],
 		});
 
-		// Map over lookupResults to create multiple SingleMeaningView instances
+		// create SingleMeaningView instance for each result
 		const dictionaryContainer = new View(locale);
-		const dictionaryContent =
-			dictionaryResults.length === 1
-				? new SingleMeaningView(locale, dictionaryResults[0])
-				: new ResultTabView(locale, dictionaryResults);
+		const dictionaryContent = new DictionaryContentView(
+			locale,
+			dictionaryResults,
+		);
 		dictionaryContainer.setTemplate({
 			tag: 'div',
 			attributes: {
 				class: [
 					'ck',
 					'ck-scrollable-results',
+					// hide dictionary content if thesaurus tab selected
 					bind.if(
 						'selectedTab',
 						'ck-hidden',
-						(value) => value !== 'dictionary'
+						(value) => value !== 'dictionary',
 					),
 				],
 			},
@@ -146,7 +140,7 @@ export default class DictionaryThesaurusSelectorView extends View {
 
 		const thesaurusContainer = new View(locale);
 		const thesaurusContent = thesaurusResults.map(
-			(result) => new ThesaurusBlock(locale, result, this.editor)
+			(result) => new ThesaurusBlock(locale, result, this.editor),
 		);
 
 		thesaurusContainer.setTemplate({
@@ -155,7 +149,12 @@ export default class DictionaryThesaurusSelectorView extends View {
 				class: [
 					'ck',
 					'ck-scrollable-results',
-					bind.if('selectedTab', 'ck-hidden', (value) => value !== 'thesaurus'),
+					// hide thesaurus content if dictionary tab selected
+					bind.if(
+						'selectedTab',
+						'ck-hidden',
+						(value) => value !== 'thesaurus',
+					),
 				],
 			},
 			children: [wordHeading, ...thesaurusContent],
