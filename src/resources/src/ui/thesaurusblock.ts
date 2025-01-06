@@ -8,22 +8,19 @@ export default class ThesaurusBlock extends View {
 	constructor(
 		locale: Locale,
 		thesaurusData: ThesaurusTypes.ThesaurusResult,
-		editor: Editor
+		editor: Editor,
 	) {
 		super(locale);
 		this.editor = editor;
-		// console.log('🚀 Data received by ThesaurusBlock:', thesaurusData);
 
 		// Extract `def` from the thesaurus data
-		const { def, shortdef, fl, hwi } = thesaurusData;
-		console.log(shortdef[0]);
+		const { def, shortdef, fl } = thesaurusData;
 		if (!def || !Array.isArray(def)) {
 			throw new Error('Invalid `def` structure in thesaurus data');
 		}
-		// const word = hwi.hw;
+		//add word shortdefWord and functionalLabel to the template
 		const functionalLabel = fl;
 		const shortdefWord = shortdef[0];
-		//add word shortdefWord and functionalLabel to the template
 
 		// Create a collection to hold all thesaurus blocks
 		const thesaurusCollection = this.createCollection();
@@ -36,7 +33,7 @@ export default class ThesaurusBlock extends View {
 						locale,
 						synonymList,
 						shortdefWord,
-						functionalLabel
+						functionalLabel,
 					);
 					thesaurusCollection.add(synonymBlock);
 				}
@@ -53,9 +50,6 @@ export default class ThesaurusBlock extends View {
 	}
 
 	/**
-	 * Extracts all `sseq` items and their `syn_list` words, including optional `lvl` and `ova` values.
-	 */
-	/**
 	 * Extracts all `sseq` items and their `syn_list` words, focusing only on `wd`.
 	 */
 	private getSseqItems(definition: ThesaurusTypes.Definition): string[][] {
@@ -67,7 +61,9 @@ export default class ThesaurusBlock extends View {
 		// Process each `senseSequence` to extract `syn_list` words
 		return definition.sseq[0].map((senseSequence) => {
 			// Validate `senseSequence` structure
-			const sense = Array.isArray(senseSequence) ? senseSequence[1] : null;
+			const sense = Array.isArray(senseSequence)
+				? senseSequence[1]
+				: null;
 
 			if (
 				sense?.syn_list &&
@@ -88,9 +84,8 @@ export default class ThesaurusBlock extends View {
 					.flat()
 					.map((syn: ThesaurusTypes.SynonymWord) => syn.wd || '');
 			}
-
-			console.info('No valid syn_list in senseSequence:', senseSequence);
-			return []; // Return an empty array if `syn_list` is missing or invalid
+			// Return an empty array if `syn_list` is missing or invalid
+			return [];
 		});
 	}
 
@@ -101,7 +96,7 @@ export default class ThesaurusBlock extends View {
 		locale: Locale,
 		synonyms: string[],
 		shortdefWord: string,
-		functionalLabel: string
+		functionalLabel: string,
 	): View {
 		const synonymBlock = new View(locale);
 
@@ -118,14 +113,14 @@ export default class ThesaurusBlock extends View {
 					attributes: {
 						class: ['ck', 'ck-functional-label'],
 					},
-					children: functionalLabel, // Add the functional label
+					children: functionalLabel,
 				},
 				{
 					tag: 'span',
 					attributes: {
 						class: ['ck', 'ck-short-def'],
 					},
-					children: [`As in: ${shortdefWord}`], // Add the short definition
+					children: [`As in: ${shortdefWord}`],
 				},
 			],
 		});
@@ -141,7 +136,7 @@ export default class ThesaurusBlock extends View {
 				tooltip: `Replace with "${synonym}"`,
 			});
 
-			// Add an event listener for the button click
+			// Add handler to replace word with the clicked synonym
 			this.listenTo(button, 'execute', () => {
 				this.replaceSelectedText(synonym);
 			});
@@ -163,6 +158,8 @@ export default class ThesaurusBlock extends View {
 
 		return synonymBlock;
 	}
+
+	// function to replace word selected in editor with passed synonym
 	private replaceSelectedText(synonym: string): void {
 		const editor = this.editor;
 		const model = editor.model;
@@ -188,19 +185,5 @@ export default class ThesaurusBlock extends View {
 				console.error('No text selected to replace');
 			}
 		});
-	}
-	/**
-	 * Copies the given text to the clipboard.
-	 */
-	private copyToClipboard(text: string): void {
-		console.log(`Copying to clipboard:`);
-		navigator.clipboard.writeText(text).then(
-			() => {
-				console.log(`Copied to clipboard: ${text}`);
-			},
-			(err) => {
-				console.error('Failed to copy text: ', err);
-			}
-		);
 	}
 }

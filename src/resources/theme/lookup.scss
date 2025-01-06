@@ -1,5 +1,3 @@
-/* stylelint-disable declaration-property-value-disallowed-list */
-/* stylelint-disable indentation */
 .ck.ck-lookup-form,
 .ck.ck-result-form {
 	width: 600px;
@@ -35,16 +33,10 @@
 	.ck-tab {
 		flex-grow: 1;
 		justify-content: center;
-		& .ck-selected {
-			color: var(--ck-color-button-on-color);
-			background: var(--ck-color-button-on-background);
-		}
 	}
-	.ck-sub-tab {
-		&.ck-selected {
-			color: var(--ck-color-button-on-color);
-			background: var(--ck-color-button-on-background);
-		}
+	.ck-selected {
+		color: var(--ck-color-button-on-color);
+		background: var(--ck-color-button-on-background);
 	}
 	.ck-toolbar__separator {
 		background-color: var(--ck-color-base-border);
@@ -71,9 +63,7 @@
 		flex-direction: row;
 		justify-content: flex-end;
 
-		/* The inputs area styles */
 		&.ck-lookup-form__inputs {
-			/* margin: 20px; */
 			input {
 				width: 100%;
 			}
@@ -86,7 +76,6 @@
 		font-size: 32px;
 	}
 	.ck-phonetic {
-		/* margin: 0 20px; */
 		font-weight: bold;
 		font-size: small;
 	}
@@ -97,48 +86,36 @@
 	}
 
 	.ck-sense-combined-row {
-		/* display: flex;
-		flex-direction: row;
-		gap: 5px; */
 		display: flex;
-		flex-wrap: wrap; /* Allow items to wrap onto the next line */
+		flex-wrap: wrap;
 		align-items: flex-start;
 	}
 	.ck-sense-label {
-		flex-shrink: 0; /* Prevent the first item from shrinking */
-		width: auto; /* Ensure it takes up only the space it needs */
+		flex-shrink: 0;
+		width: auto;
 		margin-right: 10px;
-		/* display: flex; */
-		/* flex-direction: column; */
 		background-color: #f4f4f4;
-		/* font-size: 14px; */
 		padding: 0.125em 0.3125em;
 		font-weight: 600;
 		color: #525a5b;
-		/* height: fit-content; */
 	}
 	.ck-sls-container {
-		flex-shrink: 0; /* Prevent the first item from shrinking */
-		width: auto; /* Ensure it takes up only the space it needs */
+		flex-shrink: 0;
+		width: auto;
 		margin-right: 10px;
-		/* display: flex; */
-		/* flex-direction: column; */
 		background-color: #f4f4f4;
-		/* font-size: 14px; */
 		padding: 0.125em 0.3125em;
 		font-weight: 600;
 		color: #525a5b;
-		/* height: fit-content; */
 	}
 	.ck-definition-row {
 		display: flex;
-		flex-direction: column; /* Place each additional definition in a new row */
-		/* margin-top: 10px; Add spacing between rows */
+		flex-direction: column;
 		margin-left: 43px;
 	}
 	.ck-definition {
-		flex-grow: 1; /* Allow the second item to grow */
-		min-width: 0; /* Make sure the text wraps properly */
+		flex-grow: 1;
+		min-width: 0;
 		word-wrap: break-word;
 		white-space: wrap;
 		& a {
@@ -159,9 +136,6 @@
 		justify-content: start;
 		gap: 10px;
 	}
-	/* & .ck-sense-sequence-container {
-
-  } */
 	.ck-sense-sequence {
 		display: flex;
 		flex-direction: column;
@@ -169,17 +143,15 @@
 		padding-bottom: 5px;
 		border-bottom: 1px solid #ced4da;
 	}
-
 	.ck-sense {
 		display: flex;
 		flex-direction: column;
-		/* margin-bottom: 6px; */
 	}
 	.ck-sense + .ck-sense .ck-number-definition-container {
-		margin-left: 11px; /* Adjust the value as needed */
+		margin-left: 11px;
 	}
 	.ck-number-definition-container:not(:has(.ck-sense-number)) {
-		margin-left: 20px; /* Adjust the value as needed */
+		margin-left: 20px;
 	}
 	.ck-sense-prefix {
 		display: flex;
@@ -189,9 +161,7 @@
 		display: flex;
 		flex-direction: row;
 		flex-grow: 1;
-		/* border-left: 2px solid #827e7e;
-		margin-left: 2px; */
-		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjyEhL+g8ABJoCMA2iZhsAAAAASUVORK5CYII=');
+		background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjyEhL+g8ABJoCMA2iZhsAAAAASUVORK5CYII=");
 		background-repeat: repeat-y;
 		background-position: center;
 		background-size: 2px 100%;
@@ -226,8 +196,6 @@
 		white-space: normal;
 		color: #827e7e;
 	}
-	/*  .ck-divided-sense {
-	} */
 	.ck-quotes-block {
 		margin-top: 20px;
 	}
@@ -261,7 +229,7 @@
 	}
 	.ck-quote-attribution {
 		font-size: 12px;
-		color: #6b6b6b; /* Grey color */
+		color: #6b6b6b;
 		font-style: italic;
 	}
 	.ck-synonym-block {
@@ -270,7 +238,6 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: start;
-		/* gap: 10px; */
 		margin: 10px;
 	}
 	.ck-synonym {
@@ -284,15 +251,6 @@
 		flex-wrap: wrap;
 		gap: 10px;
 	}
-	/* .ck-synonym-button {
-		background-color: #f0f0f0;
-		border: 1px solid #ccc;
-		padding: 2px 4px;
-		cursor: pointer;
-		font-size: 14px;
-		border-radius: 4px;
-		margin: 4px;
-	} */
 	.ck-synonym-block button {
 		background-color: #f8f9fa;
 		border: 1px solid #ced4da;
@@ -311,6 +269,7 @@
 	}
 	.ck-short-def {
 		margin-left: 20px;
+		white-space: wrap;
 	}
 	.ck-number-definition-container {
 		display: flex;
@@ -351,7 +310,6 @@
 		margin: 10px;
 	}
 	.ck-word-detail {
-		/* margin: 20px; */
 		line-height: 50px;
 		font-weight: 700;
 		font-size: 32px;

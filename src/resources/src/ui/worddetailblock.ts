@@ -1,6 +1,5 @@
 import { Locale } from 'ckeditor5';
 import { View } from 'ckeditor5/src/ui.js';
-import { stringToViewCollection } from '../utils.js';
 
 export default class WordDetailBlock extends View {
 	constructor(locale: Locale, word: string, functionalLabel: string) {

@@ -2,8 +2,6 @@ import { Locale } from 'ckeditor5';
 import { View } from 'ckeditor5/src/ui.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
 import DefiningTextBlock from './definingtextblock.js';
-import VerbalIllustrationBlock from './verbalillustrationblock.js';
-import { stringToViewCollection } from '../utils.js';
 
 export default class SenseBlock extends View {
 	constructor(locale: Locale, data: [string, DictionaryTypes.TestSense]) {
@@ -31,7 +29,7 @@ export default class SenseBlock extends View {
 	private handleBindingSubstitute(
 		locale: Locale,
 		bindingSubstitute: DictionaryTypes.TestSense,
-		collection: any
+		collection: any,
 	): void {
 		const { dt, sense } = bindingSubstitute;
 
@@ -40,7 +38,10 @@ export default class SenseBlock extends View {
 			dt.forEach((definitionPart: any) => {
 				if (definitionPart[0] === 'text') {
 					const definingText = definitionPart[1];
-					const definingTextBlock = new DefiningTextBlock(locale, definingText);
+					const definingTextBlock = new DefiningTextBlock(
+						locale,
+						definingText,
+					);
 					collection.add(definingTextBlock);
 				}
 			});
@@ -56,9 +57,15 @@ export default class SenseBlock extends View {
 	private handleSense(
 		locale: Locale,
 		content: DictionaryTypes.TestSense,
-		collection: any
+		collection: any,
 	): void {
-		const { sn: senseNumber, dt, sdsense: dividedSense, sls, pseq } = content;
+		const {
+			sn: senseNumber,
+			dt,
+			sdsense: dividedSense,
+			sls,
+			pseq,
+		} = content;
 
 		// Create a container for the sense number and first definition
 		const numberDefinitionContainer = new View(locale);
@@ -80,7 +87,10 @@ export default class SenseBlock extends View {
 			const firstDefinition = dt[0];
 			if (firstDefinition[0] === 'text') {
 				const definingText = firstDefinition[1];
-				const definingTextBlock = new DefiningTextBlock(locale, definingText);
+				const definingTextBlock = new DefiningTextBlock(
+					locale,
+					definingText,
+				);
 				numberDefinitionCollection.add(definingTextBlock);
 			}
 		}
@@ -99,7 +109,10 @@ export default class SenseBlock extends View {
 				if (definitionPart[0] === 'text') {
 					const definingText = definitionPart[1];
 					const rowDefinitionContainer = new View(locale);
-					const definitionBlock = new DefiningTextBlock(locale, definingText);
+					const definitionBlock = new DefiningTextBlock(
+						locale,
+						definingText,
+					);
 
 					rowDefinitionContainer.setTemplate({
 						tag: 'div',
@@ -116,7 +129,7 @@ export default class SenseBlock extends View {
 		if (dividedSense) {
 			const dividedSenseBlock = this.createDividedSenseBlock(
 				dividedSense,
-				locale
+				locale,
 			);
 			collection.add(dividedSenseBlock);
 		}
@@ -130,7 +143,7 @@ export default class SenseBlock extends View {
 
 	private createDividedSenseBlock(
 		dividedSense: DictionaryTypes.DividedSense,
-		locale: Locale
+		locale: Locale,
 	): View {
 		const { sd: senseDivider, dt } = dividedSense;
 
@@ -172,7 +185,9 @@ export default class SenseBlock extends View {
 		pseq[1].forEach((seqItem) => {
 			if ('sense' in seqItem) {
 				// Recursively create SenseBlock for each nested sense
-				pseqCollection.add(new SenseBlock(locale, ['sense', seqItem.sense]));
+				pseqCollection.add(
+					new SenseBlock(locale, ['sense', seqItem.sense]),
+				);
 			}
 		});
 
