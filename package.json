@@ -1,5 +1,5 @@
 {
-  "name": "craft-thesaurus-lex-plugin",
+  "name": "thesaurus-lex",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
