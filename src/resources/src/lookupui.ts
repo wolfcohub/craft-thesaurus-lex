@@ -6,13 +6,10 @@ import LookupEditing from './lookupediting.js';
 import LookupState from './lookupstate.js';
 import lexIcon from './../../icon.svg';
 
-/**
- * The Lookup UI feature. It introduces the Lookup button.
- */
 export default class LookupUI extends Plugin {
 	state!: LookupState;
 	private modal!: Dialog;
-
+	private handleOutsideClick: (event: MouseEvent) => void = () => {};
 	public static get pluginName() {
 		return 'LookupUI' as const;
 	}
@@ -21,27 +18,36 @@ export default class LookupUI extends Plugin {
 		return [Dialog, Notification];
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public init(): void {
 		const editor = this.editor;
+
 		const t = editor.locale.t;
 		const plugin = editor.plugins.get('LookupEditing') as LookupEditing;
 		this.state = plugin.state;
 
+		// instantiate modal
 		this.modal = new Dialog(editor);
+
+		// define the handler to close modal on outside click
+		this.handleOutsideClick = (event: MouseEvent) => {
+			const modalContainer = document.querySelector('.ck-dialog');
+			if (
+				modalContainer &&
+				!modalContainer.contains(event.target as Node)
+			) {
+				this.modal.hide();
+				this.state.reset();
+			}
+		};
 
 		const lookupCommand = editor.commands.get(LOOKUP);
 		if (lookupCommand) {
-			// Add lookup button to feature components.
+			// add the ThesaurusLex button (which opens modal) to CKEditor toolbar
 			editor.ui.componentFactory.add('thesaurusLexButton', () => {
-				const dialog = editor.plugins.get('Dialog');
 				const plugin = editor.plugins.get(
 					'LookupEditing',
 				) as LookupEditing;
 				const state = plugin.state;
-				const doc = editor.model.document;
 
 				const buttonView = new ButtonView(editor.locale);
 
@@ -51,32 +57,40 @@ export default class LookupUI extends Plugin {
 					tooltip: true,
 				});
 
-				buttonView
-					.bind('isOn')
-					.to(dialog, 'id', (id) => id === 'dictionaryLookup');
-
-				// Execute the command.
+				// handle ThesaurusLex button click
 				this.listenTo(buttonView, 'execute', () => {
-					console.log('LookupUI:execute');
-					const selection = doc.selection;
+					const selection = editor.model.document.selection;
 					if (selection.rangeCount === 1) {
-						// if a single word is selected, prepopulate search input with it
 						const range = selection.getFirstRange();
-
 						const word = rangeToText(range);
+
 						if (isSingleWord(word)) {
+							// if a single word is selected, set it in the state
 							state.wordToLookup = word;
 						}
 					}
 
-					const formView = this.createLookupFormView();
+					// instantiate word lookup form
+					const formView = new LookupFormView(editor.locale, editor);
 					formView.input.fieldView.set({
 						value: state?.wordToLookup,
 					});
+					// the following form props should reflect their respective state values
+					// - isFetching
+					// - isSuccess
+					// - dictionaryResults
+					// - thesaurusResults
 					formView.bind('isFetching').to(state, 'isFetching');
 					formView.bind('isSuccess').to(state, 'isSuccess');
-					formView.bind('results').to(state, 'results');
+					formView
+						.bind('dictionaryResults')
+						.to(state, 'dictionaryResults');
+					formView
+						.bind('thesaurusResults')
+						.to(state, 'thesaurusResults');
 
+					// listen to state for change in errorMessage
+					// display in modal if non-empty
 					this.listenTo(
 						state,
 						'change:errorMessage',
@@ -90,36 +104,50 @@ export default class LookupUI extends Plugin {
 						},
 					);
 
+					// hide modal on form 'cancel' event
 					formView.on('cancel', () => {
 						this.modal.hide();
 					});
+
+					// trigger lookup command on form submit
 					this.listenTo(formView, 'submit', () => {
 						editor.execute(LOOKUP, formView.inputText);
 					});
 
-					if (buttonView.isOn) {
-						this.modal.hide();
-						state.reset();
-					} else {
-						this.modal.show({
-							isModal: true,
-							id: 'dictionaryLookup',
-							title: t('Dictionary Lookup'),
-							content: formView,
-							onHide: () => {
-								state.reset();
-							},
-						});
-					}
+					// with all event listeners hooked up, now show the modal
+					this.modal.show({
+						isModal: true,
+						id: 'dictionaryLookup',
+						title: t('Dictionary Lookup'),
+						content: formView,
+						onShow: () => {
+							if (state.wordToLookup) {
+								// trigger lookup automatically if word to lookup is set in state
+								editor.execute(LOOKUP, state.wordToLookup);
+							}
+							// prevent background scrolling while modal is open
+							document.body.classList.add('no-scroll');
+							// hook up mousedown event to our outside click handler
+							document.addEventListener(
+								'mousedown',
+								this.handleOutsideClick,
+							);
+						},
+						onHide: () => {
+							// clear state (avoid duplicate API calls)
+							state.reset();
+							// with modal closed, re-enable background scrolling
+							document.body.classList.remove('no-scroll');
+							document.removeEventListener(
+								'mousedown',
+								this.handleOutsideClick,
+							);
+						},
+					});
 				});
 
 				return buttonView;
 			});
 		}
-	}
-
-	createLookupFormView(): LookupFormView {
-		const formView = new LookupFormView(this.editor.locale);
-		return formView;
 	}
 }

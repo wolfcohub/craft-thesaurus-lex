@@ -1,22 +1,21 @@
-{% block content %}
-  <form method="post" accept-charset="UTF-8">
-    {{ csrfInput() }}
-    {{ actionInput('thesaurus-plugin/settings/save-settings') }}
+{% import '_includes/forms' as forms %}
 
-    <h3>Settings for Thesaurus Plugin</h3>
-<h4>{{ settings.tKey }}</h4>
-    <div>
-      <label for="tKey">Merriam Thesaurus API Key</label>
-      <input type="text" id="tKey" name="settings[tKey]" value="{{ settings.tKey ?? '' }}" />
-    </div>
+<p><strong>Plugin Version:</strong> {{ version }}</p>
 
-    <div>
-      <label for="dKey">Merriam Dictionary API Key</label>
-      <input type="text" id="dKey" name="settings[dKey]" value="{{ settings.dKey ?? '' }}" />
-    </div>
+{{ forms.autosuggestField({
+    label: "Dictionary API Key",
+    name: 'dKey',
+    suggestEnvVars: true,
+    value: settings.dKey,
+    instructions: 'Enter Merriam-Webster Collegiate&reg; Dictionary API key',
+}) }}
 
-    <div class="buttons">
-      <button type="submit" class="btn submit">Save Settings</button>
-    </div>
-  </form>
-{% endblock %}
+{{ forms.autosuggestField({
+    label: "Thesaurus API Key",
+    name: 'tKey',
+    suggestEnvVars: true,
+    value: settings.tKey,
+    instructions: 'Enter Merriam-Webster Collegiate&reg; Thesaurus API key',
+}) }}
+
+<p>API keys must be obtained through <a href="https://dictionaryapi.com/products/index">Merriam-Webster</a></p>

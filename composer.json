@@ -1,5 +1,5 @@
 {
-  "name": "dev/craft-thesaurus-plugin",
+  "name": "wolfco/craft-thesaurus-lex",
   "description": "Your plugin’s package description",
   "type": "craft-plugin",
   "keywords": [
@@ -7,18 +7,14 @@
     "keywords",
     "here"
   ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Dev",
-      "homepage": "https://developer-website.tld"
-    }
-  ],
+  "homepage": "https://www.wolfco.us",
+  "license": "proprietary",
   "support": {
-    "email": "email@developer-website.tld",
-    "issues": "https://github.com/developer/repo/issues?state=open",
-    "source": "https://github.com/developer/repo",
-    "docs": "https://github.com/developer/repo/blob/master/README.md"
+    "email": "jack@wolfco.us",
+    "issues": "https://github.com/wolfcohub/craft-thesaurus-lex",
+    "source": "https://github.com/wolfcohub/craft-thesaurus-lex",
+    "docs": "https://github.com/wolfcohub/craft-thesaurus-lex",
+    "rss": "https://github.com/wolfcohub/craft-thesaurus-lex"
   },
   "require": {
     "craftcms/cms": "^5.3.0",
@@ -30,8 +26,8 @@
     }
   },
   "extra": {
-    "name": "Thesaurussaurus Rex",
-    "handle": "thesaurus-plugin"
+    "name": "Thesaurus Lex",
+    "handle": "thesaurus-lex"
   },
   "config": {
     "allow-plugins": {
