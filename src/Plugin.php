@@ -16,7 +16,7 @@ class Plugin extends BasePlugin
     public static Plugin $plugin;
     public bool $hasCpSettings = true;
     public string $schemaVersion = '1.0.0';
-    protected string $handle = 'thesaurus-plugin';
+    protected string $handle = 'thesaurus-lex';
 
     public function init()
     {
@@ -28,7 +28,7 @@ class Plugin extends BasePlugin
 
         // Register the controller map to ensure it's accessible
         Craft::$app->controllerMap['thesaurus'] = 'wolfco\thesaurus\controllers\ThesaurusController';
-        Craft::$app->controllerMap['thesaurus-plugin/settings'] = 'wolfco\thesaurus\controllers\SettingsController';
+        Craft::$app->controllerMap['thesaurus-lex/settings'] = 'wolfco\thesaurus\controllers\SettingsController';
         // Register custom routes
         Event::on(
             UrlManager::class,
@@ -46,7 +46,7 @@ class Plugin extends BasePlugin
     protected function settingsHtml(): ?string
     {
         return Craft::$app->view->renderTemplate(
-            'thesaurus-plugin/settings',
+            'thesaurus-lex/settings',
             [
                 'settings' => $this->getSettings(),  // This ensures the saved settings are loaded
                 'version' => $this->schemaVersion,
