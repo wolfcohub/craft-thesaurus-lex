@@ -1,10 +1,9 @@
 import { Locale } from 'ckeditor5';
-import { View, ViewCollection } from 'ckeditor5/src/ui.js';
+import { View } from 'ckeditor5/src/ui.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
 
 export default class PronunciationsBlock extends View {
 	constructor(locale: Locale, data: DictionaryTypes.Pronunciation[]) {
-		console.log(`PronunciationsBlock constructor`);
 		super(locale);
 
 		const pronunciationBlocks = this.createCollection();

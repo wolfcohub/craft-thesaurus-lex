@@ -1,8 +1,7 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
 import LookupState from './lookupstate.js';
 import { DictionaryTypes } from './DictionaryTypes.js';
-
-const API_KEY = '054c2e55-ab0b-437e-adc6-ddec840a3616';
+import { ThesaurusTypes } from './ThesaurusTypes.js';
 
 export default class LookupCommand extends Command {
 	/**
@@ -22,45 +21,101 @@ export default class LookupCommand extends Command {
 	override async execute(inputWord: string) {
 		this._state.set('isFetching', true);
 
-		const url = `https://dictionaryapi.com/api/v3/references/collegiate/json/${inputWord}?key=${API_KEY}`;
-		const response = await fetch(url);
-		if (!response.ok) {
+		const url =
+			`/actions/thesaurus/get-definitions?` +
+			new URLSearchParams({
+				word: inputWord,
+			}).toString();
+
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				Accept: 'application/json',
+			},
+		});
+
+		const dictionaryResults = await response.json();
+
+		if (dictionaryResults.error) {
 			this._state.set('isFetching', false);
 			this._state.set(
 				'errorMessage',
-				`Error fetching definition for ${inputWord}: ${response.status}`,
+				`Error fetching definition for ${inputWord}: ${dictionaryResults.error}`,
 			);
 			return;
 		}
 
-		const results = await response.json();
-		console.log('response data: ', results);
-		if (!Array.isArray(results)) {
+		if (!Array.isArray(dictionaryResults)) {
 			this._state.set('isFetching', false);
 			this._state.set('errorMessage', 'Unexpected response from API');
 			return;
 		}
-		const validResults: DictionaryTypes.DictionaryResult[] = [];
+		const validDictionaryResults: DictionaryTypes.DictionaryResult[] = [];
 
-		results.forEach((result) => {
+		dictionaryResults.forEach((result) => {
 			try {
-				// const validResult = formatMerriamWebsterResult(result);
-				validResults.push(result as DictionaryTypes.DictionaryResult);
+				validDictionaryResults.push(
+					result as DictionaryTypes.DictionaryResult,
+				);
 			} catch (e) {
 				console.log(`Error!`, e);
 			} // swallow error, exclude from results
 		});
-		if (!validResults.length) {
+		if (!validDictionaryResults.length) {
 			this._state.set('isFetching', false);
 			this._state.set('errorMessage', 'Unexpected response from API');
 			return;
 		}
-		console.log(`results: `, validResults);
 
 		// request succeeded
+		this._state.set('dictionaryResults', validDictionaryResults);
+
+		const thesaurusUrl =
+			`/actions/thesaurus/get-synonyms?` +
+			new URLSearchParams({
+				word: inputWord,
+			}).toString();
+
+		const thesaurusResponse = await fetch(thesaurusUrl, {
+			method: 'GET',
+			headers: {
+				Accept: 'application/json',
+			},
+		});
+
+		const thesaurusResults = await thesaurusResponse.json();
+		if (thesaurusResults.error) {
+			console.error(
+				`Failed to fetch thesaurus results: ${thesaurusResults.error}`,
+			);
+			return;
+		}
+
+		if (!Array.isArray(thesaurusResults)) {
+			this._state.set('isFetching', false);
+			this._state.set('errorMessage', 'Unexpected response from API');
+			return;
+		}
+		const validThesaurusResults: ThesaurusTypes.ThesaurusResult[] = [];
+
+		thesaurusResults.forEach((thesaurusResult) => {
+			try {
+				validThesaurusResults.push(
+					thesaurusResult as ThesaurusTypes.ThesaurusResult,
+				);
+			} catch (e) {
+				console.log(`Error!`, e);
+			} // swallow error, exclude from results
+		});
+		if (!validThesaurusResults.length) {
+			this._state.set('isFetching', false);
+			this._state.set('errorMessage', 'Unexpected response from API');
+			return;
+		}
+
+		this._state.set('thesaurusResults', validThesaurusResults);
 		this._state.set('isFetching', false);
 		this._state.set('isSuccess', true);
 		this._state.set('errorMessage', null);
-		this._state.set('results', validResults);
 	}
 }
