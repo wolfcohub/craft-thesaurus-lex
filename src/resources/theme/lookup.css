@@ -1,0 +1,389 @@
+.ck.ck-lookup-form,
+.ck.ck-result-form {
+  width: 600px;
+  max-width: 100%;
+  min-height: 400px;
+}
+.ck.ck-lookup-form .ck-loader,
+.ck.ck-result-form .ck-loader {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.ck.ck-lookup-form .no-scroll,
+.ck.ck-result-form .no-scroll {
+  overflow: hidden;
+  height: 100%;
+}
+.ck.ck-lookup-form .ck-tab-selector,
+.ck.ck-result-form .ck-tab-selector {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.ck.ck-lookup-form .ck-sub-tab-selector,
+.ck.ck-result-form .ck-sub-tab-selector {
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.ck.ck-lookup-form .ck-tab,
+.ck.ck-result-form .ck-tab {
+  flex-grow: 1;
+  justify-content: center;
+}
+.ck.ck-lookup-form .ck-selected,
+.ck.ck-result-form .ck-selected {
+  color: var(--ck-color-button-on-color);
+  background: var(--ck-color-button-on-background);
+}
+.ck.ck-lookup-form .ck-toolbar__separator,
+.ck.ck-result-form .ck-toolbar__separator {
+  background-color: var(--ck-color-base-border);
+  width: 1px;
+}
+.ck.ck-lookup-form .ck-word-container,
+.ck.ck-result-form .ck-word-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+.ck.ck-lookup-form .ck-functional-label,
+.ck.ck-result-form .ck-functional-label {
+  font-weight: 700;
+  line-height: 33px;
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 22px;
+  color: #4a7d95;
+}
+.ck.ck-lookup-form .ck-lookup-form__inputs,
+.ck.ck-lookup-form .ck-lookup-form__actions,
+.ck.ck-result-form .ck-lookup-form__inputs,
+.ck.ck-result-form .ck-lookup-form__actions {
+  margin: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.ck.ck-lookup-form .ck-lookup-form__inputs.ck-lookup-form__inputs input,
+.ck.ck-lookup-form .ck-lookup-form__actions.ck-lookup-form__inputs input,
+.ck.ck-result-form .ck-lookup-form__inputs.ck-lookup-form__inputs input,
+.ck.ck-result-form .ck-lookup-form__actions.ck-lookup-form__inputs input {
+  width: 100%;
+}
+.ck.ck-lookup-form .ck-word,
+.ck.ck-result-form .ck-word {
+  margin: 20px;
+  line-height: 50px;
+  font-weight: 700;
+  font-size: 32px;
+}
+.ck.ck-lookup-form .ck-phonetic,
+.ck.ck-result-form .ck-phonetic {
+  font-weight: bold;
+  font-size: small;
+}
+.ck.ck-lookup-form .ck-definitions,
+.ck.ck-result-form .ck-definitions {
+  margin: 4px 12px;
+  white-space: wrap;
+  list-style-type: none;
+}
+.ck.ck-lookup-form .ck-sense-combined-row,
+.ck.ck-result-form .ck-sense-combined-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.ck.ck-lookup-form .ck-sense-label,
+.ck.ck-result-form .ck-sense-label {
+  flex-shrink: 0;
+  width: auto;
+  margin-right: 10px;
+  background-color: #f4f4f4;
+  padding: 0.125em 0.3125em;
+  font-weight: 600;
+  color: #525a5b;
+}
+.ck.ck-lookup-form .ck-sls-container,
+.ck.ck-result-form .ck-sls-container {
+  flex-shrink: 0;
+  width: auto;
+  margin-right: 10px;
+  background-color: #f4f4f4;
+  padding: 0.125em 0.3125em;
+  font-weight: 600;
+  color: #525a5b;
+}
+.ck.ck-lookup-form .ck-definition-row,
+.ck.ck-result-form .ck-definition-row {
+  display: flex;
+  flex-direction: column;
+  margin-left: 43px;
+}
+.ck.ck-lookup-form .ck-definition,
+.ck.ck-result-form .ck-definition {
+  flex-grow: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  white-space: wrap;
+}
+.ck.ck-lookup-form .ck-definition a,
+.ck.ck-result-form .ck-definition a {
+  font-weight: bold;
+  font-size: 14px;
+  color: #0074cc;
+  text-transform: uppercase;
+}
+.ck.ck-lookup-form .ck-pretext,
+.ck.ck-lookup-form .ck-posttext,
+.ck.ck-result-form .ck-pretext,
+.ck.ck-result-form .ck-posttext {
+  font-style: italic;
+}
+.ck.ck-lookup-form .ck-dt-row,
+.ck.ck-result-form .ck-dt-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: start;
+  gap: 10px;
+}
+.ck.ck-lookup-form .ck-sense-sequence,
+.ck.ck-result-form .ck-sense-sequence {
+  display: flex;
+  flex-direction: column;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ced4da;
+}
+.ck.ck-lookup-form .ck-sense,
+.ck.ck-result-form .ck-sense {
+  display: flex;
+  flex-direction: column;
+}
+.ck.ck-lookup-form .ck-sense + .ck-sense .ck-number-definition-container,
+.ck.ck-result-form .ck-sense + .ck-sense .ck-number-definition-container {
+  margin-left: 11px;
+}
+.ck.ck-lookup-form .ck-number-definition-container:not(:has(.ck-sense-number)),
+.ck.ck-result-form .ck-number-definition-container:not(:has(.ck-sense-number)) {
+  margin-left: 20px;
+}
+.ck.ck-lookup-form .ck-sense-prefix,
+.ck.ck-result-form .ck-sense-prefix {
+  display: flex;
+  flex-direction: column;
+}
+.ck.ck-lookup-form .ck-sense-indent,
+.ck.ck-result-form .ck-sense-indent {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjyEhL+g8ABJoCMA2iZhsAAAAASUVORK5CYII=");
+  background-repeat: repeat-y;
+  background-position: center;
+  background-size: 2px 100%;
+}
+.ck.ck-lookup-form .ck-sense-content,
+.ck.ck-result-form .ck-sense-content {
+  display: flex;
+  flex-direction: column;
+}
+.ck.ck-lookup-form .ck-sense-content-row,
+.ck.ck-result-form .ck-sense-content-row {
+  display: flex;
+  flex-direction: row;
+}
+.ck.ck-lookup-form .ck-sense-header,
+.ck.ck-result-form .ck-sense-header {
+  display: flex;
+  flex-direction: row;
+}
+.ck.ck-lookup-form .ck-sense-number,
+.ck.ck-result-form .ck-sense-number {
+  font-weight: bold;
+  margin: 0 7px;
+}
+.ck.ck-lookup-form .ck-sense-divider,
+.ck.ck-result-form .ck-sense-divider {
+  font-style: italic;
+  margin-left: 16px;
+  margin-right: 3px;
+}
+.ck.ck-lookup-form .ck-vis-container,
+.ck.ck-result-form .ck-vis-container {
+  border-left: 1px solid #827e7e;
+  padding-left: 10px;
+  margin-left: 21px;
+}
+.ck.ck-lookup-form .ck-verbal-illustration,
+.ck.ck-result-form .ck-verbal-illustration {
+  white-space: normal;
+  color: #827e7e;
+}
+.ck.ck-lookup-form .ck-quotes-block,
+.ck.ck-result-form .ck-quotes-block {
+  margin-top: 20px;
+}
+.ck.ck-lookup-form .ck-quotes-header,
+.ck.ck-result-form .ck-quotes-header {
+  border-left: 2px solid #827e7e;
+  padding-left: 10px;
+  background-color: #d1d1d1;
+}
+.ck.ck-lookup-form .ck-quotes-header p,
+.ck.ck-result-form .ck-quotes-header p {
+  font-size: 14px;
+  font-weight: bold;
+}
+.ck.ck-lookup-form .ck-quotes-header p span,
+.ck.ck-result-form .ck-quotes-header p span {
+  font-style: italic;
+}
+.ck.ck-lookup-form .ck-quotes-body,
+.ck.ck-result-form .ck-quotes-body {
+  margin: 10px;
+}
+.ck.ck-lookup-form .ck-verb-divider,
+.ck.ck-result-form .ck-verb-divider {
+  font-weight: 400;
+  font-style: italic;
+  color: #0074cc;
+}
+.ck.ck-lookup-form .ck-quote,
+.ck.ck-result-form .ck-quote {
+  padding-left: 10px;
+  border-left: 2px solid #b0b0b0;
+}
+.ck.ck-lookup-form .ck-quote-content,
+.ck.ck-result-form .ck-quote-content {
+  font-size: 13px;
+  white-space: normal;
+}
+.ck.ck-lookup-form .ck-quote-attribution,
+.ck.ck-result-form .ck-quote-attribution {
+  font-size: 12px;
+  color: #6b6b6b;
+  font-style: italic;
+}
+.ck.ck-lookup-form .ck-synonym-block,
+.ck.ck-result-form .ck-synonym-block {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  margin: 10px;
+}
+.ck.ck-lookup-form .ck-synonym,
+.ck.ck-result-form .ck-synonym {
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #f4f4f4;
+}
+.ck.ck-lookup-form .ck-synonym-list,
+.ck.ck-result-form .ck-synonym-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.ck.ck-lookup-form .ck-synonym-block button,
+.ck.ck-result-form .ck-synonym-block button {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  padding: 0px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 6px 4px;
+}
+.ck.ck-lookup-form .ck-synonym-header,
+.ck.ck-result-form .ck-synonym-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+.ck.ck-lookup-form .ck-short-def,
+.ck.ck-result-form .ck-short-def {
+  margin-left: 20px;
+  white-space: wrap;
+}
+.ck.ck-lookup-form .ck-number-definition-container,
+.ck.ck-result-form .ck-number-definition-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.ck.ck-lookup-form .ck-thesaurus-container,
+.ck.ck-result-form .ck-thesaurus-container {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #ccc;
+  align-items: center;
+  gap: 5px;
+}
+.ck.ck-lookup-form .ck-synonym-block button:hover,
+.ck.ck-result-form .ck-synonym-block button:hover {
+  background-color: #e2e6ea;
+}
+.ck.ck-lookup-form .ck-synonym-button:hover,
+.ck.ck-result-form .ck-synonym-button:hover {
+  background-color: #e0e0e0;
+}
+.ck.ck-lookup-form .ck-synonym-button:active,
+.ck.ck-result-form .ck-synonym-button:active {
+  background-color: #d0d0d0;
+}
+.ck.ck-lookup-form .ck.ck-scrollable-results,
+.ck.ck-result-form .ck.ck-scrollable-results {
+  height: 400px;
+  max-height: 100%;
+  overflow: scroll;
+}
+.ck.ck-lookup-form .ck-prs-container,
+.ck.ck-result-form .ck-prs-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+  margin: 10px;
+}
+.ck.ck-lookup-form .ck-word-detail,
+.ck.ck-result-form .ck-word-detail {
+  line-height: 50px;
+  font-weight: 700;
+  font-size: 32px;
+}
+.ck.ck-lookup-form .ck-word-detail-container,
+.ck.ck-result-form .ck-word-detail-container {
+  display: flex;
+  align-items: center;
+}
+.ck.ck-lookup-form .ck-sdsense-container,
+.ck.ck-result-form .ck-sdsense-container {
+  display: flex;
+  align-items: center;
+}
+.ck.ck-lookup-form .ck-functionalLabel-detail,
+.ck.ck-result-form .ck-functionalLabel-detail {
+  font-weight: 700;
+  line-height: 33px;
+  text-decoration: none;
+  margin-left: 15px;
+  font-size: 22px;
+  color: #4a7d95;
+}

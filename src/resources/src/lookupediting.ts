@@ -2,7 +2,7 @@ import { Plugin } from 'ckeditor5/src/core.js';
 import LookupCommand from './lookupcommand.js';
 import LookupState from './lookupstate.js';
 import { LOOKUP } from './utils.js';
-import '../theme/lookup.scss';
+import '../theme/lookup.css';
 
 export default class LookupEditing extends Plugin {
 	public state!: LookupState;
