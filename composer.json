@@ -18,8 +18,8 @@
     "rss": "https://github.com/wolfcohub/craft-thesaurus-lex"
   },
   "require": {
-    "craftcms/cms": "^5.3.0",
-    "craftcms/ckeditor": "^4.3"
+    "craftcms/cms": "^4.0.0 || ^5.0.0",
+    "craftcms/ckeditor": "^3.10 || ^4.4"
   },
   "autoload": {
     "psr-4": {
