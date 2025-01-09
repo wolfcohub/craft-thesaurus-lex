@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "install": "npm --prefix src/resources install",
+    "scss:compile": "npm --prefix src/resources run scss:compile",
     "dll:build": "npm --prefix src/resources run dll:build",
     "dll:watch": "npm --prefix src/resources run dll:watch"
   },
