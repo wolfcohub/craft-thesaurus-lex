@@ -125,35 +125,53 @@ export namespace DictionaryTypes {
 	export type DefiningText = ['text', string];
 	export type EtymologyContent = ['text', string];
 	export type EtymologySupplementalNote = ['et_snote', Array<['t', string]>];
-	export type Pseq = [
-		'pseq',
-		Array<{
-			sense: {
-				sn: string;
-				dt: Array<DefiningText | VerbalIllustration>;
-			};
-		}>,
-	];
+	// export type Pseq = [
+	// 	'pseq',
+	// 	Array<{
+	// 		sense: {
+	// 			sn: string;
+	// 			dt: Array<DefiningText | VerbalIllustration>;
+	// 		};
+	// 	}>,
+	// ];
+	export type Pseq = Array<{
+		sense: Sense; // Nested sense under the sequence
+	}>;
 
-	export type Sense = [
-		'sense' | 'pseq',
-		{
-			sn?: string;
-			dt?: Array<DefiningText | VerbalIllustration>;
-			et?: Array<EtymologyContent | EtymologySupplementalNote>;
-			sdsense?: DividedSense;
-			sls?: string[];
-			pseq?: Pseq;
-		},
-	];
+	// export type Sense = [
+	// 	'sense' | 'pseq',
+	// 	{
+	// 		sn?: string;
+	// 		dt?: Array<DefiningText | VerbalIllustration>;
+	// 		et?: Array<EtymologyContent | EtymologySupplementalNote>;
+	// 		sdsense?: DividedSense;
+	// 		sls?: string[];
+	// 		pseq?: Pseq;
+	// 	},
+	// ];
+	export type Sense = {
+		sn?: string; // Sense number (e.g., "1a", "2b")
+		dt?: Array<DefiningText | VerbalIllustration>; // Defining text and illustrations
+		et?: Array<EtymologyContent | EtymologySupplementalNote>; // Etymologies
+		sdsense?: DividedSense; // Sub-divided senses
+		sls?: string[]; // Subject or status labels
+		pseq?: Pseq; // Nested sense sequence
+		sense?: TestSense; // Recursive sense definitions
+		children?: Array<SenseSequence | BindingSubstitute | Sense>; // Explicit children types
+	};
+	export type BindingSubstitute = {
+		dt?: Array<DefiningText | VerbalIllustration>; // Defining text for the binding substitute
+		sense?: Sense; // Nested sense under the binding substitute
+	};
 	export type TestSense = {
-		sn?: string;
-		dt?: Array<DefiningText | VerbalIllustration>;
-		et?: Array<EtymologyContent | EtymologySupplementalNote>;
-		sdsense?: DividedSense;
-		sls?: string[];
-		pseq?: Pseq;
-		sense?: TestSense;
+		sn?: string; // Sense number
+		dt?: Array<DefiningText | VerbalIllustration>; // Defining text or illustrations
+		et?: Array<EtymologyContent | EtymologySupplementalNote>; // Etymologies
+		sdsense?: DividedSense; // Divided sense details
+		sls?: string[]; // Subject/status labels
+		pseq?: Pseq; // Sequence of nested senses
+		sense?: TestSense; // Nested senses
+		bs?: BindingSubstitute; // Binding substitute structure
 	};
 	export type VerbalIllustrationContent = {
 		t: string;
@@ -172,9 +190,16 @@ export namespace DictionaryTypes {
 		sd: string;
 		dt: Array<DefiningText | VerbalIllustration>;
 	};
-
-	export type SenseSequence = Array<Sense>;
-
+	export type SenseGroup = {
+		sn?: string; // Sense number (e.g., "1", "2a")
+		sls?: string[]; // Subject or status labels (e.g., "chiefly dialectal")
+	};
+	export type SenseSequence = Array<
+		| ['sense', Sense]
+		| ['bs', BindingSubstitute]
+		| ['pseq', SenseSequence]
+		| ['sen', DividedSense]
+	>;
 	export type Definition = {
 		sseq: SenseSequence[];
 		vd?: string;
