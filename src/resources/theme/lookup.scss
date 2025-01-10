@@ -1,5 +1,6 @@
 .ck.ck-lookup-form,
-.ck.ck-result-form {
+.ck.ck-result-form,
+.ck.ck-suggestions-container {
 	width: 600px;
 	max-width: 100%;
 	min-height: 400px;
@@ -329,5 +330,31 @@
 		margin-left: 15px;
 		font-size: 22px;
 		color: #4a7d95;
+	}
+	.ck-suggestions-block {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
+		align-items: center;
+		justify-content: start;
+		margin: 10px;
+
+		.ck-suggestions-header {
+			width: 100%;
+			padding: 10px 5px;
+			font-weight: bold;
+			font-size: 15px;
+		}
+
+		button {
+			background-color: #f8f9fa;
+			border: 1px solid #ced4da;
+			padding: 0px 5px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 12px;
+			font-weight: 700;
+			margin: 6px 4px;
+		}
 	}
 }

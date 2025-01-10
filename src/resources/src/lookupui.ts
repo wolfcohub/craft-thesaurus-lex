@@ -80,6 +80,7 @@ export default class LookupUI extends Plugin {
 					// - isSuccess
 					// - dictionaryResults
 					// - thesaurusResults
+          // - spellingSuggestions
 					formView.bind('isFetching').to(state, 'isFetching');
 					formView.bind('isSuccess').to(state, 'isSuccess');
 					formView
@@ -88,6 +89,9 @@ export default class LookupUI extends Plugin {
 					formView
 						.bind('thesaurusResults')
 						.to(state, 'thesaurusResults');
+          formView
+						.bind('spellingSuggestions')
+						.to(state, 'spellingSuggestions');
 
 					// listen to state for change in errorMessage
 					// display in modal if non-empty

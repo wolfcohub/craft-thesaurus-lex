@@ -36,6 +36,15 @@ export default class LookupCommand extends Command {
 
 		const dictionaryResults = await response.json();
 
+		if (
+			dictionaryResults.every((result: any) => typeof result === 'string')
+		) {
+			// results are strings (not objects) -> suggestions for correct spelling
+			this._state.set('isFetching', false);
+			this._state.set('spellingSuggestions', dictionaryResults);
+			return;
+		}
+
 		if (dictionaryResults.error) {
 			this._state.set('isFetching', false);
 			this._state.set(

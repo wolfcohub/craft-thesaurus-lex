@@ -9,9 +9,11 @@ import {
 	ViewCollection,
 } from 'ckeditor5/src/ui.js';
 import { type Locale } from 'ckeditor5/src/utils.js';
+import { Editor } from 'ckeditor5/src/core.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
 import DictionaryThesaurusSelectorView from './dictionarythesaurusselectorview.js';
 import { ThesaurusTypes } from '../ThesaurusTypes.js';
+import SpellingSuggestionsView from './spellingsuggestionsview.js';
 
 export default class LookupFormView extends View {
 	contentBlocks!: ViewCollection;
@@ -29,11 +31,14 @@ export default class LookupFormView extends View {
 	isError!: boolean;
 
 	dictionaryResults!: DictionaryTypes.DictionaryResult[];
+
 	thesaurusResults!: ThesaurusTypes.ThesaurusResult[];
+
+	spellingSuggestions!: string[];
 
 	errorMessage!: string | null;
 
-	constructor(locale: Locale, editor: any) {
+	constructor(locale: Locale, editor: Editor) {
 		super(locale);
 
 		// instantiate the container for all content blocks in this view
@@ -41,6 +46,24 @@ export default class LookupFormView extends View {
 
 		const inputForm = this.createInputForm(locale);
 		this.contentBlocks.add(inputForm);
+
+		this.listenTo(
+			this,
+			'change:spellingSuggestions',
+			(evt, name, spellingSuggestions) => {
+				// dictionaryResults changed. add them to the UI
+				if (spellingSuggestions.length > 0) {
+					const spellingSuggestionsView = new SpellingSuggestionsView(
+						locale,
+						spellingSuggestions,
+						editor,
+					);
+					spellingSuggestionsView.set({ viewUid: 'suggestions' });
+					this.contentBlocks.clear();
+					this.contentBlocks.add(spellingSuggestionsView);
+				}
+			},
+		);
 
 		this.listenTo(
 			this,
