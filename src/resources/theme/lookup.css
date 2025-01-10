@@ -105,13 +105,30 @@
 }
 .ck.ck-lookup-form .ck-sense-label,
 .ck.ck-result-form .ck-sense-label {
-  flex-shrink: 0;
-  width: auto;
-  margin-right: 10px;
-  background-color: #f4f4f4;
-  padding: 0.125em 0.3125em;
-  font-weight: 600;
-  color: #525a5b;
+  display: inline-block;
+  background-color: #e0f7fa;
+  padding: 0.125em 0.5em;
+  font-weight: bold;
+  font-size: 0.9em;
+  color: #00796b;
+  margin-bottom: 4px;
+  border-radius: 4px;
+}
+.ck.ck-lookup-form .ck-sense-row,
+.ck.ck-result-form .ck-sense-row {
+  display: flex;
+  align-items: flex-start; /* Adjust alignment as needed */
+  gap: 8px;
+}
+.ck.ck-lookup-form .ck-sense-number,
+.ck.ck-result-form .ck-sense-number {
+  flex: 0 0 auto; /* Prevent stretching */
+  margin-right: 4px; /* Add spacing between sn and dt */
+  font-weight: bold;
+}
+.ck.ck-lookup-form .ck-dt-container,
+.ck.ck-result-form .ck-dt-container {
+  flex: 1 1 auto; /* Allow it to take up the remaining space */
 }
 .ck.ck-lookup-form .ck-sls-container,
 .ck.ck-result-form .ck-sls-container {
@@ -125,9 +142,7 @@
 }
 .ck.ck-lookup-form .ck-definition-row,
 .ck.ck-result-form .ck-definition-row {
-  display: flex;
-  flex-direction: column;
-  margin-left: 43px;
+  margin-left: 20px;
 }
 .ck.ck-lookup-form .ck-definition,
 .ck.ck-result-form .ck-definition {
@@ -135,6 +150,7 @@
   min-width: 0;
   word-wrap: break-word;
   white-space: wrap;
+  font-size: 14px;
 }
 .ck.ck-lookup-form .ck-definition a,
 .ck.ck-result-form .ck-definition a {
