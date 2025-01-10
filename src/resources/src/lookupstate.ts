@@ -13,6 +13,8 @@ export default class LookupState extends ObservableMixin() {
 
 	public declare thesaurusResults: ThesaurusTypes.ThesaurusResult[];
 
+	public declare spellingSuggestions: string[];
+
 	public declare errorMessage: string | null;
 
 	constructor() {
@@ -26,6 +28,7 @@ export default class LookupState extends ObservableMixin() {
 		this.set('isSuccess', false);
 		this.set('dictionaryResults', []);
 		this.set('thesaurusResults', []);
+		this.set('spellingSuggestions', []);
 		this.set('errorMessage', null);
 	}
 }
