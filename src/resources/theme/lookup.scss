@@ -92,13 +92,29 @@
 		align-items: flex-start;
 	}
 	.ck-sense-label {
-		flex-shrink: 0;
-		width: auto;
-		margin-right: 10px;
-		background-color: #f4f4f4;
-		padding: 0.125em 0.3125em;
-		font-weight: 600;
-		color: #525a5b;
+		display: inline-block;
+		background-color: #e0f7fa;
+		padding: 0.125em 0.5em;
+		font-weight: bold;
+		font-size: 0.9em;
+		color: #00796b;
+		margin-bottom: 4px;
+		border-radius: 4px;
+	}
+	.ck-sense-row {
+		display: flex;
+		align-items: flex-start; /* Adjust alignment as needed */
+		gap: 8px;
+	}
+
+	.ck-sense-number {
+		flex: 0 0 auto; /* Prevent stretching */
+		margin-right: 4px; /* Add spacing between sn and dt */
+		font-weight: bold;
+	}
+
+	.ck-dt-container {
+		flex: 1 1 auto; /* Allow it to take up the remaining space */
 	}
 	.ck-sls-container {
 		flex-shrink: 0;
@@ -109,16 +125,13 @@
 		font-weight: 600;
 		color: #525a5b;
 	}
-	.ck-definition-row {
-		display: flex;
-		flex-direction: column;
-		margin-left: 43px;
-	}
+
 	.ck-definition {
 		flex-grow: 1;
 		min-width: 0;
 		word-wrap: break-word;
 		white-space: wrap;
+		font-size: 14px;
 		& a {
 			font-weight: bold;
 			font-size: 14px;
@@ -179,15 +192,12 @@
 		display: flex;
 		flex-direction: row;
 	}
-	.ck-sense-number {
-		font-weight: bold;
-		margin: 0 7px;
-	}
 	.ck-sense-divider {
 		font-style: italic;
 		margin-left: 16px;
 		margin-right: 3px;
 	}
+
 	.ck-vis-container {
 		border-left: 1px solid #827e7e;
 		padding-left: 10px;
@@ -338,14 +348,12 @@
 		align-items: center;
 		justify-content: start;
 		margin: 10px;
-
 		.ck-suggestions-header {
 			width: 100%;
 			padding: 10px 5px;
 			font-weight: bold;
 			font-size: 15px;
 		}
-
 		button {
 			background-color: #f8f9fa;
 			border: 1px solid #ced4da;
