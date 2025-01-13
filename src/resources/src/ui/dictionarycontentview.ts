@@ -1,16 +1,19 @@
-import { Locale } from 'ckeditor5';
+import { Editor } from 'ckeditor5/src/core.js';
 import { ToolbarSeparatorView, View } from 'ckeditor5/src/ui.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
 import SingleMeaningView from './singlemeaningview.js';
 
 export default class DictionaryContentView extends View {
+	private editor: Editor;
 	public declare selectedResult: string | null;
 
 	constructor(
-		locale: Locale,
+		editor: Editor,
 		lookupResults: DictionaryTypes.DictionaryResult[],
 	) {
-		super(locale);
+		super(editor.locale);
+		this.editor = editor;
+
 		const tabBlocks = this.createCollection();
 		const resultBlocks = this.createCollection();
 
@@ -22,18 +25,18 @@ export default class DictionaryContentView extends View {
 			// insert separators between tabs
 			tabBlocks.add(new ToolbarSeparatorView());
 
-			const resultBlock = new View(locale);
+			const resultBlock = new View(editor.locale);
 			resultBlock.setTemplate({
 				tag: 'div',
 				attributes: {
 					class: ['ck', 'selectedResult'],
 				},
-				children: [new SingleMeaningView(locale, result)],
+				children: [new SingleMeaningView(this.editor, result)],
 			});
 			resultBlocks.add(resultBlock);
 		});
 
-		const tabsContainer = new View(locale);
+		const tabsContainer = new View(editor.locale);
 		tabsContainer.setTemplate({
 			tag: 'div',
 			attributes: {
@@ -42,7 +45,7 @@ export default class DictionaryContentView extends View {
 			children: tabBlocks,
 		});
 
-		const resultsContainer = new View(locale);
+		const resultsContainer = new View(editor.locale);
 		resultsContainer.setTemplate({
 			tag: 'div',
 			children: resultBlocks,

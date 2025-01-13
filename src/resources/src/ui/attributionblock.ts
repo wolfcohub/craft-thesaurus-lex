@@ -1,11 +1,14 @@
-import { Locale } from 'ckeditor5';
+import { Editor } from 'ckeditor5/src/core.js';
 import { View } from 'ckeditor5/src/ui.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
 import { stringToViewCollection } from '../utils.js';
 
 export default class AttributionBlock extends View {
-	constructor(locale: Locale, data: DictionaryTypes.AttributionQuote) {
-		super(locale);
+	private editor: Editor;
+
+	constructor(editor: Editor, data: DictionaryTypes.AttributionQuote) {
+		super(editor.locale);
+		this.editor = editor;
 
 		const { auth, source, aqdate, subsource } = data;
 
@@ -19,14 +22,20 @@ export default class AttributionBlock extends View {
 			if (attributionStrings.length) {
 				attributionStrings.push(', ');
 			}
-			const sourceCollection = stringToViewCollection(source, locale);
+			const sourceCollection = stringToViewCollection(
+				source,
+				this.editor,
+			);
 			attributionStrings.push(...sourceCollection);
 		}
 		if (aqdate) {
 			if (attributionStrings.length) {
 				attributionStrings.push(', ');
 			}
-			const aqdateCollection = stringToViewCollection(aqdate, locale);
+			const aqdateCollection = stringToViewCollection(
+				aqdate,
+				this.editor,
+			);
 			attributionStrings.push(...aqdateCollection);
 		}
 		if (subsource) {
@@ -38,7 +47,7 @@ export default class AttributionBlock extends View {
 				}
 				const innerSourceCollection = stringToViewCollection(
 					innerSource,
-					locale,
+					this.editor,
 				);
 				attributionStrings.push(...innerSourceCollection);
 			}
@@ -48,7 +57,7 @@ export default class AttributionBlock extends View {
 				}
 				const innerAqdateCollection = stringToViewCollection(
 					innerAqdate,
-					locale,
+					this.editor,
 				);
 				attributionStrings.push(...innerAqdateCollection);
 			}

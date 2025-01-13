@@ -1,6 +1,6 @@
 import { Locale } from 'ckeditor5';
 import type { Range } from 'ckeditor5/src/engine.js';
-import { View } from 'ckeditor5/src/ui.js';
+import { ButtonView, View } from 'ckeditor5/src/ui.js';
 import { Editor } from 'ckeditor5/src/core.js';
 
 type StylingKey =
@@ -48,55 +48,59 @@ function stripNestedTokens(text: string): string {
 	return text.replace(nestedTokenRegex, '');
 }
 
-type TokenHandler = (matchGroups: string[], locale: Locale) => string | View;
+type TokenHandler = (matchGroups: string[], editor: Editor) => string | View;
 
 // function map for converting the various tokens to displayable elements in CKEditor
 // per Merriam-Webster guidlines (https://dictionaryapi.com/products/json)
 const tokenHandlers: Record<string, TokenHandler> = {
-	it: (groups, locale) => createStyledView('italic', groups[0], locale),
-	b: (groups, locale) => createStyledView('bold', groups[0], locale),
-	inf: (groups, locale) => createStyledView('sub', groups[0], locale),
-	sup: (groups, locale) => createStyledView('sup', groups[0], locale),
-	sc: (groups, locale) => createStyledView('smallCaps', groups[0], locale),
-	gloss: (groups, locale) =>
-		createStyledView('normal', `[${groups[0]}]`, locale),
-	parahw: (groups, locale) =>
-		createStyledView('boldSmallCaps', groups[0], locale),
-	phrase: (groups, locale) =>
-		createStyledView('boldItalic', groups[0], locale),
-	qword: (groups, locale) => createStyledView('italic', groups[0], locale),
-	wi: (groups, locale) => createStyledView('italic', groups[0], locale),
+	it: (groups, editor) =>
+		createStyledView('italic', groups[0], editor.locale),
+	b: (groups, editor) => createStyledView('bold', groups[0], editor.locale),
+	inf: (groups, editor) => createStyledView('sub', groups[0], editor.locale),
+	sup: (groups, editor) => createStyledView('sup', groups[0], editor.locale),
+	sc: (groups, editor) =>
+		createStyledView('smallCaps', groups[0], editor.locale),
+	gloss: (groups, editor) =>
+		createStyledView('normal', `[${groups[0]}]`, editor.locale),
+	parahw: (groups, editor) =>
+		createStyledView('boldSmallCaps', groups[0], editor.locale),
+	phrase: (groups, editor) =>
+		createStyledView('boldItalic', groups[0], editor.locale),
+	qword: (groups, editor) =>
+		createStyledView('italic', groups[0], editor.locale),
+	wi: (groups, editor) =>
+		createStyledView('italic', groups[0], editor.locale),
 	bc: () => ': ',
 	ldquo: () => '“',
 	rdquo: () => '”',
-	a_link: (groups, locale) => createLinkView(groups[3], groups[3], locale),
-	d_link: (groups, locale) => {
+	a_link: (groups, editor) => createLinkView(groups[3], groups[3], editor),
+	d_link: (groups, editor) => {
 		const linkText = groups[4] || groups[3];
-		const view = createLinkView(linkText, linkText, locale);
+		const view = createLinkView(linkText, linkText, editor);
 		return view;
 	},
-	i_link: (groups, locale) => {
+	i_link: (groups, editor) => {
 		const linkText = groups[4] || groups[3];
-		const view = createLinkView(linkText, linkText, locale);
+		const view = createLinkView(linkText, linkText, editor);
 		return view;
 	},
-	et_link: (groups, locale) => {
+	et_link: (groups, editor) => {
 		const linkText = groups[4] || groups[3];
-		const view = createLinkView(linkText, linkText, locale);
+		const view = createLinkView(linkText, linkText, editor);
 		return view;
 	},
-	sx: (groups, locale) =>
-		createLinkView(groups[3], groups[3], locale, undefined, groups[5]),
-	mat: (groups, locale) => {
+	sx: (groups, editor) =>
+		createLinkView(groups[3], groups[3], editor, undefined, groups[5]),
+	mat: (groups, editor) => {
 		const linkText = groups[4] || groups[3];
-		const view = createLinkView(linkText, linkText, locale);
+		const view = createLinkView(linkText, linkText, editor);
 		return view;
 	},
-	dxt: (groups, locale) => {
+	dxt: (groups, editor) => {
 		const view = createLinkView(
 			groups[3],
 			groups[3],
-			locale,
+			editor,
 			undefined,
 			groups[5],
 		);
@@ -108,18 +112,18 @@ const tokenHandlers: Record<string, TokenHandler> = {
 // which can be passed into the `children` prop of `View.setTemplate`
 export function stringToViewCollection(
 	text: string,
-	locale: Locale,
+	editor: Editor,
 ): Array<string | View> {
 	const collection: Array<string | View> = [];
 	const textWithoutNestedTokens = stripNestedTokens(text);
-	parseAndBuildCollection(textWithoutNestedTokens, collection, locale);
+	parseAndBuildCollection(textWithoutNestedTokens, collection, editor);
 	return collection;
 }
 
 function parseAndBuildCollection(
 	text: string,
 	collection: Array<string | View>,
-	locale: Locale,
+	editor: Editor,
 ) {
 	const tokenRegex =
 		/\{(it|b|inf|sc|sup|gloss|parahw|phrase|qword|wi)\}(.*?)\{\/\1\}|\{(bc|ldquo|rdquo)\}|\{(a_link|d_link|i_link|et_link|sx|mat|dxt)\|?([^|]*)\|?([^|]*)\|?([^|]*)\}/g;
@@ -141,7 +145,7 @@ function parseAndBuildCollection(
 			if (handler) {
 				// Slice to extract the relevant match groups and pass to the handler
 				const groups = match.slice(2);
-				const element = handler(groups, locale);
+				const element = handler(groups, editor);
 				collection.push(element);
 			}
 		}
@@ -184,27 +188,34 @@ function createStyledView(
 }
 
 // create CKEditor View for link to another word
-// @todo make this a Button whose job is to search for the word in `href`
-// (these links do nothing as of now)
 function createLinkView(
 	linkText: string,
 	href: string | undefined,
-	locale: Locale,
+	editor: Editor,
 	textStyle?: string,
 	extraText?: string,
 ): View {
-	const linkView = new View(locale);
+	const linkView = new ButtonView(editor.locale);
 	const text = extraText ? `${linkText} ${extraText}` : linkText;
 
-	linkView.setTemplate({
-		tag: 'a',
-		attributes: {
-			href: href || linkText,
-			...(textStyle && {
-				style: textStyle === 'italic' ? 'font-style: italic;' : '',
-			}),
-		},
-		children: [text],
+	linkView.set({
+		label: text,
+		withText: true,
+		tooltip: `Look up "${text}"`,
+	});
+
+	// linkView.setTemplate({
+	// 	tag: 'a',
+	// 	attributes: {
+	// 		...(textStyle && {
+	// 			style: textStyle === 'italic' ? 'font-style: italic;' : '',
+	// 		}),
+	// 	},
+	// 	children: [text],
+	// });
+	linkView.on('execute', () => {
+		console.log(`executing lookup command with ${text}`);
+		editor.execute(LOOKUP, text);
 	});
 	return linkView;
 }
