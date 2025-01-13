@@ -73,37 +73,30 @@ const tokenHandlers: Record<string, TokenHandler> = {
 	bc: () => ': ',
 	ldquo: () => '“',
 	rdquo: () => '”',
-	a_link: (groups, editor) => createLinkView(groups[3], groups[3], editor),
+	a_link: (groups, editor) => createLinkView(groups[3], editor),
 	d_link: (groups, editor) => {
 		const linkText = groups[4] || groups[3];
-		const view = createLinkView(linkText, linkText, editor);
+		const view = createLinkView(linkText, editor);
 		return view;
 	},
 	i_link: (groups, editor) => {
 		const linkText = groups[4] || groups[3];
-		const view = createLinkView(linkText, linkText, editor);
+		const view = createLinkView(linkText, editor);
 		return view;
 	},
 	et_link: (groups, editor) => {
 		const linkText = groups[4] || groups[3];
-		const view = createLinkView(linkText, linkText, editor);
+		const view = createLinkView(linkText, editor);
 		return view;
 	},
-	sx: (groups, editor) =>
-		createLinkView(groups[3], groups[3], editor, undefined, groups[5]),
+	sx: (groups, editor) => createLinkView(groups[3], editor, groups[5]),
 	mat: (groups, editor) => {
 		const linkText = groups[4] || groups[3];
-		const view = createLinkView(linkText, linkText, editor);
+		const view = createLinkView(linkText, editor);
 		return view;
 	},
 	dxt: (groups, editor) => {
-		const view = createLinkView(
-			groups[3],
-			groups[3],
-			editor,
-			undefined,
-			groups[5],
-		);
+		const view = createLinkView(groups[3], editor, groups[5]);
 		return view;
 	},
 };
@@ -190,9 +183,7 @@ function createStyledView(
 // create CKEditor View for link to another word
 function createLinkView(
 	linkText: string,
-	href: string | undefined,
 	editor: Editor,
-	textStyle?: string,
 	extraText?: string,
 ): View {
 	const linkView = new ButtonView(editor.locale);
@@ -201,21 +192,12 @@ function createLinkView(
 	linkView.set({
 		label: text,
 		withText: true,
-		tooltip: `Look up "${text}"`,
+		tooltip: `Look up "${linkText}"`,
 	});
 
-	// linkView.setTemplate({
-	// 	tag: 'a',
-	// 	attributes: {
-	// 		...(textStyle && {
-	// 			style: textStyle === 'italic' ? 'font-style: italic;' : '',
-	// 		}),
-	// 	},
-	// 	children: [text],
-	// });
 	linkView.on('execute', () => {
-		console.log(`executing lookup command with ${text}`);
-		editor.execute(LOOKUP, text);
+		// execute lookup command on the linked word
+		editor.execute(LOOKUP, linkText);
 	});
 	return linkView;
 }
