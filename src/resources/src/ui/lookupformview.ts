@@ -54,9 +54,8 @@ export default class LookupFormView extends View {
 				// dictionaryResults changed. add them to the UI
 				if (spellingSuggestions.length > 0) {
 					const spellingSuggestionsView = new SpellingSuggestionsView(
-						locale,
-						spellingSuggestions,
 						editor,
+						spellingSuggestions,
 					);
 					spellingSuggestionsView.set({ viewUid: 'suggestions' });
 					this.contentBlocks.clear();
