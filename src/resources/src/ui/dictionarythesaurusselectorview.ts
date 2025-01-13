@@ -118,7 +118,7 @@ export default class DictionaryThesaurusSelectorView extends View {
 		// create SingleMeaningView instance for each result
 		const dictionaryContainer = new View(locale);
 		const dictionaryContent = new DictionaryContentView(
-			locale,
+			this.editor,
 			dictionaryResults,
 		);
 		dictionaryContainer.setTemplate({

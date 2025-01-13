@@ -1,18 +1,17 @@
 import { View, ButtonView } from 'ckeditor5/src/ui.js';
-import { type Locale } from 'ckeditor5/src/utils.js';
 import { Editor } from 'ckeditor5/src/core.js';
 import { LOOKUP } from '../utils.js';
 
 export default class SpellingSuggestionsView extends View {
 	private editor: Editor;
 
-	constructor(locale: Locale, suggestions: string[], editor: Editor) {
-		super(locale);
+	constructor(editor: Editor, suggestions: string[]) {
+		super(editor.locale);
 		this.editor = editor;
 
-		const suggestionsContainer = new View(locale);
+		const suggestionsContainer = new View(editor.locale);
 
-		const headerView = new View(locale);
+		const headerView = new View(editor.locale);
 		headerView.setTemplate({
 			tag: 'div',
 			attributes: {
@@ -24,7 +23,7 @@ export default class SpellingSuggestionsView extends View {
 		});
 
 		const suggestionButtons = suggestions.map((suggestion) => {
-			const button = new ButtonView(locale);
+			const button = new ButtonView(editor.locale);
 			button.set({
 				label: suggestion,
 				withText: true,
