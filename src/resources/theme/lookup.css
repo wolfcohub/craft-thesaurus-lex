@@ -172,9 +172,9 @@
   white-space: wrap;
   font-size: 14px;
 }
-.ck.ck-lookup-form .ck-definition a,
-.ck.ck-result-form .ck-definition a,
-.ck.ck-suggestions-container .ck-definition a {
+.ck.ck-lookup-form .ck-definition button,
+.ck.ck-result-form .ck-definition button,
+.ck.ck-suggestions-container .ck-definition button {
   font-weight: bold;
   font-size: 14px;
   color: #0074cc;
