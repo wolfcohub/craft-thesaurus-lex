@@ -264,6 +264,24 @@
   margin-left: 16px;
   margin-right: 3px;
 }
+.ck.ck-lookup-form .ck-uns-list,
+.ck.ck-result-form .ck-uns-list,
+.ck.ck-suggestions-container .ck-uns-list {
+  margin: 10px 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+.ck.ck-lookup-form .ck-uns-item,
+.ck.ck-result-form .ck-uns-item,
+.ck.ck-suggestions-container .ck-uns-item {
+  margin-bottom: 5px;
+}
+.ck.ck-lookup-form .ck-uns-item .ck-definition,
+.ck.ck-result-form .ck-uns-item .ck-definition,
+.ck.ck-suggestions-container .ck-uns-item .ck-definition {
+  font-size: 14px;
+  color: #333;
+}
 .ck.ck-lookup-form .ck-vis-container,
 .ck.ck-result-form .ck-vis-container,
 .ck.ck-suggestions-container .ck-vis-container {
