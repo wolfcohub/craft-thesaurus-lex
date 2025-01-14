@@ -1,381 +1,407 @@
+.ck.ck-form-container {
+	position: relative;
+	padding-bottom: 70px;
+
+	.ck-logo-container {
+		position: absolute;
+		width: 100%;
+		bottom: 0px;
+		padding-right: 10px;
+		height: 70px;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 7px;
+	}
+	.ck-logo-prefix {
+		font-weight: bold;
+		font-size: small;
+	}
+	.ck-logo {
+		display: block;
+		width: 50px;
+		height: 50px;
+		top: 0;
+		background-image: url("./icons/MWLogo_LightBG_120x120_2x.png");
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+}
+
 .ck.ck-lookup-form,
 .ck.ck-result-form,
 .ck.ck-suggestions-container {
-    width: 600px;
-    max-width: 100%;
-    min-height: 400px;
+	width: 600px;
+	max-width: 100%;
+	min-height: 400px;
+	// position: relative;
 
-    & .ck-loader {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        z-index: 999;
-    }
-    .no-scroll {
-        overflow: hidden;
-        height: 100%;
-    }
-    .ck-tab-selector {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-    }
-    .ck-sub-tab-selector {
-        margin: 10px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-    }
+	& .ck-loader {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		z-index: 999;
+	}
+	.no-scroll {
+		overflow: hidden;
+		height: 100%;
+	}
+	.ck-tab-selector {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+	}
 
-    .ck-tab {
-        flex-grow: 1;
-        justify-content: center;
-    }
-    .ck-selected {
-        color: var(--ck-color-button-on-color);
-        background: var(--ck-color-button-on-background);
-    }
-    .ck-toolbar__separator {
-        background-color: var(--ck-color-base-border);
-        width: 1px;
-    }
-    .ck-word-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 5px;
-    }
-    .ck-functional-label {
-        font-weight: 700;
-        line-height: 33px;
-        text-decoration: none;
-        margin-left: 5px;
-        font-size: 22px;
-        color: #4a7d95;
-    }
-    .ck-lookup-form__inputs,
-    .ck-lookup-form__actions {
-        margin: 20px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
+	.ck-tab {
+		flex-grow: 1;
+		justify-content: center;
+	}
+	.ck-selected {
+		color: var(--ck-color-button-on-color);
+		background: var(--ck-color-button-on-background);
+	}
+	.ck-toolbar__separator {
+		background-color: var(--ck-color-base-border);
+		width: 1px;
+	}
+	.ck-word-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 5px;
+	}
+	.ck-functional-label {
+		font-weight: 700;
+		line-height: 33px;
+		text-decoration: none;
+		margin-left: 5px;
+		font-size: 22px;
+		color: #4a7d95;
+	}
+	.ck-lookup-form__inputs,
+	.ck-lookup-form__actions {
+		margin: 20px;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
 
-        &.ck-lookup-form__inputs {
-            input {
-                width: 100%;
-            }
-        }
-    }
-    .ck-word {
-        margin: 20px;
-        line-height: 50px;
-        font-weight: 700;
-        font-size: 32px;
-    }
-    .ck-phonetic {
-        font-weight: bold;
-        font-size: small;
-    }
-    .ck-definitions {
-        margin: 4px 12px;
-        white-space: wrap;
-        list-style-type: none;
-    }
+		&.ck-lookup-form__inputs {
+			input {
+				width: 100%;
+			}
+		}
+	}
+	.ck-word {
+		margin: 20px;
+		line-height: 50px;
+		font-weight: 700;
+		font-size: 32px;
+	}
+	.ck-phonetic {
+		font-weight: bold;
+		font-size: small;
+	}
+	.ck-definitions {
+		margin: 4px 12px;
+		white-space: wrap;
+		list-style-type: none;
+	}
 
-    .ck-sense-combined-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-    }
-    .ck-sense-label {
-        display: inline-block;
-        background-color: #e0f7fa;
-        padding: 0.125em 0.5em;
-        font-weight: bold;
-        font-size: 0.9em;
-        color: #00796b;
-        margin-bottom: 4px;
-        border-radius: 4px;
-    }
-    .ck-sense-row {
-        display: flex;
-        align-items: flex-start; /* Adjust alignment as needed */
-        gap: 8px;
-    }
+	.ck-sense-combined-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+	}
+	.ck-sense-label {
+		display: inline-block;
+		background-color: #e0f7fa;
+		padding: 0.125em 0.5em;
+		font-weight: bold;
+		font-size: 0.9em;
+		color: #00796b;
+		margin-bottom: 4px;
+		border-radius: 4px;
+	}
+	.ck-sense-row {
+		display: flex;
+		align-items: flex-start; /* Adjust alignment as needed */
+		gap: 8px;
+	}
 
-    .ck-sense-number {
-        flex: 0 0 auto; /* Prevent stretching */
-        margin-right: 4px; /* Add spacing between sn and dt */
-        font-weight: bold;
-    }
+	.ck-sense-number {
+		flex: 0 0 auto; /* Prevent stretching */
+		margin-right: 4px; /* Add spacing between sn and dt */
+		font-weight: bold;
+	}
 
-    .ck-dt-container {
-        flex: 1 1 auto; /* Allow it to take up the remaining space */
-    }
-    .ck-sls-container {
-        flex-shrink: 0;
-        width: auto;
-        margin-right: 10px;
-        background-color: #f4f4f4;
-        padding: 0.125em 0.3125em;
-        font-weight: 600;
-        color: #525a5b;
-    }
+	.ck-dt-container {
+		flex: 1 1 auto; /* Allow it to take up the remaining space */
+	}
+	.ck-sls-container {
+		flex-shrink: 0;
+		width: auto;
+		margin-right: 10px;
+		background-color: #f4f4f4;
+		padding: 0.125em 0.3125em;
+		font-weight: 600;
+		color: #525a5b;
+	}
 
-    .ck-definition {
-        flex-grow: 1;
-        min-width: 0;
-        word-wrap: break-word;
-        white-space: wrap;
-        font-size: 14px;
-        & button {
-            font-weight: bold;
-            font-size: 14px;
-            color: #0074cc;
-            text-transform: uppercase;
-        }
-    }
-    .ck-pretext,
-    .ck-posttext {
-        font-style: italic;
-    }
-    .ck-dt-row {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        justify-content: start;
-        gap: 10px;
-    }
-    .ck-sense-sequence {
-        display: flex;
-        flex-direction: column;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        border-bottom: 1px solid #ced4da;
-    }
-    .ck-sense {
-        display: flex;
-        flex-direction: column;
-    }
-    .ck-sense + .ck-sense .ck-number-definition-container {
-        margin-left: 11px;
-    }
-    .ck-number-definition-container:not(:has(.ck-sense-number)) {
-        margin-left: 20px;
-    }
-    .ck-sense-prefix {
-        display: flex;
-        flex-direction: column;
-    }
-    .ck-sense-indent {
-        display: flex;
-        flex-direction: row;
-        flex-grow: 1;
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjyEhL+g8ABJoCMA2iZhsAAAAASUVORK5CYII=');
-        background-repeat: repeat-y;
-        background-position: center;
-        background-size: 2px 100%;
-    }
-    .ck-sense-content {
-        display: flex;
-        flex-direction: column;
-    }
-    .ck-sense-content-row {
-        display: flex;
-        flex-direction: row;
-    }
-    .ck-sense-header {
-        display: flex;
-        flex-direction: row;
-    }
-    .ck-sense-divider {
-        font-style: italic;
-        margin-left: 16px;
-        margin-right: 3px;
-    }
-    .ck-uns-list {
-        margin: 10px 0;
-        padding-left: 20px;
-        list-style-type: disc;
-    }
+	.ck-definition {
+		flex-grow: 1;
+		min-width: 0;
+		word-wrap: break-word;
+		white-space: wrap;
+		font-size: 14px;
+		& button {
+			font-weight: bold;
+			font-size: 14px;
+			color: #0074cc;
+			text-transform: uppercase;
+		}
+	}
+	.ck-pretext,
+	.ck-posttext {
+		font-style: italic;
+	}
+	.ck-dt-row {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		justify-content: start;
+		gap: 10px;
+	}
+	.ck-sense-sequence {
+		display: flex;
+		flex-direction: column;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		border-bottom: 1px solid #ced4da;
+	}
+	.ck-sense {
+		display: flex;
+		flex-direction: column;
+	}
+	.ck-sense + .ck-sense .ck-number-definition-container {
+		margin-left: 11px;
+	}
+	.ck-number-definition-container:not(:has(.ck-sense-number)) {
+		margin-left: 20px;
+	}
+	.ck-sense-prefix {
+		display: flex;
+		flex-direction: column;
+	}
+	.ck-sense-indent {
+		display: flex;
+		flex-direction: row;
+		flex-grow: 1;
+		background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjyEhL+g8ABJoCMA2iZhsAAAAASUVORK5CYII=");
+		background-repeat: repeat-y;
+		background-position: center;
+		background-size: 2px 100%;
+	}
+	.ck-sense-content {
+		display: flex;
+		flex-direction: column;
+	}
+	.ck-sense-content-row {
+		display: flex;
+		flex-direction: row;
+	}
+	.ck-sense-header {
+		display: flex;
+		flex-direction: row;
+	}
+	.ck-sense-divider {
+		font-style: italic;
+		margin-left: 16px;
+		margin-right: 3px;
+	}
+	.ck-uns-list {
+		margin: 10px 0;
+		padding-left: 20px;
+		list-style-type: disc;
+	}
 
-    .ck-uns-item {
-        margin-bottom: 5px;
-    }
+	.ck-uns-item {
+		margin-bottom: 5px;
+	}
 
-    .ck-uns-item .ck-definition {
-        font-size: 14px;
-        color: #333;
-    }
-    .ck-vis-container {
-        border-left: 1px solid #827e7e;
-        padding-left: 10px;
-        margin-left: 21px;
-    }
-    .ck-verbal-illustration {
-        white-space: normal;
-        color: #827e7e;
-    }
-    .ck-quotes-block {
-        margin-top: 20px;
-    }
-    .ck-quotes-header {
-        border-left: 2px solid #827e7e;
-        padding-left: 10px;
-        background-color: #d1d1d1;
-        p {
-            font-size: 14px;
-            font-weight: bold;
-            span {
-                font-style: italic;
-            }
-        }
-    }
-    .ck-quotes-body {
-        margin: 10px;
-    }
-    .ck-verb-divider {
-        font-weight: 400;
-        font-style: italic;
-        color: #0074cc;
-    }
-    .ck-quote {
-        padding-left: 10px;
-        border-left: 2px solid #b0b0b0;
-    }
-    .ck-quote-content {
-        font-size: 13px;
-        white-space: normal;
-    }
-    .ck-quote-attribution {
-        font-size: 12px;
-        color: #6b6b6b;
-        font-style: italic;
-    }
-    .ck-synonym-block {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        align-items: center;
-        justify-content: start;
-        margin: 10px;
-    }
-    .ck-synonym {
-        font-size: 14px;
-        font-weight: bold;
-        background-color: #f4f4f4;
-    }
-    .ck-synonym-list {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .ck-synonym-block button {
-        background-color: #f8f9fa;
-        border: 1px solid #ced4da;
-        padding: 0px 5px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: 700;
-        margin: 6px 4px;
-    }
-    .ck-synonym-header {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-    }
-    .ck-short-def {
-        margin-left: 20px;
-        white-space: wrap;
-    }
-    .ck-number-definition-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-    }
-    .ck-thesaurus-container {
-        display: flex;
-        flex-direction: row;
-        border-bottom: 1px solid #ccc;
-        align-items: center;
-        gap: 5px;
-    }
-    .ck-synonym-block button:hover {
-        background-color: #e2e6ea;
-    }
+	.ck-uns-item .ck-definition {
+		font-size: 14px;
+		color: #333;
+	}
+	.ck-vis-container {
+		border-left: 1px solid #827e7e;
+		padding-left: 10px;
+		margin-left: 21px;
+	}
+	.ck-verbal-illustration {
+		white-space: normal;
+		color: #827e7e;
+	}
+	.ck-quotes-block {
+		margin-top: 20px;
+	}
+	.ck-quotes-header {
+		border-left: 2px solid #827e7e;
+		padding-left: 10px;
+		background-color: #d1d1d1;
+		p {
+			font-size: 14px;
+			font-weight: bold;
+			span {
+				font-style: italic;
+			}
+		}
+	}
+	.ck-quotes-body {
+		margin: 10px;
+	}
+	.ck-verb-divider {
+		font-weight: 400;
+		font-style: italic;
+		color: #0074cc;
+	}
+	.ck-quote {
+		padding-left: 10px;
+		border-left: 2px solid #b0b0b0;
+	}
+	.ck-quote-content {
+		font-size: 13px;
+		white-space: normal;
+	}
+	.ck-quote-attribution {
+		font-size: 12px;
+		color: #6b6b6b;
+		font-style: italic;
+	}
+	.ck-synonym-block {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
+		align-items: center;
+		justify-content: start;
+		margin: 10px;
+	}
+	.ck-synonym {
+		font-size: 14px;
+		font-weight: bold;
+		background-color: #f4f4f4;
+	}
+	.ck-synonym-list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+	.ck-synonym-block button {
+		background-color: #f8f9fa;
+		border: 1px solid #ced4da;
+		padding: 0px 5px;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 12px;
+		font-weight: 700;
+		margin: 6px 4px;
+	}
+	.ck-synonym-header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		width: 100%;
+	}
+	.ck-short-def {
+		margin-left: 20px;
+		white-space: wrap;
+	}
+	.ck-number-definition-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 10px;
+	}
+	.ck-thesaurus-container {
+		display: flex;
+		flex-direction: row;
+		border-bottom: 1px solid #ccc;
+		align-items: center;
+		gap: 5px;
+	}
+	.ck-synonym-block button:hover {
+		background-color: #e2e6ea;
+	}
 
-    .ck-synonym-button:hover {
-        background-color: #e0e0e0;
-    }
+	.ck-synonym-button:hover {
+		background-color: #e0e0e0;
+	}
 
-    .ck-synonym-button:active {
-        background-color: #d0d0d0;
-    }
-    .ck.ck-scrollable-results {
-        height: 400px;
-        max-height: 100%;
-        overflow: scroll;
-    }
-
-    .ck-prs-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: start;
-        gap: 10px;
-        margin: 10px;
-    }
-    .ck-word-detail {
-        line-height: 50px;
-        font-weight: 700;
-        font-size: 32px;
-    }
-    .ck-word-detail-container {
-        display: flex;
-        align-items: center;
-    }
-    .ck-sdsense-container {
-        display: flex;
-        align-items: center;
-    }
-    .ck-functionalLabel-detail {
-        font-weight: 700;
-        line-height: 33px;
-        text-decoration: none;
-        margin-left: 15px;
-        font-size: 22px;
-        color: #4a7d95;
-    }
-    .ck-suggestions-block {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        align-items: center;
-        justify-content: start;
-        margin: 10px;
-        .ck-suggestions-header {
-            width: 100%;
-            padding: 10px 5px;
-            font-weight: bold;
-            font-size: 15px;
-        }
-        button {
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-            padding: 0px 5px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-            margin: 6px 4px;
-        }
-    }
+	.ck-synonym-button:active {
+		background-color: #d0d0d0;
+	}
+	.ck.ck-scrollable-results {
+		height: 400px;
+		max-height: 100%;
+		overflow: scroll;
+	}
+	.ck-prs-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: start;
+		gap: 10px;
+		margin: 10px;
+	}
+	.ck-word-detail {
+		line-height: 50px;
+		font-weight: 700;
+		font-size: 32px;
+	}
+	.ck-word-detail-container {
+		display: flex;
+		align-items: center;
+	}
+	.ck-sdsense-container {
+		display: flex;
+		align-items: center;
+	}
+	.ck-functionalLabel-detail {
+		font-weight: 700;
+		line-height: 33px;
+		text-decoration: none;
+		margin-left: 15px;
+		font-size: 22px;
+		color: #4a7d95;
+	}
+	.ck-suggestions-block {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
+		align-items: center;
+		justify-content: start;
+		margin: 10px;
+		.ck-suggestions-header {
+			width: 100%;
+			padding: 10px 5px;
+			font-weight: bold;
+			font-size: 15px;
+		}
+		button {
+			background-color: #f8f9fa;
+			border: 1px solid #ced4da;
+			padding: 0px 5px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 12px;
+			font-weight: 700;
+			margin: 6px 4px;
+		}
+	}
 }
