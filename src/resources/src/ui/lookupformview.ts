@@ -106,7 +106,7 @@ export default class LookupFormView extends View {
 		this.setTemplate({
 			tag: 'div',
 			attributes: {
-				class: 'ck',
+				class: ['ck'],
 				tabindex: '-1',
 			},
 			children: this.contentBlocks,
