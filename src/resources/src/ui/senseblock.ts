@@ -89,25 +89,23 @@ export default class SenseBlock extends View {
     ) {
         const { sn, dt, sdsense, pseq } = content;
 
+        // Ensure placeholder for missing `sn`
+        const senseNumberView = new View(locale);
+        senseNumberView.setTemplate({
+            tag: 'span',
+            attributes: {
+                class: ['ck', 'ck-sense-number'],
+            },
+            children: [sn || '\u00A0'], // Use non-breaking space if `sn` is null
+        });
+
         if (sn || dt) {
             const rowContainer = new View(locale);
             rowContainer.setTemplate({
                 tag: 'div',
                 attributes: { class: ['ck', 'ck-sense-row'] },
                 children: [
-                    sn
-                        ? (() => {
-                              const senseNumberView = new View(locale);
-                              senseNumberView.setTemplate({
-                                  tag: 'span',
-                                  attributes: {
-                                      class: ['ck', 'ck-sense-number'],
-                                  },
-                                  children: [sn],
-                              });
-                              return senseNumberView;
-                          })()
-                        : null,
+                    senseNumberView, // Always add the sense number view
                     dt ? this.createDefiningTextCollection(dt, locale) : null,
                 ].filter((child): child is View => child !== null),
             });
@@ -120,7 +118,7 @@ export default class SenseBlock extends View {
 
         if (pseq) {
             pseq.forEach(({ sense }) =>
-                collection.add(new SenseBlock(this.editor, ['sense', sense])),
+                collection.add(new SenseBlock(this.editor, ['sense', sense!])),
             );
         }
     }
