@@ -1,17 +1,26 @@
 <?php
 
-namespace wolfco\thesaurus;
+namespace wolfco\craftthesauruslex;
 
 use Craft;
 use craft\base\Model;
-use craft\base\Plugin as BasePlugin;
+use craft\base\Plugin;
 use craft\ckeditor\Plugin as CkeditorPlugin;
 use craft\events\RegisterUrlRulesEvent;
 use yii\base\Event;
 use craft\web\UrlManager;
-use wolfco\thesaurus\assetbundles\CkeditorThesaurusAsset;
+use wolfco\craftthesauruslex\assetbundles\CkeditorThesaurusAsset;
 
-class Plugin extends BasePlugin
+/**
+ * Thesaurus Lex plugin
+ *
+ * @method static ThesaurusLex getInstance()
+ * @method Settings getSettings()
+ * @author Wolfco <jack@wolfco.us>
+ * @copyright Wolfco
+ * @license https://craftcms.github.io/license/ Craft License
+ */
+class ThesaurusLex extends Plugin
 {
     public static Plugin $plugin;
     public bool $hasCpSettings = true;
@@ -27,8 +36,8 @@ class Plugin extends BasePlugin
         CkeditorPlugin::registerCkeditorPackage(CkeditorThesaurusAsset::class);
 
         // Register the controller map to ensure it's accessible
-        Craft::$app->controllerMap['thesaurus'] = 'wolfco\thesaurus\controllers\ThesaurusController';
-        Craft::$app->controllerMap['thesaurus-lex/settings'] = 'wolfco\thesaurus\controllers\SettingsController';
+        Craft::$app->controllerMap['thesaurus'] = 'wolfco\craftthesauruslex\controllers\ThesaurusController';
+        Craft::$app->controllerMap['thesaurus-lex/settings'] = 'wolfco\craftthesauruslex\controllers\SettingsController';
         // Register custom routes
         Event::on(
             UrlManager::class,
@@ -40,7 +49,7 @@ class Plugin extends BasePlugin
     }
     protected function createSettingsModel(): ?Model
     {
-        return new \wolfco\thesaurus\models\Settings();
+        return new \wolfco\craftthesauruslex\models\Settings();
     }
 
     protected function settingsHtml(): ?string
