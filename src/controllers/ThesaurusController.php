@@ -5,7 +5,7 @@ namespace wolfco\craftthesauruslex\controllers;
 use craft\web\Controller;
 use yii\web\Response;
 use Craft;
-use wolfco\craftthesauruslex\Plugin;
+use wolfco\craftthesauruslex\ThesaurusLex;
 
 class ThesaurusController extends Controller
 {
@@ -19,7 +19,7 @@ class ThesaurusController extends Controller
         if (!$word) {
           return $this->asJson(['error' => 'No word provided']);
         }
-        $settings = Plugin::$plugin->getSettings();
+        $settings = ThesaurusLex::$plugin->getSettings();
         $thesaurusApiKey = $settings['tKey'];
 
         if (!$thesaurusApiKey) {
@@ -46,7 +46,7 @@ class ThesaurusController extends Controller
         if (!$word) {
             return $this->asJson(['error' => 'No word provided']);
         }
-        $settings = Plugin::$plugin->getSettings();
+        $settings = ThesaurusLex::$plugin->getSettings();
         $dictionaryApiKey = $settings->dKey;
 
         if (!$dictionaryApiKey) {
