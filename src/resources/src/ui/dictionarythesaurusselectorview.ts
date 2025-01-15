@@ -9,8 +9,6 @@ export function removeAsterisks(input: string): string {
     return input.replace(/\*/g, '');
 }
 
-// Placeholder API key for the thesaurus API
-
 export default class DictionaryThesaurusSelectorView extends View {
     public declare selectedTab: 'dictionary' | 'thesaurus';
     private word: string;

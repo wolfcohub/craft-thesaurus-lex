@@ -1,3 +1,34 @@
+.ck.ck-form-container {
+  position: relative;
+  padding-bottom: 70px;
+}
+.ck.ck-form-container .ck-logo-container {
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  padding-right: 10px;
+  height: 70px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+}
+.ck.ck-form-container .ck-logo-prefix {
+  font-weight: bold;
+  font-size: small;
+}
+.ck.ck-form-container .ck-logo {
+  display: block;
+  width: 50px;
+  height: 50px;
+  top: 0;
+  background-image: url("./icons/MWLogo_LightBG_120x120_2x.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .ck.ck-lookup-form,
 .ck.ck-result-form,
 .ck.ck-suggestions-container {
@@ -29,14 +60,6 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-}
-.ck.ck-lookup-form .ck-sub-tab-selector,
-.ck.ck-result-form .ck-sub-tab-selector,
-.ck.ck-suggestions-container .ck-sub-tab-selector {
-  margin: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
 }
 .ck.ck-lookup-form .ck-tab,
 .ck.ck-result-form .ck-tab,

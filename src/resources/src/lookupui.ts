@@ -1,5 +1,5 @@
 import { Plugin } from 'ckeditor5/src/core.js';
-import { ButtonView, Dialog, Notification } from 'ckeditor5/src/ui.js';
+import { ButtonView, Dialog, Notification, View } from 'ckeditor5/src/ui.js';
 import { isSingleWord, LOOKUP, rangeToText } from './utils.js';
 import LookupFormView from './ui/lookupformview.js';
 import LookupEditing from './lookupediting.js';
@@ -80,7 +80,7 @@ export default class LookupUI extends Plugin {
 					// - isSuccess
 					// - dictionaryResults
 					// - thesaurusResults
-          // - spellingSuggestions
+					// - spellingSuggestions
 					formView.bind('isFetching').to(state, 'isFetching');
 					formView.bind('isSuccess').to(state, 'isSuccess');
 					formView
@@ -89,7 +89,7 @@ export default class LookupUI extends Plugin {
 					formView
 						.bind('thesaurusResults')
 						.to(state, 'thesaurusResults');
-          formView
+					formView
 						.bind('spellingSuggestions')
 						.to(state, 'spellingSuggestions');
 
@@ -118,12 +118,46 @@ export default class LookupUI extends Plugin {
 						editor.execute(LOOKUP, formView.inputText);
 					});
 
+					const logoPrefix = new View(editor.locale);
+					logoPrefix.setTemplate({
+						tag: 'span',
+						attributes: {
+							class: ['ck', 'ck-logo-prefix'],
+						},
+						children: ['Powered by'],
+					});
+					const logoBlock = new View(editor.locale);
+					logoBlock.setTemplate({
+						tag: 'span',
+						attributes: {
+							class: ['ck', 'ck-logo'],
+						},
+					});
+					const logoContainer = new View(editor.locale);
+					logoContainer.setTemplate({
+						tag: 'div',
+						attributes: {
+							class: ['ck', 'ck-logo-container'],
+						},
+						children: [logoPrefix, logoBlock],
+					});
+
+					const formContainer = new View(editor.locale);
+					formContainer.setTemplate({
+						tag: 'div',
+						attributes: {
+							class: ['ck', 'ck-form-container'],
+						},
+						children: [formView, logoContainer],
+					});
+
 					// with all event listeners hooked up, now show the modal
 					this.modal.show({
 						isModal: true,
 						id: 'dictionaryLookup',
-						title: t('Dictionary Lookup'),
-						content: formView,
+						title: 'Thesaurus Lex',
+						className: 'ck-thesaurus-lex-modal',
+						content: formContainer,
 						onShow: () => {
 							if (state.wordToLookup) {
 								// trigger lookup automatically if word to lookup is set in state
