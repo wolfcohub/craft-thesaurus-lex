@@ -156,25 +156,6 @@
   margin-bottom: 4px;
   border-radius: 4px;
 }
-.ck.ck-lookup-form .ck-sense-row,
-.ck.ck-result-form .ck-sense-row,
-.ck.ck-suggestions-container .ck-sense-row {
-  display: flex;
-  align-items: flex-start; /* Adjust alignment as needed */
-  gap: 8px;
-}
-.ck.ck-lookup-form .ck-sense-number,
-.ck.ck-result-form .ck-sense-number,
-.ck.ck-suggestions-container .ck-sense-number {
-  flex: 0 0 auto; /* Prevent stretching */
-  margin-right: 4px; /* Add spacing between sn and dt */
-  font-weight: bold;
-}
-.ck.ck-lookup-form .ck-dt-container,
-.ck.ck-result-form .ck-dt-container,
-.ck.ck-suggestions-container .ck-dt-container {
-  flex: 1 1 auto; /* Allow it to take up the remaining space */
-}
 .ck.ck-lookup-form .ck-sls-container,
 .ck.ck-result-form .ck-sls-container,
 .ck.ck-suggestions-container .ck-sls-container {
@@ -194,6 +175,8 @@
   word-wrap: break-word;
   white-space: wrap;
   font-size: 14px;
+  display: flex;
+  align-items: flex-end;
 }
 .ck.ck-lookup-form .ck-definition button,
 .ck.ck-result-form .ck-definition button,
@@ -290,14 +273,8 @@
 .ck.ck-lookup-form .ck-uns-list,
 .ck.ck-result-form .ck-uns-list,
 .ck.ck-suggestions-container .ck-uns-list {
-  margin: 10px 0;
   padding-left: 20px;
   list-style-type: disc;
-}
-.ck.ck-lookup-form .ck-uns-item,
-.ck.ck-result-form .ck-uns-item,
-.ck.ck-suggestions-container .ck-uns-item {
-  margin-bottom: 5px;
 }
 .ck.ck-lookup-form .ck-uns-item .ck-definition,
 .ck.ck-result-form .ck-uns-item .ck-definition,
@@ -500,6 +477,34 @@
   margin-left: 15px;
   font-size: 22px;
   color: #4a7d95;
+}
+.ck.ck-lookup-form .ck-sense-row,
+.ck.ck-result-form .ck-sense-row,
+.ck.ck-suggestions-container .ck-sense-row {
+  display: flex; /* Enables flexbox layout */
+  align-items: flex-start; /* Aligns items at the start vertically */
+  gap: 8px; /* Optional spacing between items */
+}
+.ck.ck-lookup-form .ck-sense-number,
+.ck.ck-result-form .ck-sense-number,
+.ck.ck-suggestions-container .ck-sense-number {
+  flex: 0 0 5%; /* Maintain consistent width */
+  max-width: 5%; /* Prevent resizing */
+  text-align: right;
+  padding-right: 8px;
+  font-weight: bold;
+}
+.ck.ck-lookup-form .ck-sense-number:empty,
+.ck.ck-result-form .ck-sense-number:empty,
+.ck.ck-suggestions-container .ck-sense-number:empty {
+  visibility: hidden; /* Hide empty `sn` without collapsing the space */
+}
+.ck.ck-lookup-form .ck-dt-container,
+.ck.ck-result-form .ck-dt-container,
+.ck.ck-suggestions-container .ck-dt-container {
+  flex: 1 1 90%; /* Remaining 80% width */
+  max-width: 90%; /* Prevent it from growing beyond 80% */
+  word-wrap: break-word; /* Ensure text wraps properly */
 }
 .ck.ck-lookup-form .ck-suggestions-block,
 .ck.ck-result-form .ck-suggestions-block,
