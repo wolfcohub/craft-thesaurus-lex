@@ -1,11 +1,11 @@
 <?php
 
-namespace wolfco\thesaurus\controllers;
+namespace wolfco\craftthesauruslex\controllers;
 
 use craft\web\Controller;
 use yii\web\Response;
 use Craft;
-use wolfco\thesaurus\Plugin;
+use wolfco\craftthesauruslex\Plugin;
 
 class ThesaurusController extends Controller
 {

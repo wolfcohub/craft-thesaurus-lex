@@ -1,5 +1,5 @@
 <?php
-namespace wolfco\thesaurus\assetbundles;
+namespace wolfco\craftthesauruslex\assetbundles;
 
 use craft\ckeditor\web\assets\BaseCkeditorPackageAsset;
 
