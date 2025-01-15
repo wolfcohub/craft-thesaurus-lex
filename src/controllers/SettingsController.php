@@ -1,8 +1,8 @@
 <?php
-namespace wolfco\thesaurus\controllers;
+namespace wolfco\craftthesauruslex\controllers;
 
 use craft\web\Controller;
-use wolfco\thesaurus\Plugin;
+use wolfco\craftthesauruslex\Plugin;
 use yii\web\Response;
 
 class SettingsController extends Controller

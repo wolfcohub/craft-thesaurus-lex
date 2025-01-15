@@ -1,6 +1,6 @@
 {
   "name": "wolfco/craft-thesaurus-lex",
-  "description": "Your plugin’s package description",
+  "description": "Thesaurus Lex is a custom Craft CMS plugin that integrates Merriam-Webster's Collegiate® Dictionary with Audio and Merriam-Webster's Collegiate Thesaurus APIs into CKEditor fields.",
   "version": "1.0.0",
   "type": "craft-plugin",
   "keywords": [
@@ -23,12 +23,15 @@
   },
   "autoload": {
     "psr-4": {
-      "wolfco\\thesaurus\\": "src/"
+      "wolfco\\craftthesauruslex\\": "src/"
     }
   },
   "extra": {
+    "handle": "thesaurus-lex",
     "name": "Thesaurus Lex",
-    "handle": "thesaurus-lex"
+    "developer": "Wolfco",
+    "documentationUrl": "https://github.com/wolfcohub/craft-thesaurus-lex",
+    "class": "wolfco\\craftthesauruslex\\ThesaurusLex"
   },
   "config": {
     "allow-plugins": {

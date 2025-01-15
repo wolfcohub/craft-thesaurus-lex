@@ -1,5 +1,5 @@
 <?php
-namespace wolfco\thesaurus\models;
+namespace wolfco\craftthesauruslex\models;
 
 use craft\base\Model;
 
