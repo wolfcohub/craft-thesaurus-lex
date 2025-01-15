@@ -119,7 +119,8 @@ function parseAndBuildCollection(
 	editor: Editor,
 ) {
 	const tokenRegex =
-		/\{(it|b|inf|sc|sup|gloss|parahw|phrase|qword|wi)\}(.*?)\{\/\1\}|\{(bc|ldquo|rdquo)\}|\{(a_link|d_link|i_link|et_link|sx|mat|dxt)\|?([^|]*)\|?([^|]*)\|?([^|]*)\}/g;
+		/\{(it|b|inf|sc|sup|gloss|parahw|phrase|qword|wi)\}(.*?)\{\/\1\}|\{(bc|ldquo|rdquo)\}|\{(a_link|d_link|i_link|et_link|sx|mat|dxt)(?:\|([^|}]*))?(?:\|([^|}]*))?(?:\|([^|}]*))?\}/g;
+
 	let lastIndex = 0;
 	let match;
 
@@ -188,16 +189,17 @@ function createLinkView(
 ): View {
 	const linkView = new ButtonView(editor.locale);
 	const text = extraText ? `${linkText} ${extraText}` : linkText;
+	const lookupWord = linkText.split(':')[0];
 
 	linkView.set({
 		label: text,
 		withText: true,
-		tooltip: `Look up "${linkText}"`,
+		tooltip: `Look up "${lookupWord}"`,
 	});
 
 	linkView.on('execute', () => {
 		// execute lookup command on the linked word
-		editor.execute(LOOKUP, linkText);
+		editor.execute(LOOKUP, lookupWord);
 	});
 	return linkView;
 }
