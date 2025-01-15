@@ -1,13 +1,13 @@
 # Thesaurus Lex
 
-Thesaurus Lex is a custom Craft CMS plugin that integrates Merriam-Webster's dictionary and thesaurus APIs into CKEditor fields. This plugin enables users to quickly look up definitions and synonyms for the selected word.
+Thesaurus Lex is a custom Craft CMS plugin that integrates Merriam-Webster's Collegiate<sup>®</sup> Dictionary with Audio and Merriam-Webster's Collegiate Thesaurus APIs into CKEditor fields. This plugin enables users to quickly look up definitions and synonyms for the selected word.
 ![Screen shot of ThesaurusLex dictionary lookup feature.](thesaurus-lex-modal.png)
 
 ## Requirements
 
 - Craft CMS 4.0.0 or later.
 - CKEditor (version compatible with Craft CMS installation)
-- Merriam-Webster API keys for **Collegiate Dictionary** and **Collegiate Thesaurus**.
+- API keys for **Merriam-Webster's Collegiate Dictionary with Audio** and **Merriam-Webster's Collegiate Thesaurus**.
 
 ---
 
@@ -28,10 +28,9 @@ To install Thesaurus Lex in a Craft CMS application:
 
 ---
 
-
 ## Setup
 
-### Register for Merriam-Webster API Keys
+### Register for API Keys
 
 1. Register for a free Merriam-Webster account at [dictionaryapi.com](https://dictionaryapi.com/register/index).
    ![Screen shot of Merriam-Webster account registration form.](merriam-webster-register-form.png)
