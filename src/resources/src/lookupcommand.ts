@@ -116,11 +116,6 @@ export default class LookupCommand extends Command {
 				console.log(`Error!`, e);
 			} // swallow error, exclude from results
 		});
-		if (!validThesaurusResults.length) {
-			this._state.set('isFetching', false);
-			this._state.set('errorMessage', 'Unexpected response from API');
-			return;
-		}
 
 		this._state.set('thesaurusResults', validThesaurusResults);
 		this._state.set('isFetching', false);
