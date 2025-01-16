@@ -145,14 +145,24 @@
         word-wrap: break-word;
         white-space: wrap;
         font-size: 14px;
-        display: flex;
-        align-items: flex-end;
-        & button {
-            font-weight: bold;
-            font-size: 14px;
-            color: #0074cc;
-            text-transform: uppercase;
-        }
+        display: flex; /* Align child elements properly */
+        align-items: flex-start; /* Center-aligns the text and button vertically */
+        gap: 4px; /* Optional, adjust spacing between text and button */
+    }
+
+    .ck-definition button {
+        font-weight: bold;
+        font-size: 14px;
+        color: #0074cc;
+        text-transform: uppercase;
+        line-height: 1; /* Ensure it aligns with text */
+        display: inline-flex; /* Ensures proper alignment with flexbox parent */
+        align-items: flex-start; /* Center-aligns button content */
+        justify-content: center; /* Center-aligns text inside button */
+        vertical-align: middle; /* Ensure alignment when used with inline elements */
+        padding-top: 0;
+        margin-top: 0;
+        position: relative;
     }
     .ck-pretext,
     .ck-posttext {
@@ -162,7 +172,7 @@
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        justify-content: start;
+        justify-content: flex-start;
         gap: 10px;
     }
     .ck-sense-sequence {
@@ -209,19 +219,12 @@
     }
     .ck-sense-divider {
         font-style: italic;
-        margin-left: 16px;
-        margin-right: 3px;
+        margin-right: 8px;
     }
     .ck-uns-list {
-        // margin: 4px 0;
         padding-left: 20px;
         list-style-type: disc;
     }
-
-    .ck-uns-item {
-        // margin-bottom: 5px;
-    }
-
     .ck-uns-item .ck-definition {
         font-size: 14px;
         color: #333;
@@ -229,7 +232,7 @@
     .ck-vis-container {
         border-left: 1px solid #827e7e;
         padding-left: 10px;
-        margin-left: 21px;
+        margin-left: 32px;
     }
     .ck-verbal-illustration {
         white-space: normal;
@@ -276,7 +279,7 @@
         flex-wrap: wrap;
         flex-direction: row;
         align-items: center;
-        justify-content: start;
+        justify-content: flex-start;
         margin: 10px;
     }
     .ck-synonym {
@@ -313,7 +316,7 @@
     .ck-number-definition-container {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         gap: 10px;
     }
     .ck-thesaurus-container {
@@ -358,8 +361,10 @@
     }
     .ck-sdsense-container {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
+        gap: 8px; /* Adjust as needed */
     }
+
     .ck-functionalLabel-detail {
         font-weight: 700;
         line-height: 33px;
@@ -376,9 +381,10 @@
 
     .ck-sense-number {
         flex: 0 0 5%; /* Maintain consistent width */
-        max-width: 5%; /* Prevent resizing */
+        // max-width: 5%; /* Prevent resizing */
         text-align: right;
         padding-right: 8px;
+        font-size: 14px;
         font-weight: bold;
     }
 
@@ -387,8 +393,7 @@
     }
 
     .ck-dt-container {
-        flex: 1 1 90%; /* Remaining 80% width */
-        max-width: 90%; /* Prevent it from growing beyond 80% */
+        flex: 1 1 auto; /* Remaining 80% width */
         word-wrap: break-word; /* Ensure text wraps properly */
     }
     .ck-suggestions-block {
@@ -396,7 +401,7 @@
         flex-wrap: wrap;
         flex-direction: row;
         align-items: center;
-        justify-content: start;
+        justify-content: flex-start;
         margin: 10px;
         .ck-suggestions-header {
             width: 100%;
