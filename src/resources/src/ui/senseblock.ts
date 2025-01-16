@@ -117,9 +117,18 @@ export default class SenseBlock extends View {
         }
 
         if (pseq) {
-            pseq.forEach(({ sense }) =>
-                collection.add(new SenseBlock(this.editor, ['sense', sense!])),
-            );
+            pseq.forEach(([type, content]) => {
+                if (type === 'sense') {
+                    collection.add(
+                        new SenseBlock(this.editor, ['sense', content]),
+                    );
+                }
+                if (type === 'bs' && content.sense) {
+                    collection.add(
+                        new SenseBlock(this.editor, ['sense', content.sense]),
+                    );
+                }
+            });
         }
     }
     private createDefiningTextCollection(

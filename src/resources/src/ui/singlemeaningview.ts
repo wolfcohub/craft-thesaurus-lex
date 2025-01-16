@@ -92,12 +92,18 @@ export default class SingleMeaningView extends View {
 	private transformSenseSequenceToPseq(
 		senseSequence: DictionaryTypes.SenseSequence,
 	): DictionaryTypes.Pseq {
-		return senseSequence
-			.filter(([type]) => type === 'sense') // Only keep 'sense' types
-			.map(([, content]) => ({
-				sense: content as DictionaryTypes.Sense,
-			}));
+		const pseq: DictionaryTypes.Pseq = [];
+		senseSequence.forEach(([type, content]) => {
+			if (type === 'sense') {
+				pseq.push(['sense', content as DictionaryTypes.Sense]);
+			}
+			if (type === 'bs' && content.sense) {
+				pseq.push(['sense', content.sense as DictionaryTypes.Sense]);
+			}
+		});
+		return pseq;
 	}
+
 	createSenseSequenceBlock(
 		senseSequence: DictionaryTypes.SenseSequence,
 		locale: Locale,
@@ -185,8 +191,8 @@ export default class SingleMeaningView extends View {
 	private createPseqBlock(pseq: DictionaryTypes.Pseq, locale: Locale): View {
 		const pseqCollection = this.createCollection();
 
-		pseq.forEach(({ sense }) => {
-			pseqCollection.add(new SenseBlock(this.editor, ['sense', sense]));
+		pseq.forEach(([type, content]) => {
+			pseqCollection.add(new SenseBlock(this.editor, [type, content]));
 		});
 
 		const pseqContainer = new View(locale);
