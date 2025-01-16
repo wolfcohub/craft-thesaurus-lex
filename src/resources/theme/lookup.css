@@ -176,7 +176,7 @@
   white-space: wrap;
   font-size: 14px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 .ck.ck-lookup-form .ck-definition button,
 .ck.ck-result-form .ck-definition button,
