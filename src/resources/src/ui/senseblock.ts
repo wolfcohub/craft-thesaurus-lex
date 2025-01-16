@@ -229,14 +229,32 @@ export default class SenseBlock extends View {
     ): View {
         const { sd: senseDivider, dt } = dividedSense;
 
-        const senseDividerBlock = new View(locale);
-        senseDividerBlock.setTemplate({
+        // Create the sense number placeholder
+        const senseNumberView = new View(locale);
+        senseNumberView.setTemplate({
             tag: 'span',
-            attributes: { class: ['ck', 'ck-sense-divider'] },
-            children: [senseDivider || ''],
+            attributes: {
+                class: 'ck ck-sense-number',
+            },
+            children: ['\u00A0'], // Non-breaking space placeholder for alignment
         });
 
+        // Create the sense divider view
+        const senseDividerView = new View(locale);
+        senseDividerView.setTemplate({
+            tag: 'span',
+            attributes: {
+                class: 'ck ck-sense-divider',
+            },
+            children: [senseDivider || '\u00A0'], // Non-breaking space if no divider
+        });
+
+        // Create the defining text collection
         const dtCollection = this.createCollection();
+
+        // Add the sense divider to the defining text collection as the first child
+        dtCollection.add(senseDividerView);
+
         if (dt) {
             dt.forEach((definingText) => {
                 if (
@@ -263,18 +281,20 @@ export default class SenseBlock extends View {
             });
         }
 
+        // Wrap the defining text collection in a container
         const dtContainer = new View(locale);
         dtContainer.setTemplate({
             tag: 'div',
-            attributes: { class: ['ck', 'ck-dt-container'] },
+            attributes: { class: 'ck ck-dt-container' },
             children: dtCollection,
         });
 
+        // Create the container that combines the placeholder and dtContainer
         const senseDividerContainer = new View(locale);
         senseDividerContainer.setTemplate({
             tag: 'div',
-            attributes: { class: ['ck', 'ck-sdsense-container'] },
-            children: [senseDividerBlock, dtContainer],
+            attributes: { class: 'ck ck-sdsense-container' },
+            children: [senseNumberView, dtContainer],
         });
 
         return senseDividerContainer;
