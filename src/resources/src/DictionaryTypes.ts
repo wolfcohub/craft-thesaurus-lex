@@ -134,9 +134,7 @@ export namespace DictionaryTypes {
 	// 		};
 	// 	}>,
 	// ];
-	export type Pseq = Array<{
-		sense: Sense; // Nested sense under the sequence
-	}>;
+	export type Pseq = Array<['sense', Sense] | ['bs', BindingSubstitute]>;
 
 	// export type Sense = [
 	// 	'sense' | 'pseq',

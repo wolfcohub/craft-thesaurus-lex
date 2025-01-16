@@ -498,6 +498,7 @@
 .ck.ck-result-form .ck-sense-number,
 .ck.ck-suggestions-container .ck-sense-number {
   flex: 0 0 5%; /* Maintain consistent width */
+  max-width: 5%; /* Prevent resizing */
   text-align: right;
   padding-right: 8px;
   font-size: 14px;
