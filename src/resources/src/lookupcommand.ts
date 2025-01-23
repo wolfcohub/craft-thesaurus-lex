@@ -2,6 +2,7 @@ import { Command, type Editor } from 'ckeditor5/src/core.js';
 import LookupState from './lookupstate.js';
 import { DictionaryTypes } from './DictionaryTypes.js';
 import { ThesaurusTypes } from './ThesaurusTypes.js';
+import { addToCache } from './utils.js';
 
 export default class LookupCommand extends Command {
 	/**
@@ -19,6 +20,7 @@ export default class LookupCommand extends Command {
 	 * @fires execute
 	 */
 	override async execute(inputWord: string) {
+		addToCache(inputWord); // Add the word to the cache
 		this._state.set('isFetching', true);
 
 		const url =
@@ -36,9 +38,7 @@ export default class LookupCommand extends Command {
 
 		const dictionaryResults = await response.json();
 
-		if (
-			dictionaryResults.every((result: any) => typeof result === 'string')
-		) {
+		if (dictionaryResults.every((result: any) => typeof result === 'string')) {
 			// results are strings (not objects) -> suggestions for correct spelling
 			this._state.set('isFetching', false);
 			this._state.set('spellingSuggestions', dictionaryResults);
@@ -60,12 +60,9 @@ export default class LookupCommand extends Command {
 			return;
 		}
 		const validDictionaryResults: DictionaryTypes.DictionaryResult[] = [];
-
 		dictionaryResults.forEach((result) => {
 			try {
-				validDictionaryResults.push(
-					result as DictionaryTypes.DictionaryResult,
-				);
+				validDictionaryResults.push(result as DictionaryTypes.DictionaryResult);
 			} catch (e) {
 				console.log(`Error!`, e);
 			} // swallow error, exclude from results
@@ -76,7 +73,6 @@ export default class LookupCommand extends Command {
 			return;
 		}
 
-		// request succeeded
 		this._state.set('dictionaryResults', validDictionaryResults);
 
 		const thesaurusUrl =
@@ -106,7 +102,6 @@ export default class LookupCommand extends Command {
 			return;
 		}
 		const validThesaurusResults: ThesaurusTypes.ThesaurusResult[] = [];
-
 		thesaurusResults.forEach((thesaurusResult) => {
 			try {
 				validThesaurusResults.push(

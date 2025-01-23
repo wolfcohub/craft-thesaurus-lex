@@ -180,6 +180,51 @@ function createStyledView(
 	});
 	return view;
 }
+const cachedWords: string[] = [];
+let currentWordIndex: number = -1;
+
+export function addToCache(word: string): void {
+    if (currentWordIndex < cachedWords.length - 1) {
+        // Clear forward history if adding a new word
+        if (cachedWords[currentWordIndex] !== word) {
+            cachedWords.splice(currentWordIndex + 1);
+        }
+    }
+    if (cachedWords[currentWordIndex] !== word) {
+        cachedWords.push(word);
+        currentWordIndex = cachedWords.length - 1;
+    }
+}
+
+export function canGoBack(): boolean {
+    return currentWordIndex > 0;
+}
+
+export function canGoForward(): boolean {
+    return currentWordIndex < cachedWords.length - 1;
+}
+
+export function getPreviousWord(): string | null {
+    if (currentWordIndex > 0) {
+        currentWordIndex -= 1;
+        return cachedWords[currentWordIndex];
+    }
+    return null;
+}
+
+export function getNextWord(): string | null {
+    if (currentWordIndex < cachedWords.length - 1) {
+        currentWordIndex += 1;
+        return cachedWords[currentWordIndex];
+    }
+    return null;
+}
+
+const lookupWordCache: { [key: string]: boolean } = {};
+// Function to get cached words
+export function getCachedWords(): string[] {
+	return Object.keys(lookupWordCache);
+}
 
 // create CKEditor View for link to another word
 function createLinkView(
@@ -198,6 +243,8 @@ function createLinkView(
 	});
 
 	linkView.on('execute', () => {
+		// Cache the lookup word when the link is clicked
+		lookupWordCache[lookupWord] = true;
 		// execute lookup command on the linked word
 		editor.execute(LOOKUP, lookupWord);
 	});
