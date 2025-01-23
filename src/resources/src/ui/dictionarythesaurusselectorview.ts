@@ -4,6 +4,7 @@ import { DictionaryTypes } from '../DictionaryTypes.js';
 import { ThesaurusTypes } from '../ThesaurusTypes.js';
 import ThesaurusBlock from './thesaurusblock.js';
 import DictionaryContentView from './dictionarycontentview.js';
+import { canGoBack, canGoForward, getNextWord, getPreviousWord } from '../utils.js';
 
 export function removeAsterisks(input: string): string {
 	return input.replace(/\*/g, '');
@@ -32,12 +33,52 @@ export default class DictionaryThesaurusSelectorView extends View {
 		if (filteredDictionaryResults.length === 0) {
 			throw new Error('No valid dictionary results to display');
 		}
+		this.word = dictionaryResults[0]?.hwi?.hw;
 
-		this.word = filteredDictionaryResults[0].hwi.hw;
 		const functionalLabel = filteredDictionaryResults[0].fl;
 
 		this.set('selectedTab', 'dictionary');
-
+        const backButton = new ButtonView(locale);
+        const forwardButton = new ButtonView(locale);
+        // Button state updater
+        const updateButtonStates = () => {
+            backButton.isEnabled = canGoBack();
+            forwardButton.isEnabled = canGoForward();
+        };
+        // Back button setup
+        backButton.set({
+            label: t('Back'),
+            withText: true,
+            tooltip: 'Go back to the previous word',
+            isEnabled: canGoBack(), // Initial state
+        });
+        backButton.on('execute', () => {
+            const previousWord = getPreviousWord();
+            if (previousWord) {
+                editor.execute('lookup', previousWord);
+                updateButtonStates(); // Update after navigation
+            } else {
+                console.warn('No previous word available.');
+            }
+        });
+        // Forward button setup
+        forwardButton.set({
+            label: t('Forward'),
+            withText: true,
+            tooltip: 'Go forward to the next word',
+            isEnabled: canGoForward(), // Initial state
+        });
+        forwardButton.on('execute', () => {
+            const nextWord = getNextWord();
+            if (nextWord) {
+                editor.execute('lookup', nextWord);
+                updateButtonStates(); // Update after navigation
+            } else {
+                console.warn('No next word available.');
+            }
+        });
+        // Call `updateButtonStates` after initial render to ensure buttons are correct
+        updateButtonStates();
 		// Dictionary select button setup
 		const dictionarySelectButton = new ButtonView(locale);
 		dictionarySelectButton.set({
@@ -170,6 +211,8 @@ export default class DictionaryThesaurusSelectorView extends View {
 			},
 			children: [
 				tabSelectDiv,
+				backButton,
+				forwardButton,
 				wordHeading,
 				dictionaryContainer,
 				thesaurusContainer,
