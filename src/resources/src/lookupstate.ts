@@ -17,6 +17,8 @@ export default class LookupState extends ObservableMixin() {
 
 	public declare errorMessage: string | null;
 
+	public declare currentWordIndex: number;
+
 	constructor() {
 		super();
 		this.reset();
@@ -30,5 +32,6 @@ export default class LookupState extends ObservableMixin() {
 		this.set('thesaurusResults', []);
 		this.set('spellingSuggestions', []);
 		this.set('errorMessage', null);
+		this.set('currentWordIndex', -1);
 	}
 }

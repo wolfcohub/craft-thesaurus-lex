@@ -2,6 +2,8 @@ import { Locale } from 'ckeditor5';
 import type { Range } from 'ckeditor5/src/engine.js';
 import { ButtonView, View } from 'ckeditor5/src/ui.js';
 import { Editor } from 'ckeditor5/src/core.js';
+import { DictionaryTypes } from './DictionaryTypes.js';
+import { ThesaurusTypes } from './ThesaurusTypes.js';
 
 type StylingKey =
 	| 'normal'
@@ -180,50 +182,54 @@ function createStyledView(
 	});
 	return view;
 }
-const cachedWords: string[] = [];
+interface CachedEntry {
+	word: string;
+	dictionaryResults: DictionaryTypes.DictionaryResult[];
+	thesaurusResults: ThesaurusTypes.ThesaurusResult[];
+}
+
+export const cachedEntries: CachedEntry[] = [];
 let currentWordIndex: number = -1;
 
-export function addToCache(word: string): void {
-    if (currentWordIndex < cachedWords.length - 1) {
-        // Clear forward history if adding a new word
-        if (cachedWords[currentWordIndex] !== word) {
-            cachedWords.splice(currentWordIndex + 1);
-        }
-    }
-    if (cachedWords[currentWordIndex] !== word) {
-        cachedWords.push(word);
-        currentWordIndex = cachedWords.length - 1;
-    }
+export function addToCache(
+	word: string,
+	dictionaryResults: any,
+	thesaurusResults: any,
+): void {
+	// Clear forward history if adding a new word
+	if (currentWordIndex < cachedEntries.length - 1) {
+		cachedEntries.splice(currentWordIndex + 1);
+	}
+
+	// Add the word if it's not already the current one
+	if (cachedEntries[currentWordIndex]?.word !== word) {
+		cachedEntries.push({ word, dictionaryResults, thesaurusResults });
+		currentWordIndex = cachedEntries.length - 1;
+	}
+}
+
+export function getPreviousEntry(): CachedEntry | null {
+	if (currentWordIndex > 0) {
+		currentWordIndex -= 1;
+		return cachedEntries[currentWordIndex];
+	}
+	return null; // Explicitly return null if no previous entry exists
+}
+
+export function getNextEntry(): CachedEntry | null {
+	if (currentWordIndex < cachedEntries.length - 1) {
+		currentWordIndex += 1;
+		return cachedEntries[currentWordIndex];
+	}
+	return null; // Explicitly return null if no next entry exists
 }
 
 export function canGoBack(): boolean {
-    return currentWordIndex > 0;
+	return currentWordIndex > 0;
 }
 
 export function canGoForward(): boolean {
-    return currentWordIndex < cachedWords.length - 1;
-}
-
-export function getPreviousWord(): string | null {
-    if (currentWordIndex > 0) {
-        currentWordIndex -= 1;
-        return cachedWords[currentWordIndex];
-    }
-    return null;
-}
-
-export function getNextWord(): string | null {
-    if (currentWordIndex < cachedWords.length - 1) {
-        currentWordIndex += 1;
-        return cachedWords[currentWordIndex];
-    }
-    return null;
-}
-
-const lookupWordCache: { [key: string]: boolean } = {};
-// Function to get cached words
-export function getCachedWords(): string[] {
-	return Object.keys(lookupWordCache);
+	return currentWordIndex < cachedEntries.length - 1;
 }
 
 // create CKEditor View for link to another word
@@ -243,9 +249,6 @@ function createLinkView(
 	});
 
 	linkView.on('execute', () => {
-		// Cache the lookup word when the link is clicked
-		lookupWordCache[lookupWord] = true;
-		// execute lookup command on the linked word
 		editor.execute(LOOKUP, lookupWord);
 	});
 	return linkView;
