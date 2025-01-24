@@ -18,4 +18,12 @@
     instructions: 'Enter Merriam-Webster Collegiate&reg; Thesaurus API key',
 }) }}
 
+{{ forms.autosuggestField({
+    label: "Cache TTL",
+    name: 'cacheTTL',
+    suggestEnvVars: true,
+    value: settings.cacheTTL,
+    instructions: 'How many seconds before cached words should expire',
+}) }}
+
 <p>API keys must be obtained through <a href="https://dictionaryapi.com/products/index">Merriam-Webster</a></p>

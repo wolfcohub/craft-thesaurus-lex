@@ -39,7 +39,7 @@ class ThesaurusController extends Controller
 
         $settings = ThesaurusLex::$plugin->getSettings();
         $apiKey = $settings[$apiKeySetting];
-        $cacheTTL = 3600; // Cache time in seconds
+        $cacheTTL = $settings->cacheTTL ?? 3600;
 
         if (!$apiKey) {
             return $this->asJson([
