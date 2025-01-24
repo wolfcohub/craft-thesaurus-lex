@@ -1,8 +1,6 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
 import LookupState from './lookupstate.js';
-import { DictionaryTypes } from './DictionaryTypes.js';
-import { ThesaurusTypes } from './ThesaurusTypes.js';
-import { addToCache, getPreviousEntry, getNextEntry } from './utils.js'; // Import cachedEntries
+import { addToCache} from './utils.js'; // Import cachedEntries
 import { cachedEntries } from './utils.js';
 
 export default class LookupCommand extends Command {
