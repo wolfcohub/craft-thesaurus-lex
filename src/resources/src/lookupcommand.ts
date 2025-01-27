@@ -1,79 +1,61 @@
 import { Command, type Editor } from 'ckeditor5/src/core.js';
 import LookupState from './lookupstate.js';
-import { addToCache} from './utils.js'; // Import cachedEntries
-import { cachedEntries } from './utils.js';
+import { addToHistory } from './utils.js';
 
 export default class LookupCommand extends Command {
-	/**
-	 * The find and replace state object used for command operations.
-	 */
 	protected _state!: LookupState;
 
 	constructor(editor: Editor, state: LookupState) {
 		super(editor);
 		this._state = state;
 	}
-	/**
-	 * Executes the command.
-	 *
-	 * @fires execute
-	 */
-	override async execute(inputWord: string) {
-		// Check if the word is already cached
-		const cachedEntry = cachedEntries.find(
-			(entry) => entry.word.toLowerCase() === inputWord.toLowerCase(),
-		);
 
-		if (cachedEntry) {
-			this._state.set('dictionaryResults', cachedEntry.dictionaryResults);
-			this._state.set('thesaurusResults', cachedEntry.thesaurusResults);
-			this._state.set('isFetching', false);
-			this._state.set('isSuccess', true);
-			return;
-		}
-		// If not cached, fetch from the API
+	override async execute(inputWord: string) {
+		// Add word to history
+		addToHistory(inputWord);
+
+		// Set state to indicate fetching
 		this._state.set('isFetching', true);
 
 		try {
-			// Fetch definitions
-			const dictionaryUrl =
+			// Fetch from backend endpoints (server handles caching)
+			const dictionaryResponse = await fetch(
 				`/actions/thesaurus/get-definitions?` +
-				new URLSearchParams({ word: inputWord }).toString();
-			const dictionaryResponse = await fetch(dictionaryUrl, {
-				method: 'GET',
-				headers: { Accept: 'application/json' },
-			});
-			const dictionaryResults = await dictionaryResponse.json();
-			// Fetch synonyms
-			const thesaurusUrl =
+					new URLSearchParams({ word: inputWord }).toString(),
+				{ method: 'GET', headers: { Accept: 'application/json' } },
+			);
+
+			const thesaurusResponse = await fetch(
 				`/actions/thesaurus/get-synonyms?` +
-				new URLSearchParams({ word: inputWord }).toString();
-			const thesaurusResponse = await fetch(thesaurusUrl, {
-				method: 'GET',
-				headers: { Accept: 'application/json' },
-			});
+					new URLSearchParams({ word: inputWord }).toString(),
+				{ method: 'GET', headers: { Accept: 'application/json' } },
+			);
+
+			// Parse responses
+			const dictionaryResults = await dictionaryResponse.json();
 			const thesaurusResults = await thesaurusResponse.json();
 
+			// Validate response structure
 			if (
 				!Array.isArray(dictionaryResults) ||
 				!Array.isArray(thesaurusResults)
 			) {
 				throw new Error('Unexpected API response structure');
 			}
-			// Validate and update state
+
+			// Update state with results
 			this._state.set('dictionaryResults', dictionaryResults);
 			this._state.set('thesaurusResults', thesaurusResults);
-			this._state.set('isFetching', false);
 			this._state.set('isSuccess', true);
-			// Cache the response
-			addToCache(inputWord, dictionaryResults, thesaurusResults);
 		} catch (error) {
-			console.error(`Failed to fetch data for word: ${inputWord}`, error);
-			this._state.set('isFetching', false);
+			// Handle errors gracefully
+			console.error(`Error fetching data for: ${inputWord}`, error);
 			this._state.set(
 				'errorMessage',
-				`Failed to fetch data for ${inputWord}`,
+				`Failed to fetch data for ${inputWord}.`,
 			);
+		} finally {
+			this._state.set('isFetching', false);
 		}
 	}
 }

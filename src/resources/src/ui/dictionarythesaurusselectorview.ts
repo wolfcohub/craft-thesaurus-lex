@@ -7,8 +7,8 @@ import DictionaryContentView from './dictionarycontentview.js';
 import {
 	canGoBack,
 	canGoForward,
-	getNextEntry,
-	getPreviousEntry,
+	getNextWord,
+	getPreviousWord,
 } from '../utils.js';
 
 export function removeAsterisks(input: string): string {
@@ -43,6 +43,8 @@ export default class DictionaryThesaurusSelectorView extends View {
 		const functionalLabel = filteredDictionaryResults[0].fl;
 
 		this.set('selectedTab', 'dictionary');
+
+		// Back button setup
 		const backButton = new ButtonView(locale);
 		const forwardButton = new ButtonView(locale);
 		// Button state updater
@@ -58,9 +60,9 @@ export default class DictionaryThesaurusSelectorView extends View {
 			isEnabled: canGoBack(), // Initial state
 		});
 		backButton.on('execute', () => {
-			const previousEntry = getPreviousEntry();
-			if (previousEntry) {
-				editor.execute('lookup', previousEntry.word); // Pass the word, not the whole entry
+			const previousWord = getPreviousWord();
+			if (previousWord) {
+				editor.execute('lookup', previousWord); // Pass the word, not the whole entry
 				updateButtonStates(); // Update after navigation
 			} else {
 				console.warn('No previous word available.');
@@ -74,9 +76,9 @@ export default class DictionaryThesaurusSelectorView extends View {
 			isEnabled: canGoForward(), // Initial state
 		});
 		forwardButton.on('execute', () => {
-			const nextEntry = getNextEntry();
-			if (nextEntry) {
-				editor.execute('lookup', nextEntry.word); // Pass the word, not the whole entry
+			const nextWord = getNextWord();
+			if (nextWord) {
+				editor.execute('lookup', nextWord); // Pass the word, not the whole entry
 				updateButtonStates(); // Update after navigation
 			} else {
 				console.warn('No next word available.');

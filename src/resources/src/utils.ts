@@ -2,8 +2,6 @@ import { Locale } from 'ckeditor5';
 import type { Range } from 'ckeditor5/src/engine.js';
 import { ButtonView, View } from 'ckeditor5/src/ui.js';
 import { Editor } from 'ckeditor5/src/core.js';
-import { DictionaryTypes } from './DictionaryTypes.js';
-import { ThesaurusTypes } from './ThesaurusTypes.js';
 
 type StylingKey =
 	| 'normal'
@@ -182,54 +180,47 @@ function createStyledView(
 	});
 	return view;
 }
-interface CachedEntry {
-	word: string;
-	dictionaryResults: DictionaryTypes.DictionaryResult[];
-	thesaurusResults: ThesaurusTypes.ThesaurusResult[];
+
+let lookupHistory: string[] = [];
+let currentHistoryIndex: number = -1;
+export function addToHistory(word: string): void {
+	// Avoid adding duplicate consecutive entries
+	if (lookupHistory[currentHistoryIndex] === word) {
+		return;
+	}
+	// Remove "forward" history if navigating back and adding a new word
+	if (currentHistoryIndex < lookupHistory.length - 1) {
+		lookupHistory = lookupHistory.slice(0, currentHistoryIndex + 1);
+	}
+	// Add the word to history and update the index
+	lookupHistory.push(word);
+	currentHistoryIndex = lookupHistory.length - 1;
 }
 
-export const cachedEntries: CachedEntry[] = [];
-let currentWordIndex: number = -1;
-
-export function addToCache(
-	word: string,
-	dictionaryResults: any,
-	thesaurusResults: any,
-): void {
-	// Clear forward history if adding a new word
-	if (currentWordIndex < cachedEntries.length - 1) {
-		cachedEntries.splice(currentWordIndex + 1);
+export function getPreviousWord(): string | null {
+	if (canGoBack()) {
+		currentHistoryIndex -= 1;
+		return lookupHistory[currentHistoryIndex];
 	}
-
-	// Add the word if it's not already the current one
-	if (cachedEntries[currentWordIndex]?.word !== word) {
-		cachedEntries.push({ word, dictionaryResults, thesaurusResults });
-		currentWordIndex = cachedEntries.length - 1;
-	}
+	return null; // No previous word
 }
 
-export function getPreviousEntry(): CachedEntry | null {
-	if (currentWordIndex > 0) {
-		currentWordIndex -= 1;
-		return cachedEntries[currentWordIndex];
+export function getNextWord(): string | null {
+	if (canGoForward()) {
+		currentHistoryIndex += 1;
+		return lookupHistory[currentHistoryIndex];
 	}
-	return null; // Explicitly return null if no previous entry exists
-}
-
-export function getNextEntry(): CachedEntry | null {
-	if (currentWordIndex < cachedEntries.length - 1) {
-		currentWordIndex += 1;
-		return cachedEntries[currentWordIndex];
-	}
-	return null; // Explicitly return null if no next entry exists
+	return null; // No next word
 }
 
 export function canGoBack(): boolean {
-	return currentWordIndex > 0;
+	// Rewrite this to only manage lookup history
+	return currentHistoryIndex > 0;
 }
 
 export function canGoForward(): boolean {
-	return currentWordIndex < cachedEntries.length - 1;
+	// Rewrite this to only manage lookup history
+	return currentHistoryIndex < lookupHistory.length - 1;
 }
 
 // create CKEditor View for link to another word
