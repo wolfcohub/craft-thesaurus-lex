@@ -5,40 +5,51 @@ import { Editor } from 'ckeditor5/src/core.js';
 
 export default class ThesaurusBlock extends View {
 	private editor: Editor;
+
 	constructor(
 		locale: Locale,
-		thesaurusData: ThesaurusTypes.ThesaurusResult,
+		thesaurusData: ThesaurusTypes.ThesaurusResult | string[],
 		editor: Editor,
 	) {
 		super(locale);
 		this.editor = editor;
 
-		// Extract `def` from the thesaurus data
-		const { def, shortdef, fl } = thesaurusData;
-		if (!def || !Array.isArray(def)) {
-			throw new Error('Invalid `def` structure in thesaurus data');
-		}
-		//add word shortdefWord and functionalLabel to the template
-		const functionalLabel = fl;
-		const shortdefWord = shortdef[0];
-
-		// Create a collection to hold all thesaurus blocks
 		const thesaurusCollection = this.createCollection();
 
-		def.forEach((definition) => {
-			const sseqItems = this.getSseqItems(definition);
-			sseqItems.forEach((synonymList) => {
-				if (synonymList.length > 0) {
-					const synonymBlock = this.createSynonymBlock(
-						locale,
-						synonymList,
-						shortdefWord,
-						functionalLabel,
-					);
-					thesaurusCollection.add(synonymBlock);
-				}
+		// Check if thesaurusData is an array of strings (edge case)
+		if (Array.isArray(thesaurusData)) {
+			// Create a container for synonym buttons in the edge case
+			const synonymContainer = new View(locale);
+			synonymContainer.setTemplate({
+				tag: 'div',
+				attributes: {
+					class: ['ck', 'ck-synonym-block'],
+				},
+				children: thesaurusData.map((word) =>
+					this.createWordButton(locale, word),
+				),
 			});
-		});
+			thesaurusCollection.add(synonymContainer);
+		} else {
+			// Handle normal case: Nested `ThesaurusResult`
+			const { def, shortdef, fl } = thesaurusData;
+			if (def && Array.isArray(def)) {
+				def.forEach((definition) => {
+					const sseqItems = this.getSseqItems(definition);
+					sseqItems.forEach((synonymList) => {
+						if (synonymList.length > 0) {
+							const synonymBlock = this.createSynonymBlock(
+								locale,
+								synonymList,
+								shortdef[0] || '',
+								fl || '',
+							);
+							thesaurusCollection.add(synonymBlock);
+						}
+					});
+				});
+			}
+		}
 
 		this.setTemplate({
 			tag: 'div',
@@ -50,41 +61,23 @@ export default class ThesaurusBlock extends View {
 	}
 
 	/**
-	 * Extracts all `sseq` items and their `syn_list` words, focusing only on `wd`.
+	 * Extracts all `sseq` items and their `syn_list` words.
 	 */
 	private getSseqItems(definition: ThesaurusTypes.Definition): string[][] {
-		// Ensure `sseq` is valid
 		if (!definition.sseq || !Array.isArray(definition.sseq)) {
 			return [];
 		}
 
-		// Process each `senseSequence` to extract `syn_list` words
 		return definition.sseq[0].map((senseSequence) => {
-			// Validate `senseSequence` structure
 			const sense = Array.isArray(senseSequence)
 				? senseSequence[1]
 				: null;
 
-			if (
-				sense?.syn_list &&
-				Array.isArray(sense.syn_list) &&
-				sense.syn_list.length > 0
-			) {
-				// Extract synonyms, focusing only on `wd`
+			if (sense?.syn_list && Array.isArray(sense.syn_list)) {
 				return sense.syn_list
 					.flat()
 					.map((syn: ThesaurusTypes.SynonymWord) => syn.wd || '');
-			} else if (
-				sense?.sim_list &&
-				Array.isArray(sense.sim_list) &&
-				sense.sim_list.length > 0
-			) {
-				// Extract synonyms, focusing only on `wd`
-				return sense.sim_list
-					.flat()
-					.map((syn: ThesaurusTypes.SynonymWord) => syn.wd || '');
 			}
-			// Return an empty array if `syn_list` is missing or invalid
 			return [];
 		});
 	}
@@ -92,7 +85,7 @@ export default class ThesaurusBlock extends View {
 	/**
 	 * Creates a block for a single list of synonyms.
 	 */
-	createSynonymBlock(
+	private createSynonymBlock(
 		locale: Locale,
 		synonyms: string[],
 		shortdefWord: string,
@@ -100,89 +93,69 @@ export default class ThesaurusBlock extends View {
 	): View {
 		const synonymBlock = new View(locale);
 
-		// Create a view for the functional label and short definition
 		const headerView = new View(locale);
 		headerView.setTemplate({
 			tag: 'div',
-			attributes: {
-				class: ['ck', 'ck-synonym-header'],
-			},
+			attributes: { class: ['ck', 'ck-synonym-header'] },
 			children: [
 				{
 					tag: 'span',
-					attributes: {
-						class: ['ck', 'ck-functional-label'],
-					},
+					attributes: { class: ['ck', 'ck-functional-label'] },
 					children: functionalLabel,
 				},
 				{
 					tag: 'span',
-					attributes: {
-						class: ['ck', 'ck-short-def'],
-					},
+					attributes: { class: ['ck', 'ck-short-def'] },
 					children: [`As in: ${shortdefWord}`],
 				},
 			],
 		});
 
-		// Create buttons for synonyms
-		const synonymButtons = synonyms.map((synonym) => {
-			const button = new ButtonView(locale);
+		const synonymButtons = synonyms.map((synonym) =>
+			this.createWordButton(locale, synonym),
+		);
 
-			// Configure the button
-			button.set({
-				label: synonym,
-				withText: true,
-				tooltip: `Replace with "${synonym}"`,
-			});
-
-			// Add handler to replace word with the clicked synonym
-			this.listenTo(button, 'execute', () => {
-				this.replaceSelectedText(synonym);
-			});
-
-			return button;
-		});
-
-		// Add all buttons to a container
 		synonymBlock.setTemplate({
 			tag: 'div',
-			attributes: {
-				class: ['ck', 'ck-synonym-block'],
-			},
-			children: [
-				headerView, // Add the header view to the block
-				...synonymButtons, // Add synonym buttons
-			],
+			attributes: { class: ['ck', 'ck-synonym-block'] },
+			children: [headerView, ...synonymButtons],
 		});
 
 		return synonymBlock;
 	}
 
-	// function to replace word selected in editor with passed synonym
-	private replaceSelectedText(synonym: string): void {
-		const editor = this.editor;
-		const model = editor.model;
+	/**
+	 * Creates a simple button for a single word.
+	 */
+	private createWordButton(locale: Locale, word: string): ButtonView {
+		const button = new ButtonView(locale);
+		button.set({
+			label: word,
+			withText: true,
+			tooltip: `Replace with "${word}"`,
+		});
 
+		this.listenTo(button, 'execute', () => {
+			this.replaceSelectedText(word);
+		});
+
+		return button;
+	}
+
+	/**
+	 * Replaces the selected text in the editor with the given synonym.
+	 */
+	private replaceSelectedText(synonym: string): void {
+		const model = this.editor.model;
 		model.change((writer) => {
 			const selection = model.document.selection;
 
 			if (selection.rangeCount > 0) {
 				const range = selection.getFirstRange();
 				if (range) {
-					// Remove the content of the range first
 					writer.remove(range);
-
-					// Insert the synonym where the range started
 					writer.insertText(synonym, range.start);
-
-					// Clear the selection
-					writer.setSelection(null);
-				} else {
-					console.error('No valid range to replace');
 				}
-			} else {
-				console.error('No text selected to replace');
 			}
 		});
 	}

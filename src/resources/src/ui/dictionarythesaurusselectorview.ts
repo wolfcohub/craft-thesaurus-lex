@@ -189,9 +189,32 @@ export default class DictionaryThesaurusSelectorView extends View {
 		});
 
 		const thesaurusContainer = new View(locale);
-		const thesaurusContent = thesaurusResults.map(
-			(result) => new ThesaurusBlock(locale, result, this.editor),
-		);
+
+		let thesaurusContent: View[];
+
+		// Check if `thesaurusResults` is a flat array of words (edge case)
+		if (
+			Array.isArray(thesaurusResults) &&
+			typeof thesaurusResults[0] === 'string'
+		) {
+			// Edge case: Wrap the flat array of strings into a single array
+			thesaurusContent = [
+				new ThesaurusBlock(
+					locale,
+					thesaurusResults as unknown as string[],
+					this.editor,
+				),
+			];
+		} else {
+			// Normal case: Process each `ThesaurusResult` object
+			thesaurusContent = thesaurusResults.map((result) => {
+				return new ThesaurusBlock(
+					locale,
+					result as ThesaurusTypes.ThesaurusResult,
+					this.editor,
+				);
+			});
+		}
 
 		thesaurusContainer.setTemplate({
 			tag: 'div',
@@ -199,7 +222,6 @@ export default class DictionaryThesaurusSelectorView extends View {
 				class: [
 					'ck',
 					'ck-scrollable-results',
-					// hide thesaurus content if dictionary tab selected
 					bind.if(
 						'selectedTab',
 						'ck-hidden',
