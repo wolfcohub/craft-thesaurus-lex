@@ -27,3 +27,7 @@
 }) }}
 
 <p>API keys must be obtained through <a href="https://dictionaryapi.com/products/index">Merriam-Webster</a></p>
+<form method="post" action="{{ url('thesaurus-lex/settings/clear-cache') }}">
+    {{ csrfInput() }}
+    <button class="btn submit" type="submit">Clear Cache</button>
+</form>

@@ -69,7 +69,6 @@ class ThesaurusController extends Controller
 
             return $this->asJson($data);
         } catch (\Exception $e) {
-          Craft::error("Failed to fetch data from {$cachePrefix} API: {$e->getMessage()}", __METHOD__);
             return $this->asJson(['error' => "Failed to fetch data from {$cachePrefix} API"]);
         }
     }
