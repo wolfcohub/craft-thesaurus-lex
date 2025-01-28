@@ -4,6 +4,7 @@ namespace wolfco\craftthesauruslex\controllers;
 
 use craft\web\Controller;
 use yii\web\Response;
+use yii\caching\TagDependency;
 use Craft;
 use wolfco\craftthesauruslex\ThesaurusLex;
 
@@ -65,7 +66,12 @@ class ThesaurusController extends Controller
             $data = json_decode($response, true);
 
             // Cache the response
-            Craft::$app->getCache()->set($cacheKey, $data, $cacheTTL);
+            Craft::$app->getCache()->set(
+              $cacheKey,
+              $data,
+              $cacheTTL,
+              new TagDependency(['tags' => ["thesaurusLex"]])
+            );
 
             return $this->asJson($data);
         } catch (\Exception $e) {

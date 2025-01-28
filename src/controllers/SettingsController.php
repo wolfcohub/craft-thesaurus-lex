@@ -29,26 +29,4 @@ class SettingsController extends Controller
 
         return $this->redirectToPostedUrl();
     }
-    
-    public function actionClearCache(): ?Response
-    {
-        $this->requirePostRequest();
-
-        // Clear all cache keys related to the plugin
-        $cache = Craft::$app->getCache();
-        $prefix = 'thesaurusLex_'; // Define your cache prefix
-        // Assuming you store cache keys separately
-        $keys = $cache->get("{$prefix}keys");
-
-        foreach ($keys as $key) {
-            $cache->delete($key);
-        }
-
-        // Optionally, clear the stored keys
-        $cache->delete("{$prefix}keys");
-
-        Craft::$app->getSession()->setNotice('Cache cleared.');
-
-        return $this->redirect('thesaurus-lex/settings');
-    }
 }
