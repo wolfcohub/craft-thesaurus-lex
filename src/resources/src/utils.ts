@@ -180,50 +180,47 @@ function createStyledView(
 	});
 	return view;
 }
-const cachedWords: string[] = [];
-let currentWordIndex: number = -1;
 
-export function addToCache(word: string): void {
-    if (currentWordIndex < cachedWords.length - 1) {
-        // Clear forward history if adding a new word
-        if (cachedWords[currentWordIndex] !== word) {
-            cachedWords.splice(currentWordIndex + 1);
-        }
-    }
-    if (cachedWords[currentWordIndex] !== word) {
-        cachedWords.push(word);
-        currentWordIndex = cachedWords.length - 1;
-    }
-}
-
-export function canGoBack(): boolean {
-    return currentWordIndex > 0;
-}
-
-export function canGoForward(): boolean {
-    return currentWordIndex < cachedWords.length - 1;
+let lookupHistory: string[] = [];
+let currentHistoryIndex: number = -1;
+export function addToHistory(word: string): void {
+	// Avoid adding duplicate consecutive entries
+	if (lookupHistory[currentHistoryIndex] === word) {
+		return;
+	}
+	// Remove "forward" history if navigating back and adding a new word
+	if (currentHistoryIndex < lookupHistory.length - 1) {
+		lookupHistory = lookupHistory.slice(0, currentHistoryIndex + 1);
+	}
+	// Add the word to history and update the index
+	lookupHistory.push(word);
+	currentHistoryIndex = lookupHistory.length - 1;
 }
 
 export function getPreviousWord(): string | null {
-    if (currentWordIndex > 0) {
-        currentWordIndex -= 1;
-        return cachedWords[currentWordIndex];
-    }
-    return null;
+	if (canGoBack()) {
+		currentHistoryIndex -= 1;
+		return lookupHistory[currentHistoryIndex];
+	}
+	return null; // No previous word
 }
 
 export function getNextWord(): string | null {
-    if (currentWordIndex < cachedWords.length - 1) {
-        currentWordIndex += 1;
-        return cachedWords[currentWordIndex];
-    }
-    return null;
+	if (canGoForward()) {
+		currentHistoryIndex += 1;
+		return lookupHistory[currentHistoryIndex];
+	}
+	return null; // No next word
 }
 
-const lookupWordCache: { [key: string]: boolean } = {};
-// Function to get cached words
-export function getCachedWords(): string[] {
-	return Object.keys(lookupWordCache);
+export function canGoBack(): boolean {
+	// Rewrite this to only manage lookup history
+	return currentHistoryIndex > 0;
+}
+
+export function canGoForward(): boolean {
+	// Rewrite this to only manage lookup history
+	return currentHistoryIndex < lookupHistory.length - 1;
 }
 
 // create CKEditor View for link to another word
@@ -243,9 +240,6 @@ function createLinkView(
 	});
 
 	linkView.on('execute', () => {
-		// Cache the lookup word when the link is clicked
-		lookupWordCache[lookupWord] = true;
-		// execute lookup command on the linked word
 		editor.execute(LOOKUP, lookupWord);
 	});
 	return linkView;

@@ -4,7 +4,12 @@ import { DictionaryTypes } from '../DictionaryTypes.js';
 import { ThesaurusTypes } from '../ThesaurusTypes.js';
 import ThesaurusBlock from './thesaurusblock.js';
 import DictionaryContentView from './dictionarycontentview.js';
-import { canGoBack, canGoForward, getNextWord, getPreviousWord } from '../utils.js';
+import {
+	canGoBack,
+	canGoForward,
+	getNextWord,
+	getPreviousWord,
+} from '../utils.js';
 
 export function removeAsterisks(input: string): string {
 	return input.replace(/\*/g, '');
@@ -38,47 +43,49 @@ export default class DictionaryThesaurusSelectorView extends View {
 		const functionalLabel = filteredDictionaryResults[0].fl;
 
 		this.set('selectedTab', 'dictionary');
-        const backButton = new ButtonView(locale);
-        const forwardButton = new ButtonView(locale);
-        // Button state updater
-        const updateButtonStates = () => {
-            backButton.isEnabled = canGoBack();
-            forwardButton.isEnabled = canGoForward();
-        };
-        // Back button setup
-        backButton.set({
-            label: t('Back'),
-            withText: true,
-            tooltip: 'Go back to the previous word',
-            isEnabled: canGoBack(), // Initial state
-        });
-        backButton.on('execute', () => {
-            const previousWord = getPreviousWord();
-            if (previousWord) {
-                editor.execute('lookup', previousWord);
-                updateButtonStates(); // Update after navigation
-            } else {
-                console.warn('No previous word available.');
-            }
-        });
-        // Forward button setup
-        forwardButton.set({
-            label: t('Forward'),
-            withText: true,
-            tooltip: 'Go forward to the next word',
-            isEnabled: canGoForward(), // Initial state
-        });
-        forwardButton.on('execute', () => {
-            const nextWord = getNextWord();
-            if (nextWord) {
-                editor.execute('lookup', nextWord);
-                updateButtonStates(); // Update after navigation
-            } else {
-                console.warn('No next word available.');
-            }
-        });
-        // Call `updateButtonStates` after initial render to ensure buttons are correct
-        updateButtonStates();
+
+		// Back button setup
+		const backButton = new ButtonView(locale);
+		const forwardButton = new ButtonView(locale);
+		// Button state updater
+		const updateButtonStates = () => {
+			backButton.isEnabled = canGoBack();
+			forwardButton.isEnabled = canGoForward();
+		};
+		// Back button setup
+		backButton.set({
+			label: t('Back'),
+			withText: true,
+			tooltip: 'Go back to the previous word',
+			isEnabled: canGoBack(), // Initial state
+		});
+		backButton.on('execute', () => {
+			const previousWord = getPreviousWord();
+			if (previousWord) {
+				editor.execute('lookup', previousWord); // Pass the word, not the whole entry
+				updateButtonStates(); // Update after navigation
+			} else {
+				console.warn('No previous word available.');
+			}
+		});
+		// Forward button setup
+		forwardButton.set({
+			label: t('Forward'),
+			withText: true,
+			tooltip: 'Go forward to the next word',
+			isEnabled: canGoForward(), // Initial state
+		});
+		forwardButton.on('execute', () => {
+			const nextWord = getNextWord();
+			if (nextWord) {
+				editor.execute('lookup', nextWord); // Pass the word, not the whole entry
+				updateButtonStates(); // Update after navigation
+			} else {
+				console.warn('No next word available.');
+			}
+		});
+		// Call `updateButtonStates` after initial render to ensure buttons are correct
+		updateButtonStates();
 		// Dictionary select button setup
 		const dictionarySelectButton = new ButtonView(locale);
 		dictionarySelectButton.set({
@@ -182,9 +189,32 @@ export default class DictionaryThesaurusSelectorView extends View {
 		});
 
 		const thesaurusContainer = new View(locale);
-		const thesaurusContent = thesaurusResults.map(
-			(result) => new ThesaurusBlock(locale, result, this.editor),
-		);
+
+		let thesaurusContent: View[];
+
+		// Check if `thesaurusResults` is a flat array of words (edge case)
+		if (
+			Array.isArray(thesaurusResults) &&
+			typeof thesaurusResults[0] === 'string'
+		) {
+			// Edge case: Wrap the flat array of strings into a single array
+			thesaurusContent = [
+				new ThesaurusBlock(
+					locale,
+					thesaurusResults as unknown as string[],
+					this.editor,
+				),
+			];
+		} else {
+			// Normal case: Process each `ThesaurusResult` object
+			thesaurusContent = thesaurusResults.map((result) => {
+				return new ThesaurusBlock(
+					locale,
+					result as ThesaurusTypes.ThesaurusResult,
+					this.editor,
+				);
+			});
+		}
 
 		thesaurusContainer.setTemplate({
 			tag: 'div',
@@ -192,7 +222,6 @@ export default class DictionaryThesaurusSelectorView extends View {
 				class: [
 					'ck',
 					'ck-scrollable-results',
-					// hide thesaurus content if dictionary tab selected
 					bind.if(
 						'selectedTab',
 						'ck-hidden',

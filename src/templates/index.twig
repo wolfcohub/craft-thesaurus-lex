@@ -1,0 +1,11 @@
+{% import '_includes/forms' as forms %}
+
+<h2>{{ 'Clear Thesaurus Lex Cache'|t('app') }}</h2>
+
+<form id="warm-cache-form" method="post" action="{{ url('actions/thesaurus-lex/cache/clear-cache') }}">
+    {{ csrfInput() }}
+    
+    <button type="submit" class="btn submit" >
+        Clear Cache
+    </button>
+</form>

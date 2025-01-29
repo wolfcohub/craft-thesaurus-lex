@@ -2,8 +2,8 @@
 namespace wolfco\craftthesauruslex\controllers;
 
 use craft\web\Controller;
-use wolfco\craftthesauruslex\ThesaurusLex;
 use yii\web\Response;
+use Craft;
 
 class SettingsController extends Controller
 {
@@ -12,19 +12,19 @@ class SettingsController extends Controller
     public function actionSaveSettings(): ?Response
     {
         $this->requirePostRequest();
-        $plugin = ThesaurusLex::$plugin;
+        $plugin = \wolfco\craftthesauruslex\ThesaurusLex::$plugin;
 
         // Get settings from the POST request
-        $settings = \Craft::$app->getRequest()->getBodyParam('settings', []);
+        $settings = Craft::$app->getRequest()->getBodyParam('settings', []);
 
         // Set the attributes on the settings model
         $plugin->getSettings()->setAttributes($settings, false);
 
         // Save the settings
         if ($plugin->saveSettings($plugin->getSettings())) {
-            \Craft::$app->getSession()->setNotice('Settings saved.');
+            Craft::$app->getSession()->setNotice('Settings saved.');
         } else {
-            \Craft::$app->getSession()->setError('Couldn’t save settings.');
+            Craft::$app->getSession()->setError('Couldn’t save settings.');
         }
 
         return $this->redirectToPostedUrl();
