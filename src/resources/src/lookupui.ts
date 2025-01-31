@@ -8,7 +8,7 @@ import lexIcon from './../../icon.svg';
 
 export default class LookupUI extends Plugin {
 	state!: LookupState;
-	private modal!: Dialog;
+	modal!: Dialog;
 	private handleOutsideClick: (event: MouseEvent) => void = () => {};
 	public static get pluginName() {
 		return 'LookupUI' as const;
