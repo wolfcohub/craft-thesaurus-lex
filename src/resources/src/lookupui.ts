@@ -100,10 +100,8 @@ export default class LookupUI extends Plugin {
 						'change:errorMessage',
 						(evt, name, errorMessage) => {
 							if (errorMessage) {
-								this.modal.hide();
-								const notification =
-									editor.plugins.get(Notification);
-								notification.showWarning(errorMessage);
+								// Keep the modal open and display the error inside it
+								formView.set('errorMessage', errorMessage);
 							}
 						},
 					);

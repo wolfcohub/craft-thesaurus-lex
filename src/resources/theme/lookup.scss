@@ -28,18 +28,78 @@
         background-repeat: no-repeat;
         background-position: center;
     }
-}
+	.ck-error-message {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 6px;
+		background-color: #ffe6e6;
+		border: 2px solid #cc0000;
+		width: 100%;
+		max-width: 400px;
+		margin: 10px auto;
+		flex-wrap: wrap;
+	}
 
+	.ck-error-message {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 6px;
+		background-color: #ffe6e6;
+		border: 2px solid #cc0000;
+		width: 100%;
+		max-width: 400px;
+		margin: 10px auto;
+		flex-wrap: wrap;
+	}
+
+	.ck-error-text {
+		font-weight: bold;
+		font-size: 14px;
+		text-align: center;
+		color: #cc0000;
+		white-space: normal;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+		width: 100%;
+	}
+
+	.ck-error-link {
+		color: #cc0000;
+		text-decoration: underline;
+		font-weight: bold;
+	}
+
+	.ck-error-link:hover {
+		color: #990000;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.ck-t-lex-logo {
+		display: inline-block;
+		width: 40px;
+		height: 40px;
+		margin-right: 10px;
+		background-image: url('./icons/thesaurus-lex.png');
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+}
 .ck.ck-lookup-form,
 .ck.ck-result-form,
 .ck.ck-suggestions-container {
-    width: 600px;
+	width: 600px;
     max-width: 100%;
     min-height: 400px;
     // position: relative;
 
     & .ck-loader {
-        position: absolute;
+		position: absolute;
         height: 100%;
         width: 100%;
         display: flex;
@@ -282,6 +342,7 @@
         justify-content: flex-start;
         margin: 10px;
     }
+
     .ck-synonym {
         font-size: 14px;
         font-weight: bold;
