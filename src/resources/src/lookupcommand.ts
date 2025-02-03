@@ -47,6 +47,12 @@ export default class LookupCommand extends Command {
 			//  Handle API errors
 			if (dictionaryResults.error) {
 				this._state.set('errorMessage', dictionaryResults.error);
+				if (dictionaryResults.settingsUrl) {
+					this._state.set(
+						'settingsUrl',
+						dictionaryResults.settingsUrl,
+					);
+				}
 				return;
 			}
 			if (thesaurusResults.error) {

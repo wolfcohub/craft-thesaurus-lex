@@ -36,6 +36,6 @@ export default class LookupState extends ObservableMixin() {
 		this.set('errorMessage', null);
 		this.set('cachedWords', []);
 		this.set('currentWordIndex', -1);
-		this.set('settingsUrl', '/admin/settings/plugins/thesaurus-lex'); // Default settings page
+		this.set('settingsUrl', null);
 	}
 }

@@ -18,7 +18,7 @@ import SpellingSuggestionsView from './spellingsuggestionsview.js';
 export default class LookupFormView extends View {
 	contentBlocks!: ViewCollection;
 
-	settingsUrl!: string;
+	settingsUrl!: string | null;
 
 	input!: LabeledFieldView<InputView>;
 
