@@ -13,6 +13,8 @@ export default class LookupCommand extends Command {
 	}
 
 	override async execute(inputWord: string) {
+		// Prevent duplicate API calls from previous errors
+		if (this._state.isFetching) return;
 		// Add word to history
 		addToHistory(inputWord);
 
@@ -39,9 +41,19 @@ export default class LookupCommand extends Command {
 			const dictionaryResults = await dictionaryResponse.json();
 			const thesaurusResults = await thesaurusResponse.json();
 
-			//  Handle API errors (e.g., missing word, invalid response)
+			//  Prevent duplicate error alerts
+			if (this._state.errorMessage) return;
+
+			//  Handle API errors
 			if (dictionaryResults.error) {
-				throw new Error(dictionaryResults.error);
+				this._state.set('errorMessage', dictionaryResults.error);
+				if (dictionaryResults.settingsUrl) {
+					this._state.set(
+						'settingsUrl',
+						dictionaryResults.settingsUrl,
+					);
+				}
+				return;
 			}
 			if (thesaurusResults.error) {
 				console.warn(
@@ -49,7 +61,7 @@ export default class LookupCommand extends Command {
 				);
 			}
 
-			// Handle Spelling Suggestions (when API returns an array of strings)
+			// Handle Spelling Suggestions
 			if (
 				Array.isArray(dictionaryResults) &&
 				dictionaryResults.every((res) => typeof res === 'string')
@@ -59,7 +71,7 @@ export default class LookupCommand extends Command {
 				return;
 			}
 
-			// Ensure valid results with explicit typing
+			//  Ensure valid results
 			const validDictionaryResults: DictionaryTypes.DictionaryResult[] =
 				dictionaryResults.filter(
 					(result: DictionaryTypes.DictionaryResult) =>
@@ -72,7 +84,7 @@ export default class LookupCommand extends Command {
 						result && typeof result === 'object',
 				);
 
-			// Handle empty results (instead of throwing an error)
+			//  Handle empty results
 			if (
 				!validDictionaryResults.length &&
 				!validThesaurusResults.length
@@ -84,12 +96,15 @@ export default class LookupCommand extends Command {
 				return;
 			}
 
-			// ✅ Store results in state
+			//  Store results in state
 			this._state.set('dictionaryResults', validDictionaryResults);
 			this._state.set('thesaurusResults', validThesaurusResults);
 			this._state.set('isSuccess', true);
 		} catch (error) {
 			console.error(`Error fetching data for: ${inputWord}`, error);
+			//  Prevent duplicate error alerts
+			if (this._state.errorMessage) return;
+
 			this._state.set(
 				'errorMessage',
 				error instanceof Error
