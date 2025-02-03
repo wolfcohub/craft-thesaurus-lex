@@ -1,9 +1,4 @@
-import {
-	ButtonView,
-	ToolbarSeparatorView,
-	View,
-	ViewCollection,
-} from 'ckeditor5/src/ui.js';
+import { ButtonView, ToolbarSeparatorView, View } from 'ckeditor5/src/ui.js';
 import { type Locale } from 'ckeditor5/src/utils.js';
 import { DictionaryTypes } from '../DictionaryTypes.js';
 import { ThesaurusTypes } from '../ThesaurusTypes.js';
@@ -176,7 +171,6 @@ export default class DictionaryThesaurusSelectorView extends View {
 			this.editor,
 			filteredDictionaryResults,
 		);
-
 		dictionaryContainer.setTemplate({
 			tag: 'div',
 			attributes: {
