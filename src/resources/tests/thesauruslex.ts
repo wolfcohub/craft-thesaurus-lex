@@ -1,58 +1,65 @@
-import { expect } from 'chai';
+import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
-import { Heading } from '@ckeditor/ckeditor5-heading';
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
+import { Dialog } from 'ckeditor5/src/ui.js';
 import ThesaurusLex from '../src/thesauruslex.js';
+import LookupUI from '../src/lookupui.js';
 
-describe( 'ThesaurusLex', () => {
-	it( 'should be named', () => {
-		expect( ThesaurusLex.pluginName ).to.equal( 'ThesaurusLex' );
-	} );
+describe('ThesaurusLex', () => {
+	it('should be named', () => {
+		expect(ThesaurusLex.pluginName).to.equal('ThesaurusLex');
+	});
 
-	describe( 'init()', () => {
+	describe('init()', () => {
 		let domElement: HTMLElement, editor: ClassicEditor;
 
-		beforeEach( async () => {
-			domElement = document.createElement( 'div' );
-			document.body.appendChild( domElement );
+		beforeEach(async () => {
+			domElement = document.createElement('div');
+			document.body.appendChild(domElement);
 
-			editor = await ClassicEditor.create( domElement, {
-				plugins: [
-					Paragraph,
-					Heading,
-					Essentials,
-					ThesaurusLex
-				],
-				toolbar: [
-					'thesaurusLexButton'
-				]
-			} );
-		} );
+			editor = await ClassicEditor.create(domElement, {
+				plugins: [Paragraph, Essentials, ThesaurusLex],
+				toolbar: ['thesaurusLexButton'],
+			});
+		});
 
-		afterEach( () => {
+		afterEach(() => {
 			domElement.remove();
 			return editor.destroy();
-		} );
+		});
 
-		it( 'should load ThesaurusLex', () => {
-			const myPlugin = editor.plugins.get( 'ThesaurusLex' );
+		it('should load ThesaurusLex', () => {
+			const myPlugin = editor.plugins.get('ThesaurusLex');
 
-			expect( myPlugin ).to.be.an.instanceof( ThesaurusLex );
-		} );
+			expect(myPlugin).to.be.an.instanceof(ThesaurusLex);
+		});
 
-		it( 'should add an icon to the toolbar', () => {
-			expect( editor.ui.componentFactory.has( 'thesaurusLexButton' ) ).to.equal( true );
-		} );
+		it('should add an icon to the toolbar', () => {
+			expect(
+				editor.ui.componentFactory.has('thesaurusLexButton'),
+			).to.equal(true);
+		});
 
-		it( 'should add a text into the editor after clicking the icon', () => {
-			const icon = editor.ui.componentFactory.create( 'thesaurusLexButton' );
+		it('clicking the icon should open the ThesaurusLex modal', () => {
+			const icon =
+				editor.ui.componentFactory.create('thesaurusLexButton');
+			const lookupUi = editor.plugins.get('LookupUI') as LookupUI;
 
-			expect( editor.getData() ).to.equal( '' );
+			expect(editor.getData()).to.equal('');
+			expect(lookupUi).to.be.instanceOf(LookupUI);
 
-			icon.fire( 'execute' );
+			expect(lookupUi).toHaveProperty('modal');
+			expect(lookupUi.modal).to.be.instanceOf(Dialog);
 
-			expect( editor.getData() ).to.equal( '<p>Hello CKEditor 5!</p>' );
-		} );
-	} );
-} );
+			// modal should initially be closed
+			expect(lookupUi.modal.isOpen).to.equal(false);
+
+			// simulate ThesaurusLex button click
+			icon.fire('execute');
+
+			// modal should now be open
+			expect(lookupUi.modal.isOpen).to.equal(true);
+		});
+	});
+});

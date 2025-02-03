@@ -1,0 +1,132 @@
+[
+	{
+		"meta": {
+			"id": "gingerly:1",
+			"uuid": "ff6c747d-83b4-4085-a592-537bf617bc31",
+			"sort": "071198000",
+			"src": "collegiate",
+			"section": "alpha",
+			"stems": ["gingerliness", "gingerlinesses", "gingerly"],
+			"offensive": false
+		},
+		"hom": 1,
+		"hwi": {
+			"hw": "gin*ger*ly",
+			"prs": [
+				{
+					"mw": "ˈjin-jər-lē",
+					"sound": {
+						"audio": "ginger07",
+						"ref": "c",
+						"stat": "1"
+					}
+				}
+			]
+		},
+		"fl": "adjective",
+		"def": [
+			{
+				"sseq": [
+					[
+						[
+							"sense",
+							{
+								"dt": [
+									["text", "{bc}very cautious or careful "],
+									[
+										"vis",
+										[
+											{
+												"t": "… loose, exfoliated rock, into which he hammered pitons with the {wi}gingerly{/wi} care of a carpenter finishing cabinets.",
+												"aq": {
+													"auth": "David Roberts"
+												}
+											},
+											{
+												"t": "His questions were {wi}gingerly{/wi} and puzzled.",
+												"aq": {
+													"auth": "John Skow"
+												}
+											}
+										]
+									]
+								]
+							}
+						]
+					]
+				]
+			}
+		],
+		"uros": [
+			{
+				"ure": "gin*ger*li*ness",
+				"fl": "noun"
+			}
+		],
+		"et": [["text", "perhaps from {et_link|ginger:1|ginger:1}"]],
+		"date": "1611",
+		"shortdef": ["very cautious or careful"]
+	},
+	{
+		"meta": {
+			"id": "gingerly:2",
+			"uuid": "1c86d562-cfdc-40c1-9e3f-b0f28729ec4f",
+			"sort": "071198500",
+			"src": "collegiate",
+			"section": "alpha",
+			"stems": ["gingerly"],
+			"offensive": false
+		},
+		"hom": 2,
+		"hwi": {
+			"hw": "gingerly"
+		},
+		"fl": "adverb",
+		"def": [
+			{
+				"sseq": [
+					[
+						[
+							"sense",
+							{
+								"dt": [
+									[
+										"text",
+										"{bc}with extreme care concerning the result of a movement or action {bc}very cautiously and carefully "
+									],
+									[
+										"vis",
+										[
+											{
+												"t": "These working dogs know how to use their jaws {wi}gingerly{/wi}, without exerting undue pressure in handling the livestock.",
+												"aq": {
+													"source": "{it}American West{/it}"
+												}
+											},
+											{
+												"t": "Today, IVF specialists around the world routinely incubate human eggs and sperm in a laboratory dish and then {wi}gingerly{/wi} transfer a fertilized egg to the mother's uterus.",
+												"aq": {
+													"auth": "Kathy A. Fackelmann"
+												}
+											},
+											{
+												"t": "Nick Price sat on a cheap folding chair as a group of somber journalists arrived, intending to {wi}gingerly{/wi} ask him how it was that one of the world's best players had just shot an 82 in the third round of the 1998 British Open.",
+												"aq": {
+													"auth": "Jeff Williams"
+												}
+											}
+										]
+									]
+								]
+							}
+						]
+					]
+				]
+			}
+		],
+		"date": "1596",
+		"shortdef": [
+			"with extreme care concerning the result of a movement or action : very cautiously and carefully"
+		]
+	}
+]
