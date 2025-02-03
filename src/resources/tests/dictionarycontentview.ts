@@ -6,23 +6,10 @@ import ThesaurusLex from '../src/thesauruslex.js';
 import { DictionaryTypes } from '../src/DictionaryTypes.js';
 import DictionaryContentView from '../src/ui/dictionarycontentview.js';
 import applicationJSON from './data/application.json';
-import { ViewCollection } from 'ckeditor5/src/ui.js';
+import gingerlyJSON from './data/gingerly.json';
 
 describe("DictionaryContentView correctly renders response from Merriam-Webster's Collegiate® Dictionary", () => {
 	let editor: ClassicEditor, view: DictionaryContentView;
-
-	// beforeEach( async () => {
-	//   const domElement = document.createElement('div');
-	//   document.body.appendChild(domElement);
-
-	//   editor = await ClassicEditor.create(domElement, {
-	//     plugins: [Paragraph, Essentials, ThesaurusLex],
-	//   });
-
-	//   model = editor.model;
-	//   root = model.document.getRoot();
-	//   state = new LookupState();
-	// } );
 
 	beforeEach(async () => {
 		const domElement = document.createElement('div');
@@ -49,7 +36,27 @@ describe("DictionaryContentView correctly renders response from Merriam-Webster'
 		view.render();
 
 		expect(view.template).is.not.undefined;
-		expect(view.template?.children).to.be.instanceOf(ViewCollection);
-		// expect(view.template?.children?.)
+		expect(view.element).is.not.null;
+
+		const resultElements =
+			view.element?.querySelectorAll('div.ck.ck-result');
+		expect(resultElements).is.not.undefined;
+		expect(resultElements?.length).toBe(4);
+	});
+
+	it('handles the word "gingerly"', () => {
+		view = new DictionaryContentView(
+			editor,
+			gingerlyJSON as unknown as DictionaryTypes.DictionaryResult[],
+		);
+		view.render();
+
+		expect(view.template).is.not.undefined;
+		expect(view.element).is.not.null;
+
+		const resultElements =
+			view.element?.querySelectorAll('div.ck.ck-result');
+		expect(resultElements).is.not.undefined;
+		expect(resultElements?.length).toBe(2);
 	});
 });

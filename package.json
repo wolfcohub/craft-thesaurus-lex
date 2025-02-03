@@ -6,7 +6,8 @@
     "install": "npm --prefix src/resources install",
     "scss:compile": "npm --prefix src/resources run scss:compile",
     "dll:build": "npm --prefix src/resources run dll:build",
-    "dll:watch": "npm --prefix src/resources run dll:watch"
+    "dll:watch": "npm --prefix src/resources run dll:watch",
+    "test": "npm --prefix src/resources run test"
   },
   "keywords": [],
   "author": "",
