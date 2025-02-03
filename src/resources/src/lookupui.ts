@@ -92,6 +92,7 @@ export default class LookupUI extends Plugin {
 					formView
 						.bind('spellingSuggestions')
 						.to(state, 'spellingSuggestions');
+					formView.bind('settingsUrl').to(state, 'settingsUrl');
 
 					// listen to state for change in errorMessage
 					// display in modal if non-empty

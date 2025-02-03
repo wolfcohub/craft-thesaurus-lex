@@ -42,7 +42,6 @@ export default class LookupFormView extends View {
 
 	constructor(locale: Locale, editor: Editor) {
 		super(locale);
-		this.set('settingsUrl', '/admin/settings/plugins/thesaurus-lex');
 		// instantiate the container for all content blocks in this view
 		this.contentBlocks = this.createCollection();
 
@@ -212,7 +211,14 @@ export default class LookupFormView extends View {
 					attributes: {
 						href: bind.to('settingsUrl'),
 						target: '_blank',
-						class: 'ck-error-link',
+						class: [
+							'ck-error-link',
+							bind.if(
+								'settingsUrl',
+								'ck-hidden',
+								(settingsUrl) => !settingsUrl,
+							),
+						],
 					},
 					children: ['Click here to set it up'],
 				},
