@@ -28,6 +28,62 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+.ck.ck-form-container .ck-error-message {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  background-color: #ffe6e6; /* Light red */
+  border: 2px solid #cc0000; /* Darker red */
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+  flex-wrap: wrap; /* Allow content to wrap */
+}
+.ck.ck-form-container .ck-error-message {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  background-color: #ffe6e6; /* Light red */
+  border: 2px solid #cc0000; /* Darker red */
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+  flex-wrap: wrap; /* Allow content to wrap */
+}
+.ck.ck-form-container .ck-error-text {
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  color: #cc0000; /* Dark red text */
+  white-space: normal; /* Ensure text wraps */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+}
+.ck.ck-form-container .ck-error-link {
+  color: #cc0000;
+  text-decoration: underline;
+  font-weight: bold;
+}
+.ck.ck-form-container .ck-error-link:hover {
+  color: #990000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.ck.ck-form-container .ck-t-lex-logo {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  background-image: url("./icons/thesaurus-lex.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 
 .ck.ck-lookup-form,
 .ck.ck-result-form,

@@ -43,10 +43,11 @@ class ThesaurusController extends Controller
         $cacheTTL = $settings->cacheTTL ?? 3600;
 
         if (!$apiKey) {
-            return $this->asJson([
-                'error' => "Missing API key for {$cachePrefix}. Set this in Settings -> Plugins -> Thesaurus Lex -> Settings."
-            ]);
-        }
+          return $this->asJson([
+              'error' => "Missing API key for {$cachePrefix}.",
+              'settingsUrl' => '/admin/settings/plugins/thesaurus-lex'
+          ]);
+      }
 
         // Generate a unique cache key
         $cacheKey = "thesaurusLex_{$cachePrefix}_" . mb_strtolower($word);

@@ -18,6 +18,8 @@ import SpellingSuggestionsView from './spellingsuggestionsview.js';
 export default class LookupFormView extends View {
 	contentBlocks!: ViewCollection;
 
+	settingsUrl!: string | null;
+
 	input!: LabeledFieldView<InputView>;
 
 	inputView!: View;
@@ -40,7 +42,6 @@ export default class LookupFormView extends View {
 
 	constructor(locale: Locale, editor: Editor) {
 		super(locale);
-
 		// instantiate the container for all content blocks in this view
 		this.contentBlocks = this.createCollection();
 
@@ -197,6 +198,55 @@ export default class LookupFormView extends View {
 			},
 			children: [this.loadingView, this.input, actionDiv],
 		});
+		// Error Text View
+		const errorTextView = new View(locale);
+		errorTextView.setTemplate({
+			tag: 'p',
+			attributes: { class: ['ck', 'ck-error-text'] },
+			children: [
+				{ text: bind.to('errorMessage') },
+				' ', // Space between text and link
+				{
+					tag: 'a',
+					attributes: {
+						href: bind.to('settingsUrl'),
+						target: '_blank',
+						class: [
+							'ck-error-link',
+							bind.if(
+								'settingsUrl',
+								'ck-hidden',
+								(settingsUrl) => !settingsUrl,
+							),
+						],
+					},
+					children: ['Click here to set it up'],
+				},
+			],
+		});
+		const logoBlock = new View(locale);
+		logoBlock.setTemplate({
+			tag: 'span',
+			attributes: {
+				class: ['ck', 'ck-t-lex-logo'],
+			},
+		});
+		// Error Container View
+		const errorView = new View(locale);
+		errorView.setTemplate({
+			tag: 'div',
+			attributes: {
+				class: [
+					'ck',
+					'ck-error-message',
+					bind.if('errorMessage', 'ck-hidden', (message) => !message),
+				],
+			},
+			children: [logoBlock, errorTextView],
+		});
+		// Add the error view to the content blocks
+		this.contentBlocks.add(errorView);
+
 		return containerView;
 	}
 }
