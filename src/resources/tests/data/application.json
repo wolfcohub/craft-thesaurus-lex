@@ -1,0 +1,444 @@
+[
+	{
+		"meta": {
+			"id": "application",
+			"uuid": "aea32aad-39ce-4bec-86a9-ab533da9c99d",
+			"sort": "013492000",
+			"src": "collegiate",
+			"section": "alpha",
+			"stems": ["application", "applications"],
+			"offensive": false
+		},
+		"hwi": {
+			"hw": "ap*pli*ca*tion",
+			"prs": [
+				{
+					"mw": "ˌa-plə-ˈkā-shən",
+					"sound": {
+						"audio": "applic05",
+						"ref": "c",
+						"stat": "1"
+					}
+				}
+			]
+		},
+		"fl": "noun",
+		"def": [
+			{
+				"sseq": [
+					[
+						[
+							"pseq",
+							[
+								[
+									"bs",
+									{
+										"sense": {
+											"sn": "1",
+											"dt": [
+												[
+													"text",
+													"{bc}an act of {a_link|applying}:"
+												]
+											]
+										}
+									}
+								],
+								[
+									"sense",
+									{
+										"sn": "a (1)",
+										"dt": [
+											[
+												"text",
+												"{bc}an act of putting something to use "
+											],
+											[
+												"vis",
+												[
+													{
+														"t": "{wi}application{/wi} of new techniques"
+													}
+												]
+											]
+										]
+									}
+								],
+								[
+									"sense",
+									{
+										"sn": "(2)",
+										"dt": [
+											[
+												"text",
+												"{bc}a use to which something is put "
+											],
+											[
+												"vis",
+												[
+													{
+														"t": "new {wi}applications{/wi} for old remedies"
+													}
+												]
+											]
+										]
+									}
+								]
+							]
+						],
+						[
+							"sense",
+							{
+								"sn": "b",
+								"dt": [
+									[
+										"text",
+										"{bc}an act of administering or laying one thing on another "
+									],
+									[
+										"vis",
+										[
+											{
+												"t": "{wi}application{/wi} of paint to a house"
+											}
+										]
+									]
+								]
+							}
+						],
+						[
+							"sense",
+							{
+								"sn": "c",
+								"dt": [
+									[
+										"text",
+										"{bc}{d_link|assiduous|assiduous} attention "
+									],
+									[
+										"vis",
+										[
+											{
+												"t": "succeeds by {wi}application{/wi} to her studies"
+											}
+										]
+									]
+								]
+							}
+						]
+					],
+					[
+						[
+							"sense",
+							{
+								"sn": "2 a",
+								"dt": [
+									[
+										"text",
+										"{bc}{sx|request||}, {sx|petition||} "
+									],
+									[
+										"vis",
+										[
+											{
+												"t": "an {wi}application{/wi} for financial aid"
+											}
+										]
+									]
+								]
+							}
+						],
+						[
+							"sense",
+							{
+								"sn": "b",
+								"dt": [
+									[
+										"text",
+										"{bc}a form used in making a request "
+									],
+									[
+										"vis",
+										[
+											{
+												"t": "filling out an {wi}application{/wi}"
+											}
+										]
+									]
+								]
+							}
+						]
+					],
+					[
+						[
+							"sense",
+							{
+								"sn": "3",
+								"dt": [
+									[
+										"text",
+										"{bc}a program (such as a {d_link|word processor|word processor} or a {d_link|spreadsheet|spreadsheet}) that performs a particular task or set of tasks"
+									]
+								]
+							}
+						]
+					],
+					[
+						[
+							"sense",
+							{
+								"sn": "4",
+								"dt": [
+									[
+										"text",
+										"{bc}the practical conclusion or lesson to be derived from a speech or writing (such as a moral tale)"
+									]
+								]
+							}
+						]
+					],
+					[
+						[
+							"sense",
+							{
+								"sn": "5",
+								"dt": [
+									[
+										"text",
+										"{bc}a medicated or protective layer or material "
+									],
+									[
+										"vis",
+										[
+											{
+												"t": "an oily {wi}application{/wi} for dry skin"
+											}
+										]
+									]
+								]
+							}
+						]
+					],
+					[
+						[
+							"sense",
+							{
+								"sn": "6",
+								"dt": [
+									["text", "{bc}capacity for practical use "],
+									[
+										"vis",
+										[
+											{
+												"t": "words of varied {wi}application{/wi}"
+											}
+										]
+									]
+								]
+							}
+						]
+					]
+				]
+			}
+		],
+		"et": [
+			[
+				"text",
+				"Middle English {it}applicacioun,{/it} borrowed from Middle French & Medieval Latin; Middle French {it}applicacion,{/it} borrowed from Medieval Latin {it}applicātiōn-, applicātiō{/it} \"bringing into contact, coming to shore, bringing into use for a particular purpose,\" going back to Latin, \"act of attaching or joining,\" from {it}applicāre{/it} \"to bring into contact (with), situate near, bring to bear (on)\" + {it}-tiōn-, -tiō,{/it} suffix of verbal action {ma}{mat|apply|}{/ma}"
+			]
+		],
+		"date": "14th century{ds||1||}",
+		"shortdef": [
+			"an act of applying:",
+			"an act of putting something to use",
+			"a use to which something is put"
+		]
+	},
+	{
+		"meta": {
+			"id": "application programming interface",
+			"uuid": "96f9aef6-3b5c-41c8-930d-91f73a68a468",
+			"sort": "013492250",
+			"src": "collegiate",
+			"section": "alpha",
+			"stems": [
+				"application program interface",
+				"application program interfaces",
+				"application programming interface",
+				"application programming interfaces"
+			],
+			"offensive": false
+		},
+		"hwi": {
+			"hw": "application programming interface"
+		},
+		"vrs": [
+			{
+				"vl": "or less commonly",
+				"va": "application program interface"
+			}
+		],
+		"fl": "noun",
+		"def": [
+			{
+				"sls": ["computing"],
+				"sseq": [
+					[
+						[
+							"sense",
+							{
+								"dt": [
+									[
+										"text",
+										"{bc}a set of rules that allows programmers to develop software for a particular operating system without having to be completely familiar with that operating system "
+									],
+									[
+										"vis",
+										[
+											{
+												"t": "To fix this problem, trustbusters have installed a provision forcing Microsoft to disclose more information about its so-called {wi}application programming interfaces{/wi}, or APIs.",
+												"aq": {
+													"source": "{it}Business Week{/it}"
+												}
+											}
+										]
+									],
+									[
+										"uns",
+										[
+											[
+												[
+													"text",
+													"abbreviation {it}API{/it}"
+												]
+											]
+										]
+									]
+								]
+							}
+						]
+					]
+				]
+			}
+		],
+		"date": "1968",
+		"shortdef": [
+			"a set of rules that allows programmers to develop software for a particular operating system without having to be completely familiar with that operating system —abbreviation API"
+		]
+	},
+	{
+		"meta": {
+			"id": "application service provider",
+			"uuid": "89f76ec6-5e68-4c89-8fd1-f071d5b7a303",
+			"sort": "013492500",
+			"src": "collegiate",
+			"section": "alpha",
+			"stems": [
+				"application service provider",
+				"application service providers"
+			],
+			"offensive": false
+		},
+		"hwi": {
+			"hw": "application service provider"
+		},
+		"fl": "noun",
+		"def": [
+			{
+				"sseq": [
+					[
+						[
+							"sense",
+							{
+								"dt": [
+									[
+										"text",
+										"{bc}a company that provides software (as for email or payroll accounting) that is accessible over the Internet instead of being stored on individual computers "
+									],
+									[
+										"uns",
+										[
+											[
+												[
+													"text",
+													"abbreviation {it}ASP{/it}"
+												]
+											]
+										]
+									]
+								]
+							}
+						]
+					]
+				]
+			}
+		],
+		"date": "1989",
+		"shortdef": [
+			"a company that provides software (as for email or payroll accounting) that is accessible over the Internet instead of being stored on individual computers —abbreviation ASP"
+		]
+	},
+	{
+		"meta": {
+			"id": "application-specific integrated circuit",
+			"uuid": "e0902bcb-d18a-46ff-a7f0-3834b90ba9c8",
+			"sort": "013492750",
+			"src": "collegiate",
+			"section": "alpha",
+			"stems": [
+				"application-specific integrated circuit",
+				"application-specific integrated circuits"
+			],
+			"offensive": false
+		},
+		"hwi": {
+			"hw": "application-specific integrated circuit"
+		},
+		"fl": "noun",
+		"def": [
+			{
+				"sseq": [
+					[
+						[
+							"sense",
+							{
+								"dt": [
+									[
+										"text",
+										"{bc}any {d_link|integrated circuit|integrated circuit} designed to perform a single, specific task "
+									],
+									[
+										"vis",
+										[
+											{
+												"t": "An {wi}application-specific integrated circuit{/wi} (ASIC) … enables wireless telemetry, remote powering …",
+												"aq": {
+													"source": "{it}Computers, Networks & Communications{/it}"
+												}
+											}
+										]
+									],
+									[
+										"uns",
+										[
+											[
+												[
+													"text",
+													"abbreviation {it}ASIC{/it}"
+												]
+											]
+										]
+									]
+								]
+							}
+						]
+					]
+				]
+			}
+		],
+		"date": "1983",
+		"shortdef": [
+			"any integrated circuit designed to perform a single, specific task —abbreviation ASIC"
+		]
+	}
+]
